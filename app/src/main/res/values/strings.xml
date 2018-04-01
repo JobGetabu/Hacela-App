@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">HacelaApp</string>
+    <string name="sign_up_with">Sign up with</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
