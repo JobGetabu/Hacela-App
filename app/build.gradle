@@ -51,6 +51,10 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:12.0.1'
     implementation 'com.google.firebase:firebase-messaging:12.0.1'
 
+    //social logins
+    implementation 'com.facebook.android:facebook-login:[4,5)'
+
+
     // ButterKnife (for sample code brevity)
     implementation 'com.jakewharton:butterknife:8.8.1'
     implementation 'com.android.support:support-v4:27.1.0'
@@ -88,3 +92,5 @@ dependencies {
     testImplementation "android.arch.persistence.room:testing:1.0.0"
 
 }
+
+apply plugin: 'com.google.gms.google-services'
