@@ -8,7 +8,7 @@ import android.widget.ImageButton;
 
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.adapter.RegistrationFragmentsAdapter;
-import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
+import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -16,6 +16,7 @@ import butterknife.OnClick;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    //TODO Remember to resolve the <21 layout resource
     @BindView(R.id.register_btn_email)
     ImageButton btnEmail;
     @BindView(R.id.register_btn_facebook)
@@ -27,7 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
     @BindView(R.id.register_main_pager)
     ViewPager mainRegisterPager;
     @BindView(R.id.register_dots_indicator)
-    DotsIndicator dotsIndicator;
+    WormDotsIndicator dotsIndicator;
 
     RegistrationFragmentsAdapter registrationFragmentsAdapter;
 

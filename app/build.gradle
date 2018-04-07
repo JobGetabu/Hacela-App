@@ -59,6 +59,9 @@ dependencies {
     //viewpager dots
     implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:2.0.0'
 
+    //password strength
+    implementation 'com.github.yesterselga:password-strength-checker-android:v1.0'
+
     //test libs
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
