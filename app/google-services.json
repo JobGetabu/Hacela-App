@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "627740910048",
+    "firebase_url": "https://hacelaapp.firebaseio.com",
+    "project_id": "hacelaapp",
+    "storage_bucket": "hacelaapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:627740910048:android:c089e176f56cdb12",
+        "android_client_info": {
+          "package_name": "com.job.hacelaapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "627740910048-i5gub9c7gerd1mbbb8dt39i0fousjh3h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.job.hacelaapp",
+            "certificate_hash": "08707c39ce53fa034d11722ba7cd4fd155e54ec8"
+          }
+        },
+        {
+          "client_id": "627740910048-mkno47ghn3v2k9bstcn7718jvfs3pmel.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXUhH4tv0uyjPtb_08RUYGPhWVfyY8HRg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "627740910048-mkno47ghn3v2k9bstcn7718jvfs3pmel.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

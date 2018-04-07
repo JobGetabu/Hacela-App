@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".manageUsers.FacebookSignUpFragment">
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginEnd="40dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="100dp"
+            android:layout_weight="1"
+            android:padding="20dp"
+            android:layout_marginBottom="40dp"
+             />
+        <Button
+            android:id="@+id/bSearch"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:padding="16dp"
+            android:drawableStart="@drawable/ic_fb_icon_white"
+            android:textColor="@android:color/white"
+            android:background="@drawable/button_selected_fb"
+            android:text="Sign up with facebook"
+            android:textSize="18sp" />
+    </android.support.v7.widget.LinearLayoutCompat>
+    <!-- TODO: Update blank fragment layout -->
+
+</FrameLayout>
