@@ -7,4 +7,12 @@
 
     <color name="colorAppBarGrey">#400233</color>
     <color name="colorTextGrey">#252424</color>
+
+    <!-- Green -->
+    <color name="green_temp">#23A96E</color>
+    <color name="green_dark">#159204</color>
+    <color name="bright_green">#02D8B0</color>
+    <color name="button_green">#10a54a</color>
+
+
 </resources>

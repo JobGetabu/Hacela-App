@@ -65,10 +65,9 @@
         android:layout_height="24dp"
         android:layout_marginEnd="8dp"
         android:layout_weight="1"
-        android:background="@drawable/ic_email_custom"
         app:layout_constraintEnd_toStartOf="@+id/imageButton2"
         app:layout_constraintTop_toTopOf="@+id/imageButton2"
-        app:srcCompat="@drawable/ic_email_custom" />
+        app:srcCompat="@drawable/ic_message_custom" />
 
     <ImageButton
         android:id="@+id/imageButton2"
@@ -76,18 +75,16 @@
         android:layout_height="24dp"
         android:layout_marginEnd="8dp"
         android:layout_weight="1"
-        android:background="@drawable/ic_email_custom"
         app:layout_constraintEnd_toStartOf="@+id/imageButton4"
         app:layout_constraintTop_toTopOf="@+id/imageButton4"
-        app:srcCompat="@drawable/ic_email_custom" />
+        app:srcCompat="@drawable/ic_message_custom" />
 
     <ImageButton
         android:id="@+id/imageButton3"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_weight="1"
-        android:background="@drawable/ic_email_custom"
-        app:srcCompat="@drawable/ic_email_custom"
+        app:srcCompat="@drawable/ic_message_custom"
         tools:layout_editor_absoluteX="232dp"
         tools:layout_editor_absoluteY="96dp" />
 
@@ -97,10 +94,9 @@
         android:layout_height="24dp"
         android:layout_marginEnd="8dp"
         android:layout_weight="1"
-        android:background="@drawable/ic_email_custom"
         app:layout_constraintEnd_toStartOf="@+id/imageButton3"
         app:layout_constraintTop_toTopOf="@+id/imageButton3"
-        app:srcCompat="@drawable/ic_email_custom" />
+        app:srcCompat="@drawable/ic_message_custom" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton"
