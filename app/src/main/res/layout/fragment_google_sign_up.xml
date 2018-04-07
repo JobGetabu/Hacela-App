@@ -5,11 +5,18 @@
     android:layout_height="match_parent"
     tools:context=".manageUsers.GoogleSignUpFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="google plus  sign up"
-        android:textSize="30sp"/>
+    <Button
+        android:id="@+id/bSearch"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/button_selected_google"
+        android:drawableStart="@drawable/ic_google_icon_white"
+        android:padding="16dp"
+        android:text="@string/sign_up_with_google"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
 </FrameLayout>

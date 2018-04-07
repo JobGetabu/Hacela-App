@@ -9,11 +9,15 @@ import android.view.ViewGroup;
 
 import com.job.hacelaapp.R;
 
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class FacebookSignUpFragment extends Fragment {
 
+
+    private View mRootView;
 
     public FacebookSignUpFragment() {
         // Required empty public constructor
@@ -24,7 +28,10 @@ public class FacebookSignUpFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_facebook_sign_up, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_facebook_sign_up, container, false);
+        ButterKnife.bind(this,mRootView);
+
+        return mRootView;
     }
 
 }
