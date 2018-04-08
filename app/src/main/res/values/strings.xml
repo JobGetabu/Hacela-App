@@ -10,7 +10,10 @@
     <string name="sign_up_with_google">Sign up with Google</string>
     <string name="sign_in_with_facebook">Sign in with Facebook</string>
     <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_up_with_twitter">Sign up with Twitter</string>
+    <string name="sign_in_with_twitter">Sign in with Twitter</string>
     <string name="sign_up_ex">Sign Up!</string>
+    <string name="sign_out">Sign out</string>
 
     <string name="or">OR</string>
     <string name="image_default_content_description">image default content description</string>
@@ -23,6 +26,4 @@
     <string name="email_or_phone_number">Email or Phone Number</string>
     <string name="email">Email</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
-    <string name="sign_up_with_twitter">Sign up with Twitter</string>
-    <string name="sign_in_with_twitter">Sign in with Twitter</string>
 </resources>
