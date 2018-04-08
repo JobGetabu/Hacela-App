@@ -1,10 +1,10 @@
 package com.job.hacelaapp;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-import com.job.hacelaapp.manageUsers.RegisterActivity;
+import com.job.hacelaapp.manageUsers.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,8 +15,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         //TODO remove this intent
-        Intent regiIntent = new Intent(MainActivity.this, RegisterActivity.class);
-        startActivity(regiIntent);
+        Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(loginIntent);
 
     }
 }
