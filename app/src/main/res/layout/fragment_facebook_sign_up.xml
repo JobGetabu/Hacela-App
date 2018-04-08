@@ -7,7 +7,7 @@
 
 
         <Button
-            android:id="@+id/bSearch"
+            android:id="@+id/frgbtn_signup_facebook"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -17,9 +17,9 @@
             android:drawableStart="@drawable/ic_fb_icon_white"
             android:textColor="@android:color/white"
             android:background="@drawable/button_selected_fb"
+            android:textAllCaps="false"
             android:text="@string/sign_up_with_facebook"
             android:textSize="18sp" />
 
-    <!-- TODO: Update blank fragment layout -->
 
 </FrameLayout>

@@ -6,7 +6,7 @@
     tools:context=".manageUsers.TwittersignUpFragment">
 
     <Button
-        android:id="@+id/bSearch"
+        android:id="@+id/frgbtn_signup_twitter"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -16,7 +16,8 @@
         android:drawableStart="@drawable/ic_twitter_icon_white"
         android:textColor="@android:color/white"
         android:background="@drawable/button_selected_twitter"
-        android:text="Sign up with Twitter"
+        android:textAllCaps="false"
+        android:text="@string/sign_up_with_twitter"
         android:textSize="18sp" />
 
 </FrameLayout>

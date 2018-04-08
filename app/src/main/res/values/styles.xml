@@ -16,8 +16,8 @@
         <item name="android:textSize">20sp</item>
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
         <item name="colorAccent">@color/colorPrimaryDark</item>
-        <item name="colorControlNormal">@color/colorDarkRed</item>
-        <item name="colorControlActivated">@color/colorPrimaryDark</item>
+        <item name="colorControlNormal">@color/colorPrimaryDark</item>
+        <item name="colorControlActivated">@color/colorAppBarGrey</item>
     </style>
 
     <color name="lightGrey">#B6B2B2</color>
