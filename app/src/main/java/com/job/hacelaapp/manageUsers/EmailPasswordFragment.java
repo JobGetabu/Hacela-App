@@ -14,11 +14,14 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.job.hacelaapp.R;
 import com.ybs.passwordstrengthmeter.PasswordStrength;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,6 +47,9 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
 
     private View mRootView;
 
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore mFirestore;
+
     public EmailPasswordFragment() {
         // Required empty public constructor
     }
@@ -55,6 +61,10 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
         // Inflate the layout for this fragment
         mRootView = inflater.inflate(R.layout.fragment_email_password, container, false);
         ButterKnife.bind(this,mRootView);
+
+        //firebase
+        mAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
 
 
         inEditPassword.addTextChangedListener(this);
@@ -106,5 +116,11 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
         } else {
             inProgressBar.setProgress(100);
         }
+    }
+
+    @OnClick({R.id.reg_btn_signup})
+    public void regBtnEmailPasswordClick(){
+
+        //TODO: perform user registration and simple database write ie token, displayname
     }
 }
