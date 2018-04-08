@@ -77,7 +77,8 @@
             app:layout_constraintStart_toStartOf="@+id/frameLayout"
             app:layout_constraintTop_toBottomOf="@+id/frameLayout"
             app:layout_constraintVertical_bias="0.583"
-            app:srcCompat="@android:color/white" />
+            app:srcCompat="@android:color/white"
+            android:focusable="true" />
 
         <TextView
             android:id="@+id/textView"
@@ -87,7 +88,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:elevation="6dp"
-            android:text="OR"
+            android:text="@string/or"
             android:textColor="@color/colorTextGrey"
             android:textSize="16sp"
             app:layout_anchor="@id/floatingActionButton"
@@ -111,7 +112,8 @@
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/register_dots_indicator"
-            app:srcCompat="@drawable/ic_message_custom" />
+            app:srcCompat="@drawable/ic_message_custom"
+            android:contentDescription="@string/image_default_content_description" />
 
         <ImageButton
             android:id="@+id/register_btn_facebook"
@@ -125,7 +127,8 @@
             app:layout_constraintEnd_toStartOf="@+id/register_btn_twitter"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/register_btn_email"
-            app:srcCompat="@drawable/ic_fb_icon_custom" />
+            app:srcCompat="@drawable/ic_fb_icon_custom"
+            android:contentDescription="@string/image_default_content_description"/>
 
         <ImageButton
             android:id="@+id/register_btn_twitter"
@@ -139,7 +142,8 @@
             app:layout_constraintEnd_toStartOf="@+id/register_btn_google"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/register_btn_facebook"
-            app:srcCompat="@drawable/ic_twitter_custom" />
+            app:srcCompat="@drawable/ic_twitter_custom"
+            android:contentDescription="@string/image_default_content_description"/>
 
         <ImageButton
             android:id="@+id/register_btn_google"
@@ -152,7 +156,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/register_btn_twitter"
-            app:srcCompat="@drawable/ic_googleplus_icon_custom" />
+            app:srcCompat="@drawable/ic_googleplus_icon_custom"
+            android:contentDescription="@string/image_default_content_description"/>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/register_main_pager"

@@ -16,7 +16,6 @@ import butterknife.OnClick;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    //TODO Remember to resolve the <21 layout resource
     @BindView(R.id.register_btn_email)
     ImageButton btnEmail;
     @BindView(R.id.register_btn_facebook)
