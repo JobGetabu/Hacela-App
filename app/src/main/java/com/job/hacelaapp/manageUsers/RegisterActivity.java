@@ -38,7 +38,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-
         registrationFragmentsAdapter = new RegistrationFragmentsAdapter(getSupportFragmentManager());
         mainRegisterPager.setAdapter(registrationFragmentsAdapter);
         dotsIndicator.setViewPager(mainRegisterPager);

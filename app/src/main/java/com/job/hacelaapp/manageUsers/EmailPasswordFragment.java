@@ -169,6 +169,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
                                 userMap.put("device_token",device_token);
                                 userMap.put("displayname",displayname);
                                 userMap.put("phonenumber",phonenumber);
+                                userMap.put("photourl","");
 
                                 mFirestore.collection("Users").document(mCurrentUserid).set(userMap)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -200,7 +201,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
     }
 
     private void sendToMain(){
-        //TODO: phoneverification activity
+
         Intent mainIntent = new Intent(getActivity(), MainActivity.class);
         //since we cnt call finish
         mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
