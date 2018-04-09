@@ -62,6 +62,11 @@ dependencies {
     //password strength
     implementation 'com.github.yesterselga:password-strength-checker-android:v1.0'
 
+    //picasso image processing lib + offline
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    //implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+
+
     //test libs
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

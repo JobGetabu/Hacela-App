@@ -1,23 +1,40 @@
 package com.job.hacelaapp.manageUsers;
 
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 import com.ybs.passwordstrengthmeter.PasswordStrength;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,10 +62,13 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
     @BindView(R.id.reg_password_strength)
     TextView inPasswordStrength;
 
+    public static final String TAG = "EmailPasswordFragment";
     private View mRootView;
+
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
+    ProgressDialog  mdialog;
 
     public EmailPasswordFragment() {
         // Required empty public constructor
@@ -121,6 +141,85 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
     @OnClick({R.id.reg_btn_signup})
     public void regBtnEmailPasswordClick(){
 
-        //TODO: perform user registration and simple database write ie token, displayname
+        final String displayname = inDisplayName.getEditText().getText().toString();
+        final String phonenumber = inPhoneNumber.getEditText().getText().toString();
+        String email = inEmail.getEditText().getText().toString();
+        String password = inEmail.getEditText().getText().toString();
+
+        if(!TextUtils.isEmpty(displayname) && !TextUtils.isEmpty(phonenumber) && !TextUtils.isEmpty(email)
+                && !TextUtils.isEmpty(password)){
+
+            mdialog = new ProgressDialog(getActivity());
+            mdialog.setTitle("Registration");
+            mdialog.setMessage("Please wait while we create your account...");
+            mdialog.setCanceledOnTouchOutside(false);
+            mdialog.show();
+
+            mAuth.createUserWithEmailAndPassword(email,password)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> authtask) {
+                            if (authtask.isSuccessful()){
+
+                                String device_token = FirebaseInstanceId.getInstance().getToken();
+                                String mCurrentUserid = mAuth.getCurrentUser().getUid();
+
+                                Map<String, Object> userMap = new HashMap<>();
+
+                                userMap.put("device_token",device_token);
+                                userMap.put("displayname",displayname);
+                                userMap.put("phonenumber",phonenumber);
+
+                                mFirestore.collection("Users").document(mCurrentUserid).set(userMap)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> dbtask) {
+                                                if(dbtask.isSuccessful()){
+                                                    mdialog.dismiss();
+                                                    sendToMain();
+                                                }else {
+                                                    mdialog.dismiss();
+                                                    Log.d(TAG, "onComplete: error"+dbtask.getException().toString());
+                                                    Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        });
+
+                            }else {
+                                UserAuthToastExceptions(authtask);
+                                mdialog.dismiss();
+                            }
+                        }
+                    });
+
+
+        }else {
+            //TODO: Error prompting logic
+        }
+
+    }
+
+    private void sendToMain(){
+        //TODO: phoneverification activity
+        Intent mainIntent = new Intent(getActivity(), MainActivity.class);
+        //since we cnt call finish
+        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainIntent);
+    }
+    private void UserAuthToastExceptions(@NonNull Task<AuthResult> authtask) {
+        String error = "";
+        try {
+            throw authtask.getException();
+        } catch (FirebaseAuthWeakPasswordException e) {
+            error = "Weak Password!";
+        } catch (FirebaseAuthInvalidCredentialsException e) {
+            error = "Invalid email";
+        } catch (FirebaseAuthUserCollisionException e) {
+            error = "Existing Account";
+        } catch (Exception e) {
+            error = "Unknown Error Occured";
+            e.printStackTrace();
+        }
+        Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
     }
 }
