@@ -47,6 +47,7 @@ public class GoogleSignUpFragment extends Fragment {
     Button mGoogleBtn;
 
     public static final int RC_SIGN_IN = 1001;
+    public static final String GOOGLE_SIGN_IN = "GOOGLE_SIGN_IN";
     public static final String TAG = "GoogleSignUpFragment";
 
     private View mRootView;
@@ -176,6 +177,7 @@ public class GoogleSignUpFragment extends Fragment {
         Intent mainIntent = new Intent(getActivity(), MainActivity.class);
         //since we cnt call finish
         mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        mainIntent.putExtra(GOOGLE_SIGN_IN,"GOOGLE_SIGN_IN");
         startActivity(mainIntent);
     }
 }

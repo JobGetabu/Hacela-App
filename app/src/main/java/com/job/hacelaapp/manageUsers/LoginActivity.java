@@ -1,11 +1,15 @@
 package com.job.hacelaapp.manageUsers;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageButton;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.adapter.LoginFragmentsAdapter;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
@@ -28,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     WormDotsIndicator ldotsIndicator;
 
     LoginFragmentsAdapter loginFragmentsAdapter;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         ButterKnife.bind(this);
+
+        //firebase
+        mAuth = FirebaseAuth.getInstance();
 
         loginFragmentsAdapter = new LoginFragmentsAdapter(getSupportFragmentManager());
         mainLoginPager.setAdapter(loginFragmentsAdapter);
@@ -107,6 +115,24 @@ public class LoginActivity extends AppCompatActivity {
                 break;
 
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            sendToMain();
+        }
+    }
+
+    private void sendToMain(){
+
+        Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(mainIntent);
+        finish();
     }
 
 }

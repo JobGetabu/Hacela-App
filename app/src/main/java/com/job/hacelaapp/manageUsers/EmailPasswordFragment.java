@@ -29,7 +29,6 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 import com.ybs.passwordstrengthmeter.PasswordStrength;
 
@@ -144,7 +143,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
         final String displayname = inDisplayName.getEditText().getText().toString();
         final String phonenumber = inPhoneNumber.getEditText().getText().toString();
         String email = inEmail.getEditText().getText().toString();
-        String password = inEmail.getEditText().getText().toString();
+        String password = inPassword.getEditText().getText().toString();
 
         if(!TextUtils.isEmpty(displayname) && !TextUtils.isEmpty(phonenumber) && !TextUtils.isEmpty(email)
                 && !TextUtils.isEmpty(password)){
@@ -177,7 +176,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
                                             public void onComplete(@NonNull Task<Void> dbtask) {
                                                 if(dbtask.isSuccessful()){
                                                     mdialog.dismiss();
-                                                    sendToMain();
+                                                    sendToLogin();
                                                 }else {
                                                     mdialog.dismiss();
                                                     Log.d(TAG, "onComplete: error"+dbtask.getException().toString());
@@ -200,12 +199,9 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
 
     }
 
-    private void sendToMain(){
-
-        Intent mainIntent = new Intent(getActivity(), MainActivity.class);
-        //since we cnt call finish
-        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(mainIntent);
+    private void sendToLogin() {
+        Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(loginIntent);
     }
     private void UserAuthToastExceptions(@NonNull Task<AuthResult> authtask) {
         String error = "";
