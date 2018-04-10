@@ -69,7 +69,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
-    ProgressDialog  mdialog;
+    private ProgressDialog  mdialog;
 
     public EmailPasswordFragment() {
         // Required empty public constructor
@@ -173,7 +173,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
                                 Map<String, Object> userAuthMap = new HashMap<>();
                                 userAuthMap.put("phonenumber",phonenumber);
                                 userAuthMap.put("fbConnected",false);
-                                userAuthMap.put("GoogleConnected",false);
+                                userAuthMap.put("googleConnected",false);
 
 
                                 // Get a new write batch

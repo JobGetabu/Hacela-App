@@ -1,6 +1,7 @@
 package com.job.hacelaapp.manageUsers;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -56,6 +57,7 @@ public class GoogleLogInFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
 
+    private ProgressDialog mdialog;
     public GoogleLogInFragment() {
         // Required empty public constructor
     }
@@ -113,6 +115,12 @@ public class GoogleLogInFragment extends Fragment {
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
+        mdialog = new ProgressDialog(getActivity());
+        mdialog.setTitle("Logging in");
+        mdialog.setMessage("Please wait logging in...");
+        mdialog.setCanceledOnTouchOutside(false);
+        mdialog.show();
+
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -141,6 +149,7 @@ public class GoogleLogInFragment extends Fragment {
                                         public void onComplete(@NonNull Task<Void> dbtask) {
                                             if(dbtask.isSuccessful()){
 
+                                                mdialog.dismiss();
                                                 mBtnGoogleLogin.setEnabled(true);
                                                 sendToMain();
                                             }else {
@@ -157,6 +166,7 @@ public class GoogleLogInFragment extends Fragment {
                             Snackbar.make(mRootView.findViewById(R.id.frg_framelayout_google), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                             //updateUI(null);
                             mBtnGoogleLogin.setEnabled(true);
+                            mdialog.dismiss();
                         }
 
                         // ...

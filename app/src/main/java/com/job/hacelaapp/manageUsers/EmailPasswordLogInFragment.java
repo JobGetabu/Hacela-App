@@ -125,6 +125,7 @@ public class EmailPasswordLogInFragment extends Fragment {
                         public void onComplete(@NonNull Task<AuthResult> authtask) {
 
                             if (authtask.isSuccessful()){
+
                                 mdialog.dismiss();
                                 sendToMain();
                             }else {

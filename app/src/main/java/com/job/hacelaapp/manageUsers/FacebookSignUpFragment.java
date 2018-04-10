@@ -1,6 +1,7 @@
 package com.job.hacelaapp.manageUsers;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -56,6 +57,8 @@ public class FacebookSignUpFragment extends Fragment {
     CallbackManager mCallbackManager;
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
+
+    private ProgressDialog mdialog;
 
     public FacebookSignUpFragment() {
         // Required empty public constructor
@@ -149,6 +152,12 @@ public class FacebookSignUpFragment extends Fragment {
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
+        mdialog = new ProgressDialog(getActivity());
+        mdialog.setTitle("Logging in");
+        mdialog.setMessage("Please wait logging in...");
+        mdialog.setCanceledOnTouchOutside(false);
+        mdialog.show();
+
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -181,8 +190,10 @@ public class FacebookSignUpFragment extends Fragment {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> dbtask) {
                                             if(dbtask.isSuccessful()){
+                                                mdialog.dismiss();
                                                 sendToMain();
                                             }else {
+                                                mdialog.dismiss();
                                                 Log.d(TAG, "onComplete: error"+dbtask.getException().toString());
                                                 Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_LONG).show();
                                             }
@@ -191,6 +202,7 @@ public class FacebookSignUpFragment extends Fragment {
 
                         } else {
                             // If sign in fails, display a message to the user.
+                            mdialog.dismiss();
                             UserAuthToastExceptions(task);
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(getActivity(), "Authentication failed.",

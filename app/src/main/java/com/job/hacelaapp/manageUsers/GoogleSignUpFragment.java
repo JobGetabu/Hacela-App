@@ -1,6 +1,7 @@
 package com.job.hacelaapp.manageUsers;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -55,6 +56,8 @@ public class GoogleSignUpFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
+
+    private ProgressDialog  mdialog;
 
     public GoogleSignUpFragment() {
         // Required empty public constructor
@@ -113,6 +116,12 @@ public class GoogleSignUpFragment extends Fragment {
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
+        mdialog = new ProgressDialog(getActivity());
+        mdialog.setTitle("Registration");
+        mdialog.setMessage("Please wait while we create your account...");
+        mdialog.setCanceledOnTouchOutside(false);
+        mdialog.show();
+
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -145,11 +154,12 @@ public class GoogleSignUpFragment extends Fragment {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> dbtask) {
                                             if(dbtask.isSuccessful()){
-
+                                                mdialog.dismiss();
                                                 mGoogleBtn.setEnabled(true);
                                                 Toast.makeText(getActivity(), "Welcome signed in as "+user.getEmail(), Toast.LENGTH_SHORT).show();
                                                 sendToMain();
                                             }else {
+                                                mdialog.dismiss();
                                                 Log.d(TAG, "onComplete: error"+dbtask.getException().toString());
                                                 Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_LONG).show();
                                             }
@@ -159,6 +169,7 @@ public class GoogleSignUpFragment extends Fragment {
 
                         } else {
                             // If sign in fails, display a message to the user.
+                            mdialog.dismiss();
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Snackbar.make(mRootView.findViewById(R.id.frg_framelayout_google), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                             //updateUI(null);
