@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.job.hacelaapp.manageUsers.EmailPasswordFragment;
 import com.job.hacelaapp.manageUsers.FacebookSignUpFragment;
 import com.job.hacelaapp.manageUsers.GoogleSignUpFragment;
-import com.job.hacelaapp.manageUsers.TwittersignUpFragment;
 
 /**
  * Created by Job on Sunday : 4/1/2018.
@@ -28,8 +27,6 @@ public class RegistrationFragmentsAdapter extends FragmentPagerAdapter {
             case 1:
                 return new FacebookSignUpFragment();
             case 2:
-                return new TwittersignUpFragment();
-            case 3:
                 return new GoogleSignUpFragment();
         }
 
@@ -38,6 +35,6 @@ public class RegistrationFragmentsAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return 3;
     }
 }

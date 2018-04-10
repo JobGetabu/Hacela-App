@@ -22,8 +22,6 @@ public class LoginActivity extends AppCompatActivity {
     ImageButton lbtnFacebook;
     @BindView(R.id.login_btn_google)
     ImageButton lbtnGoogle;
-    @BindView(R.id.login_btn_twitter)
-    ImageButton lbtnTwitter;
     @BindView(R.id.login_main_pager)
     ViewPager mainLoginPager;
     @BindView(R.id.login_dots_indicator)
@@ -60,16 +58,10 @@ public class LoginActivity extends AppCompatActivity {
         mPageChange(1);
     }
 
-    @OnClick(R.id.login_btn_twitter)
-    public void lbtnTwitterclick(){
-        mainLoginPager.setCurrentItem(2);
-        mPageChange(2);
-    }
-
     @OnClick(R.id.login_btn_google)
     public void lbtnGoogleclick(){
-        mainLoginPager.setCurrentItem(3);
-        mPageChange(3);
+        mainLoginPager.setCurrentItem(2);
+        mPageChange(2);
     }
 
 
@@ -97,29 +89,19 @@ public class LoginActivity extends AppCompatActivity {
             case 0:
                 lbtnEmail.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_message_white));
                 lbtnFacebook.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_fb_icon_custom));
-                lbtnTwitter.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_twitter_custom));
                 lbtnGoogle.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_googleplus_icon_custom));
                 break;
 
             case 1:
                 lbtnFacebook.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_fb_icon_white));
                 lbtnEmail.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_message_custom));
-                lbtnTwitter.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_twitter_custom));
                 lbtnGoogle.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_googleplus_icon_custom));
                 break;
 
             case 2:
-                lbtnTwitter.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_twitter_icon_white));
-                lbtnEmail.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_message_custom));
-                lbtnFacebook.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_fb_icon_custom));
-                lbtnGoogle.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_googleplus_icon_custom));
-                break;
-
-            case 3:
                 lbtnGoogle.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_googleplus_icon_white));
                 lbtnEmail.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_message_custom));
                 lbtnFacebook.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_fb_icon_custom));
-                lbtnTwitter.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_twitter_custom));
                 break;
             default:
                 break;

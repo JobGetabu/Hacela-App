@@ -22,8 +22,6 @@ public class RegisterActivity extends AppCompatActivity {
     ImageButton btnFacebook;
     @BindView(R.id.register_btn_google)
     ImageButton btnGoogle;
-    @BindView(R.id.register_btn_twitter)
-    ImageButton btnTwitter;
     @BindView(R.id.register_main_pager)
     ViewPager mainRegisterPager;
     @BindView(R.id.register_dots_indicator)
@@ -60,16 +58,10 @@ public class RegisterActivity extends AppCompatActivity {
         mPageChange(1);
     }
 
-    @OnClick(R.id.register_btn_twitter)
-    public void btnTwitterclick(){
-        mainRegisterPager.setCurrentItem(2);
-        mPageChange(2);
-    }
-
     @OnClick(R.id.register_btn_google)
     public void btnGoogleclick(){
-        mainRegisterPager.setCurrentItem(3);
-        mPageChange(3);
+        mainRegisterPager.setCurrentItem(2);
+        mPageChange(2);
     }
 
     ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -95,29 +87,19 @@ public class RegisterActivity extends AppCompatActivity {
                 case 0:
                     btnEmail.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_message_white));
                     btnFacebook.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_fb_icon_custom));
-                    btnTwitter.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_twitter_custom));
                     btnGoogle.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_googleplus_icon_custom));
                     break;
 
                 case 1:
                     btnFacebook.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_fb_icon_white));
                     btnEmail.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_message_custom));
-                    btnTwitter.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_twitter_custom));
                     btnGoogle.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_googleplus_icon_custom));
                     break;
 
                 case 2:
-                    btnTwitter.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_twitter_icon_white));
-                    btnEmail.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_message_custom));
-                    btnFacebook.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_fb_icon_custom));
-                    btnGoogle.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_googleplus_icon_custom));
-                    break;
-
-                case 3:
                     btnGoogle.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_googleplus_icon_white));
                     btnEmail.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_message_custom));
                     btnFacebook.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_fb_icon_custom));
-                    btnTwitter.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_twitter_custom));
                     break;
                     default:
                         break;

@@ -124,26 +124,12 @@
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="@+id/register_btn_email"
-            app:layout_constraintEnd_toStartOf="@+id/register_btn_twitter"
+            app:layout_constraintEnd_toStartOf="@+id/register_btn_google"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/register_btn_email"
             app:srcCompat="@drawable/ic_fb_icon_custom"
             android:contentDescription="@string/image_default_content_description"/>
 
-        <ImageButton
-            android:id="@+id/register_btn_twitter"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="@+id/register_btn_facebook"
-            app:layout_constraintEnd_toStartOf="@+id/register_btn_google"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/register_btn_facebook"
-            app:srcCompat="@drawable/ic_twitter_custom"
-            android:contentDescription="@string/image_default_content_description"/>
 
         <ImageButton
             android:id="@+id/register_btn_google"
@@ -152,10 +138,10 @@
             android:layout_marginStart="24dp"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="@+id/register_btn_twitter"
+            app:layout_constraintBottom_toBottomOf="@+id/register_btn_facebook"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/register_btn_twitter"
+            app:layout_constraintStart_toEndOf="@+id/register_btn_facebook"
             app:srcCompat="@drawable/ic_googleplus_icon_custom"
             android:contentDescription="@string/image_default_content_description"/>
 
