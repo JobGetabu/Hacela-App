@@ -27,7 +27,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.job.hacelaapp.R;
 import com.ybs.passwordstrengthmeter.PasswordStrength;
@@ -164,27 +166,41 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
                                 String mCurrentUserid = mAuth.getCurrentUser().getUid();
 
                                 Map<String, Object> userMap = new HashMap<>();
-
                                 userMap.put("device_token",device_token);
                                 userMap.put("displayname",displayname);
-                                userMap.put("phonenumber",phonenumber);
                                 userMap.put("photourl","");
 
-                                mFirestore.collection("Users").document(mCurrentUserid).set(userMap)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> dbtask) {
-                                                if(dbtask.isSuccessful()){
-                                                    mdialog.dismiss();
-                                                    sendToLogin();
-                                                }else {
-                                                    mdialog.dismiss();
-                                                    Log.d(TAG, "onComplete: error"+dbtask.getException().toString());
-                                                    Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_LONG).show();
-                                                }
-                                            }
-                                        });
+                                Map<String, Object> userAuthMap = new HashMap<>();
+                                userAuthMap.put("phonenumber",phonenumber);
+                                userAuthMap.put("fbConnected",false);
+                                userAuthMap.put("GoogleConnected",false);
 
+
+                                // Get a new write batch
+                                WriteBatch batch = mFirestore.batch();
+
+                                // Set the value of 'Users'
+                                DocumentReference UsersRef = mFirestore.collection("Users").document(mCurrentUserid);
+                                batch.set(UsersRef, userMap);
+
+                                // Set the value of 'UsersAuth'
+                                DocumentReference UsersAuthRef = mFirestore.collection("UsersAuth").document(mCurrentUserid);
+                                batch.set(UsersAuthRef, userAuthMap);
+
+                                // Commit the batch
+                                batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> dbtask) {
+                                        if(dbtask.isSuccessful()){
+                                            mdialog.dismiss();
+                                            sendToLogin();
+                                        }else {
+                                            mdialog.dismiss();
+                                            Log.d(TAG, "onComplete: error"+dbtask.getException().toString());
+                                            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
                             }else {
                                 UserAuthToastExceptions(authtask);
                                 mdialog.dismiss();

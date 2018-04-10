@@ -26,8 +26,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.mainactivity_toolbar)
     Toolbar mToolBar;
 
-    public static final String FACEBOOK_SIGN_IN = "FACEBOOK_SIGN_IN";
-    String mGOOGLE_SIGN_IN;
+
     String mFACEBOOK_SIGN_IN;
 
 
@@ -41,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolBar);
-        mFACEBOOK_SIGN_IN = getIntent().getStringExtra(FACEBOOK_SIGN_IN);
-
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))

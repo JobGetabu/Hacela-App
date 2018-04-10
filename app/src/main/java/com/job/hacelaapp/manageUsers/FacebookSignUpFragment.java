@@ -52,7 +52,6 @@ public class FacebookSignUpFragment extends Fragment {
     private View mRootView;
 
     public static final String TAG = "FacebookSignUpFragment";
-    public static final String FACEBOOK_SIGN_IN = "FACEBOOK_SIGN_IN";
 
     CallbackManager mCallbackManager;
     private FirebaseAuth mAuth;
@@ -83,7 +82,6 @@ public class FacebookSignUpFragment extends Fragment {
     private void sendToMain(){
 
         Intent mainIntent = new Intent(getActivity(), MainActivity.class);
-        mainIntent.putExtra(FACEBOOK_SIGN_IN,"FACEBOOK_SIGN_IN");
         //since we cnt call finish
         mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainIntent);
@@ -176,7 +174,6 @@ public class FacebookSignUpFragment extends Fragment {
 
                             userMap.put("device_token",device_token);
                             userMap.put("displayname",user.getDisplayName());
-                            userMap.put("phonenumber","");
                             userMap.put("photourl",user.getPhotoUrl().toString());
 
                             mFirestore.collection("Users").document(mCurrentUserid).set(userMap)
@@ -194,6 +191,7 @@ public class FacebookSignUpFragment extends Fragment {
 
                         } else {
                             // If sign in fails, display a message to the user.
+                            UserAuthToastExceptions(task);
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(getActivity(), "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
