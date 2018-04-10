@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">HacelaApp</string>
 
+    <!--facebook-->
     <string name="facebook_app_id">179544296012408</string>
     <string name="fb_login_protocol_scheme">fb179544296012408</string>
+
+    <!--google-->
+    <!--<string name="default_web_client_id">627740910048-hl9mua299ihac1mrm1r8n1smn0jg056b.apps.googleusercontent.com</string>-->
 
 
     <string name="sign_up_with">Sign up with</string>
