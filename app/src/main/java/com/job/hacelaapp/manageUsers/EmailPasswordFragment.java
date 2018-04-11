@@ -69,6 +69,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
+
     private ProgressDialog  mdialog;
 
     public EmailPasswordFragment() {

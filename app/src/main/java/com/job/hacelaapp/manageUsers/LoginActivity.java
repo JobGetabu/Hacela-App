@@ -1,7 +1,9 @@
 package com.job.hacelaapp.manageUsers;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -95,26 +97,31 @@ public class LoginActivity extends AppCompatActivity {
     private void mPageChange(int position){
         switch (position){
             case 0:
-                lbtnEmail.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_message_white));
-                lbtnFacebook.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_fb_icon_custom));
-                lbtnGoogle.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_googleplus_icon_custom));
+                lbtnEmail.setImageDrawable(fetchDrawable(R.drawable.ic_message_white));
+                lbtnFacebook.setImageDrawable(fetchDrawable(R.drawable.ic_fb_icon_custom));
+                lbtnGoogle.setImageDrawable(fetchDrawable(R.drawable.ic_googleplus_icon_custom));
                 break;
 
             case 1:
-                lbtnFacebook.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_fb_icon_white));
-                lbtnEmail.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_message_custom));
-                lbtnGoogle.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_googleplus_icon_custom));
+                lbtnFacebook.setImageDrawable(fetchDrawable(R.drawable.ic_fb_icon_white));
+                lbtnEmail.setImageDrawable(fetchDrawable(R.drawable.ic_message_custom));
+                lbtnGoogle.setImageDrawable(fetchDrawable(R.drawable.ic_googleplus_icon_custom));
                 break;
 
             case 2:
-                lbtnGoogle.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_googleplus_icon_white));
-                lbtnEmail.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_message_custom));
-                lbtnFacebook.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_fb_icon_custom));
+                lbtnGoogle.setImageDrawable(fetchDrawable(R.drawable.ic_googleplus_icon_white));
+                lbtnEmail.setImageDrawable(fetchDrawable(R.drawable.ic_message_custom));
+                lbtnFacebook.setImageDrawable(fetchDrawable(R.drawable.ic_fb_icon_custom));
                 break;
             default:
                 break;
 
         }
+    }
+
+    private Drawable fetchDrawable(@DrawableRes int mdrawable) {
+        // Facade Design Pattern
+        return ContextCompat.getDrawable(this, mdrawable);
     }
 
     @Override

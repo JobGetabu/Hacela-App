@@ -1,6 +1,9 @@
 package com.job.hacelaapp.manageUsers;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -64,6 +67,16 @@ public class RegisterActivity extends AppCompatActivity {
         mPageChange(2);
     }
 
+    private int fetchColor(@ColorRes int color) {
+        return ContextCompat.getColor(this, color);
+    }
+
+    private Drawable fetchDrawable(@DrawableRes int mdrawable) {
+        // Facade Design Pattern
+        return ContextCompat.getDrawable(this, mdrawable);
+    }
+
+
     ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -85,21 +98,21 @@ public class RegisterActivity extends AppCompatActivity {
         private void mPageChange(int position){
             switch (position){
                 case 0:
-                    btnEmail.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_message_white));
-                    btnFacebook.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_fb_icon_custom));
-                    btnGoogle.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_googleplus_icon_custom));
+                    btnEmail.setImageDrawable(fetchDrawable(R.drawable.ic_message_white));
+                    btnFacebook.setImageDrawable(fetchDrawable(R.drawable.ic_fb_icon_custom));
+                    btnGoogle.setImageDrawable(fetchDrawable(R.drawable.ic_googleplus_icon_custom));
                     break;
 
                 case 1:
-                    btnFacebook.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_fb_icon_white));
-                    btnEmail.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_message_custom));
-                    btnGoogle.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_googleplus_icon_custom));
+                    btnFacebook.setImageDrawable(fetchDrawable(R.drawable.ic_fb_icon_white));
+                    btnEmail.setImageDrawable(fetchDrawable(R.drawable.ic_message_custom));
+                    btnGoogle.setImageDrawable(fetchDrawable(R.drawable.ic_googleplus_icon_custom));
                     break;
 
                 case 2:
-                    btnGoogle.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_googleplus_icon_white));
-                    btnEmail.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_message_custom));
-                    btnFacebook.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_fb_icon_custom));
+                    btnGoogle.setImageDrawable(fetchDrawable(R.drawable.ic_googleplus_icon_white));
+                    btnEmail.setImageDrawable(fetchDrawable(R.drawable.ic_message_custom));
+                    btnFacebook.setImageDrawable(fetchDrawable(R.drawable.ic_fb_icon_custom));
                     break;
                     default:
                         break;

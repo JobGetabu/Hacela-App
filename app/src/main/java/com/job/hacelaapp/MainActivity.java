@@ -25,9 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.mainactivity_toolbar)
     Toolbar mToolBar;
-
-
-    String mFACEBOOK_SIGN_IN;
+    
 
 
     GoogleSignInClient mGoogleSignInClient;
@@ -50,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         //firebase
         mAuth = FirebaseAuth.getInstance();
+
 
 
     }
