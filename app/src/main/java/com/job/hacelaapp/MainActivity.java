@@ -28,6 +28,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.job.hacelaapp.adapter.BottomBarAdapter;
 import com.job.hacelaapp.adapter.NoSwipePager;
+import com.job.hacelaapp.hacelaCore.AccountFragment;
+import com.job.hacelaapp.hacelaCore.ChatFragment;
+import com.job.hacelaapp.hacelaCore.HomeFragment;
+import com.job.hacelaapp.hacelaCore.ProfileFragment;
 import com.job.hacelaapp.manageUsers.LoginActivity;
 
 import butterknife.BindView;
@@ -83,12 +87,11 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigation.addItem(item4);
 
         mBottomNavigation.setOnTabSelectedListener(onTabSelectedListener);
-        mBottomNavigation.setCurrentItem(1);
 
         mBottomNavigation.setDefaultBackgroundColor(Color.WHITE);
-        mBottomNavigation.setAccentColor(fetchColor(R.color.colorPrimary));
         mBottomNavigation.setInactiveColor(fetchColor(R.color.bottomtab_item_resting));
 
+        mBottomNavigation.setAccentColor(fetchColor(R.color.colorPrimary));
         mBottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         //translucent bottom navigation
         //mBottomNavigation.setTranslucentNavigationEnabled(true);
@@ -106,7 +109,20 @@ public class MainActivity extends AppCompatActivity {
 
         pagerAdapter = new BottomBarAdapter(getSupportFragmentManager());
 
+        //disable swiping
+        mNoSwipePager.setPagingEnabled(false);
         //add fragments here
+        pagerAdapter.addFragments(new ProfileFragment());
+        pagerAdapter.addFragments(new HomeFragment());
+        pagerAdapter.addFragments(new AccountFragment());
+        pagerAdapter.addFragments(new ChatFragment());
+
+        mNoSwipePager.setAdapter(pagerAdapter);
+
+        mNoSwipePager.setCurrentItem(2);
+        mBottomNavigation.setCurrentItem(1);
+
+        //click events
     }
 
     private Drawable fetchDrawable(@DrawableRes int mdrawable) {
@@ -182,20 +198,21 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onTabSelected(int position, boolean wasSelected) {
 
-            //TODO change fragments
-
+            //change fragments
+            if (!wasSelected) {
+                mNoSwipePager.setCurrentItem(position);
+            }
 
             // remove notification badge..
             int lastItemPos = mBottomNavigation.getItemsCount() - 1;
-            if (notificationVisible && position == lastItemPos)
+            if (notificationVisible && position == lastItemPos) {
                 mBottomNavigation.setNotification(new AHNotification(), lastItemPos);
-
-
-
+            }
 
             return true;
         }
     };
+
 
     private void createFakeNotification() {
         new Handler().postDelayed(new Runnable() {
