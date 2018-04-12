@@ -26,6 +26,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.job.hacelaapp.adapter.BottomBarAdapter;
+import com.job.hacelaapp.adapter.NoSwipePager;
 import com.job.hacelaapp.manageUsers.LoginActivity;
 
 import butterknife.BindView;
@@ -37,12 +39,15 @@ public class MainActivity extends AppCompatActivity {
     Toolbar mToolBar;
     @BindView(R.id.mainactivity_bottom_navigation)
     AHBottomNavigation mBottomNavigation;
+    @BindView(R.id.mainactivity_noswipepager)
+    NoSwipePager mNoSwipePager;
 
 
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
 
     private boolean notificationVisible = false;
+    private BottomBarAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +102,11 @@ public class MainActivity extends AppCompatActivity {
         //mBottomNavigation.setColored(true);
         // Colors for selected (active) and non-selected items (in color reveal mode).
         //mBottomNavigation.setColoredModeColors(Color.WHITE,fetchColor(R.color.bottomtab_item_resting));
+
+
+        pagerAdapter = new BottomBarAdapter(getSupportFragmentManager());
+
+        //add fragments here
     }
 
     private Drawable fetchDrawable(@DrawableRes int mdrawable) {

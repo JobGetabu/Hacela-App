@@ -14,7 +14,13 @@
         android:id="@+id/mainactivity_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <com.job.hacelaapp.adapter.NoSwipePager
+            android:id="@+id/mainactivity_noswipepager"
+            android:layout_width="match_parent"
+            android:layout_height="501dp" />
+    </FrameLayout>
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/mainactivity_bottom_navigation"
         android:layout_width="match_parent"

@@ -10,7 +10,6 @@
     <string name="twitter_consumer_secret" translatable="false">5NA95Doqga0JKGPIwUr7HN65kadYVHB2dEDNvsVCDPLRFavZ08</string>
 
 
-
     <string name="sign_up_with">Sign up with</string>
     <string name="sign_up_with_facebook">Sign up with facebook</string>
     <string name="sign_up_with_google">Sign up with Google</string>
@@ -38,4 +37,7 @@
     <string name="bottomnav_title_1">Home</string>
     <string name="bottomnav_title_2">Account</string>
     <string name="bottomnav_title_3">Chat</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
