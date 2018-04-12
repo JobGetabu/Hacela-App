@@ -1,13 +1,23 @@
 package com.job.hacelaapp;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -25,11 +35,14 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.mainactivity_toolbar)
     Toolbar mToolBar;
-    
+    @BindView(R.id.mainactivity_bottom_navigation)
+    AHBottomNavigation mBottomNavigation;
 
 
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
+
+    private boolean notificationVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +62,55 @@ public class MainActivity extends AppCompatActivity {
         //firebase
         mAuth = FirebaseAuth.getInstance();
 
+        //bottom nav items
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_0),
+                fetchDrawable(R.drawable.ic_edit_profile));
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_1),
+                fetchDrawable(R.drawable.ic_home_trans));
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_2),
+                fetchDrawable(R.drawable.ic_account));
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_3),
+                fetchDrawable(R.drawable.ic_chat_trans));
+
+        mBottomNavigation.addItem(item1);
+        mBottomNavigation.addItem(item2);
+        mBottomNavigation.addItem(item3);
+        mBottomNavigation.addItem(item4);
+
+        mBottomNavigation.setOnTabSelectedListener(onTabSelectedListener);
+        mBottomNavigation.setCurrentItem(1);
+
+        mBottomNavigation.setDefaultBackgroundColor(Color.WHITE);
+        mBottomNavigation.setAccentColor(fetchColor(R.color.colorPrimary));
+        mBottomNavigation.setInactiveColor(fetchColor(R.color.bottomtab_item_resting));
+
+        mBottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+        //translucent bottom navigation
+        //mBottomNavigation.setTranslucentNavigationEnabled(true);
+
+        //Quick Return Animation
+        mBottomNavigation.setBehaviorTranslationEnabled(true);
 
 
+        //Color ripple effect will enable it at the finish of design
+        //  Enables color Reveal effect
+        //mBottomNavigation.setColored(true);
+        // Colors for selected (active) and non-selected items (in color reveal mode).
+        //mBottomNavigation.setColoredModeColors(Color.WHITE,fetchColor(R.color.bottomtab_item_resting));
     }
 
+    private Drawable fetchDrawable(@DrawableRes int mdrawable) {
+        // Facade Design Pattern
+        return ContextCompat.getDrawable(this, mdrawable);
+    }
+    private String fetchString(@StringRes int mystring) {
+        // Facade Design Pattern
+        return getResources().getString(mystring);
+    }
+    private int fetchColor(@ColorRes int color) {
+        // Facade Design Pattern
+        return ContextCompat.getColor(this,color);
+    }
     @Override
     public void onStart() {
         super.onStart();
@@ -108,5 +166,40 @@ public class MainActivity extends AppCompatActivity {
 
     private void signOutFaceBook(){
         LoginManager.getInstance().logOut();
+    }
+
+    AHBottomNavigation.OnTabSelectedListener onTabSelectedListener = new AHBottomNavigation.OnTabSelectedListener() {
+        @Override
+        public boolean onTabSelected(int position, boolean wasSelected) {
+
+            //TODO change fragments
+
+
+            // remove notification badge..
+            int lastItemPos = mBottomNavigation.getItemsCount() - 1;
+            if (notificationVisible && position == lastItemPos)
+                mBottomNavigation.setNotification(new AHNotification(), lastItemPos);
+
+
+
+
+            return true;
+        }
+    };
+
+    private void createFakeNotification() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                AHNotification notification = new AHNotification.Builder()
+                        .setText("2")
+                        .setBackgroundColor(fetchColor(R.color.colorAccent))
+                        .setTextColor(Color.BLACK)
+                        .build();
+                // Adding notification to last item.
+                mBottomNavigation.setNotification(notification, mBottomNavigation.getItemsCount() - 1);
+                notificationVisible = true;
+            }
+        }, 1000);
     }
 }

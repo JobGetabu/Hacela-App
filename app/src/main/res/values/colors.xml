@@ -21,4 +21,11 @@
     <color name="twitterGreen">#23B0E6</color>
     <color name="twitterDarkGreen">#177599</color>
 
+    <color name="bottomtab_item_resting">#36000000</color>
+    <color name="bottomtab_item_disabled">#46000000</color>
+
+    <color name="bottomtab_0">#6CCC3D</color>
+    <color name="bottomtab_1">#EA5C46</color>
+    <color name="bottomtab_2">#33b3cc</color>
+
 </resources>

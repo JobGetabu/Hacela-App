@@ -20,5 +20,9 @@
         <item name="colorControlActivated">@color/colorAppBarGrey</item>
     </style>
 
+    <!--BottomNavigation-->
+    <style name="AppTheme.TranslucentNavigation" parent="AppTheme">
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
     <color name="lightGrey">#B6B2B2</color>
 </resources>
