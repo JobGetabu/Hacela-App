@@ -5,11 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".hacelaCore.ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/profile_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Profile fragment"
-        android:textSize="30sp"/>
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"/>
 
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="profile"
+        android:textSize="64sp"
+        android:layout_gravity="center_vertical"/>
 </FrameLayout>

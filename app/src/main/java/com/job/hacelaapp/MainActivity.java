@@ -12,8 +12,10 @@ import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -28,6 +30,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.job.hacelaapp.adapter.BottomBarAdapter;
 import com.job.hacelaapp.adapter.NoSwipePager;
+import com.job.hacelaapp.hacelaCore.AccountFragment;
+import com.job.hacelaapp.hacelaCore.ChatFragment;
+import com.job.hacelaapp.hacelaCore.HomeFragment;
+import com.job.hacelaapp.hacelaCore.ProfileFragment;
 import com.job.hacelaapp.manageUsers.LoginActivity;
 
 import butterknife.BindView;
@@ -35,13 +41,14 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.mainactivity_toolbar)
-    Toolbar mToolBar;
+   /* @BindView(R.id.mainactivity_toolbar)
+    Toolbar mToolbar;*/
     @BindView(R.id.mainactivity_bottom_navigation)
     AHBottomNavigation mBottomNavigation;
     @BindView(R.id.mainactivity_noswipepager)
     NoSwipePager mNoSwipePager;
 
+    public static final String TAG = "MainActivity";
 
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
@@ -55,21 +62,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        setSupportActionBar(mToolBar);
+
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         //firebase
         mAuth = FirebaseAuth.getInstance();
 
         //bottom nav items
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_0),
-                fetchDrawable(R.drawable.ic_edit_profile));
+                fetchDrawable(R.drawable.ic_profile_trans));
         AHBottomNavigationItem item2 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_1),
                 fetchDrawable(R.drawable.ic_home_trans));
         AHBottomNavigationItem item3 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_2),
@@ -83,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
         mBottomNavigation.addItem(item4);
 
         mBottomNavigation.setOnTabSelectedListener(onTabSelectedListener);
-        mBottomNavigation.setCurrentItem(1);
 
         mBottomNavigation.setDefaultBackgroundColor(Color.WHITE);
         mBottomNavigation.setAccentColor(fetchColor(R.color.colorPrimary));
@@ -101,11 +107,20 @@ public class MainActivity extends AppCompatActivity {
         //  Enables color Reveal effect
         //mBottomNavigation.setColored(true);
         // Colors for selected (active) and non-selected items (in color reveal mode).
-        //mBottomNavigation.setColoredModeColors(Color.WHITE,fetchColor(R.color.bottomtab_item_resting));
+        //mBottomNavigation.setColoredModeColors(fetchColor(R.color.colorPrimary),fetchColor(R.color.bottomtab_item_resting));
 
+        mNoSwipePager.setPagingEnabled(false);
 
         pagerAdapter = new BottomBarAdapter(getSupportFragmentManager());
+        pagerAdapter.addFragments(new ProfileFragment());
+        pagerAdapter.addFragments(new HomeFragment());
+        pagerAdapter.addFragments(new AccountFragment());
+        pagerAdapter.addFragments(new ChatFragment());
 
+        mNoSwipePager.setAdapter(pagerAdapter);
+
+        mBottomNavigation.setCurrentItem(1);
+        mNoSwipePager.setCurrentItem(1);
         //add fragments here
     }
 
@@ -113,21 +128,24 @@ public class MainActivity extends AppCompatActivity {
         // Facade Design Pattern
         return ContextCompat.getDrawable(this, mdrawable);
     }
+
     private String fetchString(@StringRes int mystring) {
         // Facade Design Pattern
         return getResources().getString(mystring);
     }
+
     private int fetchColor(@ColorRes int color) {
         // Facade Design Pattern
-        return ContextCompat.getColor(this,color);
+        return ContextCompat.getColor(this, color);
     }
+
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null){
+        if (currentUser == null) {
             sendToLogin();
         }
     }
@@ -136,31 +154,6 @@ public class MainActivity extends AppCompatActivity {
         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(loginIntent);
         finish();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-         super.onCreateOptionsMenu(menu);
-         getMenuInflater().inflate(R.menu.main_home_menu,menu);
-         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-         super.onOptionsItemSelected(item);
-         int id = item.getItemId();
-         switch (id){
-             case R.id.main_home_menu_signout:
-                 mAuth.signOut();
-                 signOutGoogle();
-                 signOutFaceBook();
-
-                 sendToLogin();
-                 //TODO: sign out other providers too
-                 break;
-         }
-
-         return true;
     }
 
     private void signOutGoogle() {
@@ -174,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void signOutFaceBook(){
+    private void signOutFaceBook() {
         LoginManager.getInstance().logOut();
     }
 
@@ -183,15 +176,16 @@ public class MainActivity extends AppCompatActivity {
         public boolean onTabSelected(int position, boolean wasSelected) {
 
             //TODO change fragments
-
+            if (!wasSelected) {
+                mNoSwipePager.setCurrentItem(position);
+                Log.d(TAG, "onTabSelected: AT :" + position);
+            }
 
             // remove notification badge..
             int lastItemPos = mBottomNavigation.getItemsCount() - 1;
-            if (notificationVisible && position == lastItemPos)
+            if (notificationVisible && position == lastItemPos) {
                 mBottomNavigation.setNotification(new AHNotification(), lastItemPos);
-
-
-
+            }
 
             return true;
         }
@@ -211,5 +205,37 @@ public class MainActivity extends AppCompatActivity {
                 notificationVisible = true;
             }
         }, 1000);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_home_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.main_home_menu_signout:
+                mAuth.signOut();
+                signOutGoogle();
+                signOutFaceBook();
+                sendToLogin();
+                
+            case R.id.profile_menu_edit:
+                Toast.makeText(this, "TODO: Edit profile", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        return true;
+    }
+
+    public Toolbar setToolbar(Toolbar toolbar) {
+        setSupportActionBar(toolbar);
+        supportInvalidateOptionsMenu();
+        return toolbar;
     }
 }

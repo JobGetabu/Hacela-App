@@ -14,7 +14,6 @@ import com.job.hacelaapp.R;
  */
 public class HomeFragment extends Fragment {
 
-
     private  View mRootView;
     public HomeFragment() {
         // Required empty public constructor
@@ -27,8 +26,8 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         mRootView = inflater.inflate(R.layout.fragment_home, container, false);
 
+        setHasOptionsMenu(true);
 
         return mRootView;
     }
-
 }
