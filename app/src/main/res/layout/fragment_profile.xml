@@ -3,12 +3,70 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".hacelaCore.ProfileFragment">
 
-    <android.support.v7.widget.AppCompatTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="profile"
-        android:textSize="64sp"
-        android:layout_gravity="center_vertical"/>
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapsingToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                android:fitsSystemWindows="true"
+                app:contentScrim="?attr/colorPrimary"
+                app:expandedTitleMarginStart="48dp"
+                app:expandedTitleMarginEnd="64dp"
+                app:title="@string/bottomnav_title_0">
+
+                <android.support.v7.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/frg_profile_image"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="18dp"
+                        app:srcCompat="@drawable/ic_profile_placeholder"
+                        app:civ_border_color="@android:color/white"
+                        app:civ_border_width="2dp" />
+                </android.support.v7.widget.LinearLayoutCompat>
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/profile_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="bottom"
+                app:tabMode="scrollable"
+                app:tabContentStart="72dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="8dp"
+                android:text="@string/toremove"
+                android:padding="16dp"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                android:textSize="28sp"
+                />
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.design.widget.CoordinatorLayout>
 </FrameLayout>

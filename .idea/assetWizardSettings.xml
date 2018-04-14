@@ -83,9 +83,9 @@
                           <map>
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="400233" />
-                            <entry key="outputName" value="ic_edit_profile" />
+                            <entry key="outputName" value="ic_profile_placeholder" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\getab\Desktop\Projects\ProjectHacela\Design\icon assets\Edit File.svg" />
+                            <entry key="sourceFile" value="C:\Users\getab\Desktop\Projects\ProjectHacela\Design\icon assets\ic_person.svg" />
                           </map>
                         </option>
                       </PersistentState>

@@ -8,21 +8,18 @@
             android:layout_height="wrap_content">
 
             <android.support.v7.widget.Toolbar
+                android:id="@+id/mainactivity_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/mainactivity_toolbar"/>
+                android:theme="@style/ToolbarTheme" />
         </android.support.design.widget.AppBarLayout>
-    <FrameLayout
-        android:id="@+id/mainactivity_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.job.hacelaapp.adapter.NoSwipePager
             android:id="@+id/mainactivity_noswipepager"
             android:layout_width="match_parent"
-            android:layout_height="501dp" />
-    </FrameLayout>
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/mainactivity_bottom_navigation"
         android:layout_width="match_parent"

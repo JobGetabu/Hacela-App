@@ -24,5 +24,25 @@
     <style name="AppTheme.TranslucentNavigation" parent="AppTheme">
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
-    <color name="lightGrey">#B6B2B2</color>
+
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Dark">
+        <!-- android:textColorPrimary is the color of the title text in the Toolbar  -->
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <!-- actionMenuTextColor is the color of the text of action (menu) items  -->
+        <item name="actionMenuTextColor">@android:color/black</item>
+        <!-- Tints the input fields like checkboxes and text fields -->
+        <item name="colorAccent">@color/colorAccent</item>
+        <!-- Applies to views in their normal state. -->
+        <item name="colorControlNormal">@color/lightGrey</item>
+        <!-- Applies to views in their activated state (i.e checked or switches) -->
+        <item name="colorControlActivated">@android:color/white</item>
+        <!-- Applied to framework control highlights (i.e ripples or list selectors) -->
+        <item name="colorControlHighlight">@android:color/darker_gray</item>
+
+        <!-- Enable these below if you want clicking icons to trigger a ripple effect -->
+
+        <item name="selectableItemBackground">?android:selectableItemBackground</item>
+        <item name="selectableItemBackgroundBorderless">?android:selectableItemBackground</item>
+
+    </style>
 </resources>

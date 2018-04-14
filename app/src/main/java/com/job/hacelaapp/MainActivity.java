@@ -7,24 +7,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
-import com.facebook.login.LoginManager;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.job.hacelaapp.adapter.BottomBarAdapter;
@@ -49,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
 
-    GoogleSignInClient mGoogleSignInClient;
+
     private FirebaseAuth mAuth;
 
     private boolean notificationVisible = false;
@@ -62,14 +53,6 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
-
-        // Configure Google Sign In
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         //firebase
         mAuth = FirebaseAuth.getInstance();
@@ -110,6 +93,9 @@ public class MainActivity extends AppCompatActivity {
         //mBottomNavigation.setColoredModeColors(fetchColor(R.color.colorPrimary),fetchColor(R.color.bottomtab_item_resting));
 
         mNoSwipePager.setPagingEnabled(false);
+
+        //caches data in fragments
+        mNoSwipePager.setOffscreenPageLimit(4);
 
         pagerAdapter = new BottomBarAdapter(getSupportFragmentManager());
         pagerAdapter.addFragments(new ProfileFragment());
@@ -156,20 +142,7 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    private void signOutGoogle() {
 
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // ...
-                    }
-                });
-    }
-
-    private void signOutFaceBook() {
-        LoginManager.getInstance().logOut();
-    }
 
     AHBottomNavigation.OnTabSelectedListener onTabSelectedListener = new AHBottomNavigation.OnTabSelectedListener() {
         @Override
@@ -185,6 +158,17 @@ public class MainActivity extends AppCompatActivity {
             int lastItemPos = mBottomNavigation.getItemsCount() - 1;
             if (notificationVisible && position == lastItemPos) {
                 mBottomNavigation.setNotification(new AHNotification(), lastItemPos);
+            }
+
+            //fragment change logic
+            switch (position){
+                case 0:
+                    getSupportActionBar().setTitle("");
+                    break;
+                case 1:
+                    getSupportActionBar().setTitle("Hacela");
+                    break;
+
             }
 
             return true;
@@ -214,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }*/
 
-    @Override
+   /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         int id = item.getItemId();
@@ -224,18 +208,12 @@ public class MainActivity extends AppCompatActivity {
                 signOutGoogle();
                 signOutFaceBook();
                 sendToLogin();
-                
-            case R.id.profile_menu_edit:
-                Toast.makeText(this, "TODO: Edit profile", Toast.LENGTH_SHORT).show();
                 break;
+            *//*case R.id.profile_menu_edit:
+                Toast.makeText(this, "TODO: Edit profile", Toast.LENGTH_SHORT).show();
+                break;*//*
         }
 
         return true;
-    }
-
-    public Toolbar setToolbar(Toolbar toolbar) {
-        setSupportActionBar(toolbar);
-        supportInvalidateOptionsMenu();
-        return toolbar;
-    }
+    }*/
 }
