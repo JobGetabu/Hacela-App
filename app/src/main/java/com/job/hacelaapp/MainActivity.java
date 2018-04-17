@@ -10,8 +10,8 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -31,8 +31,6 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.mainactivity_toolbar)
-    Toolbar mToolbar;
     @BindView(R.id.mainactivity_bottom_navigation)
     AHBottomNavigation mBottomNavigation;
     @BindView(R.id.mainactivity_noswipepager)
@@ -51,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        setSupportActionBar(mToolbar);
 
         //firebase
         mAuth = FirebaseAuth.getInstance();
@@ -107,7 +103,8 @@ public class MainActivity extends AppCompatActivity {
 
         mBottomNavigation.setCurrentItem(1);
         mNoSwipePager.setCurrentItem(1);
-        //add fragments here
+
+        createFakeNotification();
     }
 
     private Drawable fetchDrawable(@DrawableRes int mdrawable) {
@@ -163,10 +160,7 @@ public class MainActivity extends AppCompatActivity {
             //fragment change logic
             switch (position){
                 case 0:
-                    getSupportActionBar().setTitle("");
-                    break;
-                case 1:
-                    getSupportActionBar().setTitle("Hacela");
+
                     break;
 
             }
@@ -192,11 +186,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_home_menu, menu);
         return super.onCreateOptionsMenu(menu);
-    }*/
+    }
 
    /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -83,9 +83,11 @@
                           <map>
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="400233" />
-                            <entry key="outputName" value="ic_profile_placeholder" />
+                            <entry key="height" value="48" />
+                            <entry key="outputName" value="gmail_icon" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\getab\Desktop\Projects\ProjectHacela\Design\icon assets\ic_person.svg" />
+                            <entry key="sourceFile" value="C:\Users\getab\Desktop\Projects\ProjectHacela\Design\icon assets\gmail_icon.svg" />
+                            <entry key="width" value="48" />
                           </map>
                         </option>
                       </PersistentState>

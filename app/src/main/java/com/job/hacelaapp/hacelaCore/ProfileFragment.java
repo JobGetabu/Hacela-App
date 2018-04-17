@@ -2,8 +2,8 @@ package com.job.hacelaapp.hacelaCore;
 
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,8 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.adapter.NoSwipePager;
+import com.job.hacelaapp.adapter.ProfileSliderAdapter;
+import com.job.hacelaapp.profileCore.DetailsFragment;
+import com.job.hacelaapp.profileCore.GroupsFragment;
+import com.job.hacelaapp.profileCore.StatsFragment;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -21,8 +28,17 @@ import butterknife.ButterKnife;
  */
 public class ProfileFragment extends Fragment {
 
+    @BindView(R.id.profile_pager_toolbar)
+    android.support.v7.widget.Toolbar mToolbar;
+    @BindView(R.id.profile_sliding_tabs)
+    TabLayout tabLayout;
+    @BindView(R.id.profile_noswipepager)
+    NoSwipePager mNoSwipePager;
+
     private View mRootView;
-    private AppCompatActivity mActivity;
+
+    private ProfileSliderAdapter profileSliderAdapter;
+
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -34,8 +50,21 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         mRootView = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this,mRootView);
+
+        ((MainActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Profile");
+
         setHasOptionsMenu(true);
 
+        //add fragments to adapter
+        profileSliderAdapter = new ProfileSliderAdapter(getChildFragmentManager());
+        profileSliderAdapter.addFragments(new DetailsFragment());
+        profileSliderAdapter.addFragments(new GroupsFragment());
+        profileSliderAdapter.addFragments(new StatsFragment());
+
+        mNoSwipePager.setAdapter(profileSliderAdapter);
+        mNoSwipePager.setPagingEnabled(true);
+        tabLayout.setupWithViewPager(mNoSwipePager);
 
         return mRootView;
     }
@@ -54,11 +83,13 @@ public class ProfileFragment extends Fragment {
         switch (id) {
             case R.id.profile_menu_edit:
                 Toast.makeText(getActivity(), "TODO: Override In Profile Edit profile", Toast.LENGTH_SHORT).show();
+                DetailsFragment.makesnack();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
 
 
