@@ -52,7 +52,7 @@ public class ProfileFragment extends Fragment {
         ButterKnife.bind(this,mRootView);
 
         ((MainActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Profile");
+        //((MainActivity) getActivity()).getSupportActionBar().setTitle("Profile");
 
         setHasOptionsMenu(true);
 

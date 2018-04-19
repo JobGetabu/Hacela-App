@@ -7,6 +7,7 @@
 
     <!-- Red -->
     <color name="colorAppBarGrey">#400233</color>
+    <color name="colorAppBarDark">#ed920662</color>
     <color name="colorDarkRed">#B20606</color>
     <color name="googleRed">#DC4B38</color>
     <color name="googleDarkRed">#923225</color>
