@@ -3,6 +3,7 @@ package com.job.hacelaapp.manageUsers;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,6 +40,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -151,12 +152,19 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
         if(!TextUtils.isEmpty(displayname) && !TextUtils.isEmpty(phonenumber) && !TextUtils.isEmpty(email)
                 && !TextUtils.isEmpty(password)){
 
-            //TODO refactor with sweet dialogue
+            //TODO: refactor with sweet dialogue
+            /*
             mdialog = new ProgressDialog(getActivity());
             mdialog.setTitle("Registration");
             mdialog.setMessage("Please wait while we create your account...");
             mdialog.setCanceledOnTouchOutside(false);
             mdialog.show();
+            */
+            final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            pDialog.setTitleText("Creating Account...");
+            pDialog.setCancelable(false);
+            pDialog.show();
 
             mAuth.createUserWithEmailAndPassword(email,password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -168,7 +176,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
                                 String mCurrentUserid = mAuth.getCurrentUser().getUid();
 
                                 Map<String, Object> userMap = new HashMap<>();
-                                userMap.put("device_token",device_token);
+                                userMap.put("devicetoken",device_token);
                                 userMap.put("displayname",displayname);
                                 userMap.put("photourl","");
 
@@ -194,27 +202,44 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> dbtask) {
                                         if(dbtask.isSuccessful()){
-                                            mdialog.dismiss();
+                                            //mdialog.dismiss();
+                                            pDialog.dismissWithAnimation();
                                             sendToLogin();
                                         }else {
-                                            mdialog.dismiss();
+                                            //mdialog.dismiss();
+                                            pDialog.dismiss();
                                             Log.d(TAG, "onComplete: error"+dbtask.getException().toString());
-                                            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_LONG).show();
+                                            errorPrompt();
                                         }
                                     }
                                 });
                             }else {
+                                //mdialog.dismiss();
+                                pDialog.dismiss();
                                 UserAuthToastExceptions(authtask);
-                                mdialog.dismiss();
                             }
                         }
                     });
 
 
         }else {
-            //TODO: Error prompting logic
+            //TODO: Error prompting logic input validation
         }
 
+    }
+
+    private void errorPrompt(){
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Oops...")
+                .setContentText("Something went wrong!")
+                .show();
+    }
+
+    private void errorPrompt(String title,String message){
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                .setTitleText(title)
+                .setContentText(message)
+                .show();
     }
 
     private void sendToLogin() {
@@ -235,6 +260,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
             error = "Unknown Error Occured";
             e.printStackTrace();
         }
-        Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
+        errorPrompt("Oops...",error);
     }
 }
