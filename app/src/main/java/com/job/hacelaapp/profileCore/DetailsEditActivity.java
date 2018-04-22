@@ -54,6 +54,8 @@ public class DetailsEditActivity extends AppCompatActivity {
     TextView mTypeOfBiz;
     @BindView(R.id.details_tv_typeofbiz_line)
     View mTypeOfBizLine;
+    @BindView(R.id.details_tv_profession_line)
+    View mProfessionLine;
 
     @BindView(R.id.detailsedit_radioSex)
     RadioGroup radioSexGroup;
@@ -122,20 +124,15 @@ public class DetailsEditActivity extends AppCompatActivity {
     }
     */
 
-    private void professionSelectedEvent(){
-
-    }
-
-    @OnClick(R.id.details_tv_profession)
-    public void setmProfessionClick(){
-
+    @OnClick(R.id.details_tv_income)
+    public void setmIncomeClick(){
         //Creating the instance of PopupMenu
-        PopupMenu popup = new PopupMenu(DetailsEditActivity.this, mProfession);
+        PopupMenu popup = new PopupMenu(DetailsEditActivity.this, mProfessionLine);
         //Inflating the Popup using xml file
         popup.getMenuInflater()
                 .inflate(R.menu.income_menu, popup.getMenu());
 
-        popup.setGravity(Gravity.CENTER | Gravity.END);
+        popup.setGravity(Gravity.END);
         //registering popup with OnMenuItemClickListener
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {

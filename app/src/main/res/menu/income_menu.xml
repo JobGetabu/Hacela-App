@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/one"
-        android:title="One"/>
+
 
     <item
-        android:id="@+id/two"
-        android:title="Two"/>
+        android:id="@+id/income1"
+        android:title="Below 10k"/>
 
     <item
-        android:id="@+id/three"
-        android:title="Three"/>
+        android:id="@+id/income2"
+        android:title="Between 10K - 20k"/>
+
+    <item
+        android:id="@+id/income3"
+        android:title="Between 20K - 40k"/>
+
+    <item
+        android:id="@+id/income4"
+        android:title="Between 40K - 90k"/>
+
+    <item
+        android:id="@+id/income5"
+        android:title="Above 100k"/>
 </menu>

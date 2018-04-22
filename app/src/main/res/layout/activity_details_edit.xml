@@ -255,22 +255,6 @@
                     android:layout_marginTop="3dp"
                     android:background="#717171" />
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding_normal">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/details_idnumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/id_number"
-                        android:imeOptions="actionNext"
-                        android:inputType="text"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
-
-
                 <TextView
                     android:id="@+id/details_tv_profession"
                     android:layout_width="wrap_content"
@@ -280,6 +264,7 @@
                     android:textSize="20sp" />
 
                 <View
+                    android:id="@+id/details_tv_profession_line"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginBottom="@dimen/padding_normal"
@@ -304,6 +289,21 @@
                     android:layout_marginBottom="@dimen/padding_normal"
                     android:layout_marginTop="3dp"
                     android:background="#717171" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_normal">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/details_idnumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/id_number"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:singleLine="true" />
+                </android.support.design.widget.TextInputLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
