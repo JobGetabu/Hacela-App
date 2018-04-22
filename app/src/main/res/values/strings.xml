@@ -56,6 +56,8 @@
     <string name="id_number">ID Number</string>
     <string name="profession">Profession</string>
     <string name="type_of_business">Type of Business</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 
 
     <!-- Types professions i could think of in 5 minutes -->
