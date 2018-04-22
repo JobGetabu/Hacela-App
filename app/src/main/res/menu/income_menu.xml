@@ -4,21 +4,21 @@
 
     <item
         android:id="@+id/income1"
-        android:title="Below 10k"/>
+        android:title="@string/below_10k"/>
 
     <item
         android:id="@+id/income2"
-        android:title="Between 10K - 20k"/>
+        android:title="@string/between_10k_20k"/>
 
     <item
         android:id="@+id/income3"
-        android:title="Between 20K - 40k"/>
+        android:title="@string/between_20k_40k"/>
 
     <item
         android:id="@+id/income4"
-        android:title="Between 40K - 90k"/>
+        android:title="@string/between_40k_90k"/>
 
     <item
         android:id="@+id/income5"
-        android:title="Above 100k"/>
+        android:title="@string/b_above_100k"/>
 </menu>

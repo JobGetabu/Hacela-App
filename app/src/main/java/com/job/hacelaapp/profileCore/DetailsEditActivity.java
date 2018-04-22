@@ -18,6 +18,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.job.hacelaapp.R;
 
 import butterknife.BindView;
@@ -81,50 +82,7 @@ public class DetailsEditActivity extends AppCompatActivity {
 
     }
 
-    /*
-    private List<String> spinnerListInit(){
-        List<String> dataset = new LinkedList<>(Arrays.asList(getResources().getStringArray(R.array.income_range)));
-        return dataset;
-    }
-    private void autoTextListInit(){
-        List<String> professionDataSet = new LinkedList<>(Arrays.asList(getResources().getStringArray(R.array.profession_categories)));
-        List<String> businessDataset = new LinkedList<>(Arrays.asList(getResources().getStringArray(R.array.business_categories)));
-
-        final ArrayAdapter<String> professionadapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, professionDataSet);
-
-        ArrayAdapter<String> businessadapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_dropdown_item_1line, businessDataset);
-
-       et_profession.setAdapter(professionadapter);
-       et_typeofbusiness.setAdapter(businessadapter);
-
-       final String str = et_profession.getText().toString();
-
-        et_profession.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View view, boolean b) {
-
-                if(!b) {
-                    // on focus off
-                    ListAdapter listAdapter = et_profession.getAdapter();
-                    for(int i = 0; i < listAdapter.getCount(); i++) {
-                        String temp = listAdapter.getItem(i).toString();
-                        if(str.equals(temp)) {
-                            return;
-                        }
-                    }
-
-                    et_profession.setText("");
-
-                }
-            }
-        });
-    }
-    */
-
-    @OnClick(R.id.details_tv_income)
+    @OnClick({R.id.details_tv_income,R.id.details_tv_income_line})
     public void setmIncomeClick(){
         //Creating the instance of PopupMenu
         PopupMenu popup = new PopupMenu(DetailsEditActivity.this, mProfessionLine);
@@ -146,6 +104,27 @@ public class DetailsEditActivity extends AppCompatActivity {
         });
 
         popup.show(); //showing popup menu
+    }
+
+    @OnClick({R.id.details_tv_profession, R.id.details_tv_profession_line})
+    public void setmProfessionClick(){
+        new MaterialDialog.Builder(this)
+                .title(R.string.profession)
+                .items(R.array.profession_categories)
+                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        /**
+                         * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
+                         * returning false here won't allow the newly selected radio button to actually be selected.
+                         **/
+
+                        makeToast(text.toString() +"int id: "+which);
+                        return true;
+                    }
+                })
+                .positiveText(R.string.choose)
+                .show();
     }
 
     private Drawable fetchDrawable(@DrawableRes int mdrawable) {

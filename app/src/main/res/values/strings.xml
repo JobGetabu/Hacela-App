@@ -58,6 +58,15 @@
     <string name="type_of_business">Type of Business</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="choose">Choose</string>
+    <string name="income">Income</string>
+
+    <!--income ranges-->
+    <string name="below_10k">Below 10k</string>
+    <string name="between_10k_20k">Between 10K - 20k</string>
+    <string name="between_20k_40k">Between 20K - 40k</string>
+    <string name="between_40k_90k">Between 40K - 90k</string>
+    <string name="b_above_100k">Above 100k</string>
 
 
     <!-- Types professions i could think of in 5 minutes -->
