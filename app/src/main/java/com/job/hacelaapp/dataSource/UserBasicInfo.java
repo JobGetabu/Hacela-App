@@ -5,15 +5,15 @@ package com.job.hacelaapp.dataSource;
  */
 public class UserBasicInfo {
     private String devicetoken;
-    private String displayname;
+    private String username;
     private String photourl;
 
     public UserBasicInfo() {
     }
 
-    public UserBasicInfo(String devicetoken, String displayname, String photourl) {
+    public UserBasicInfo(String devicetoken, String username, String photourl) {
         this.devicetoken = devicetoken;
-        this.displayname = displayname;
+        this.username = username;
         this.photourl = photourl;
     }
 
@@ -25,12 +25,12 @@ public class UserBasicInfo {
         this.devicetoken = devicetoken;
     }
 
-    public String getDisplayname() {
-        return displayname;
+    public String getUsername() {
+        return username;
     }
 
-    public void setDisplayname(String displayname) {
-        this.displayname = displayname;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPhotourl() {

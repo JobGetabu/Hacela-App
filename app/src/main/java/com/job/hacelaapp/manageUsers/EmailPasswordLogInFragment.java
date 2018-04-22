@@ -180,7 +180,7 @@ public class EmailPasswordLogInFragment extends Fragment {
         }
 
         if (password.isEmpty() || password.length() < 6 ) {
-            mPassword.setError("between at least 6 characters");
+            mPassword.setError("at least 6 characters");
             valid = false;
         } else {
             mPassword.setError(null);

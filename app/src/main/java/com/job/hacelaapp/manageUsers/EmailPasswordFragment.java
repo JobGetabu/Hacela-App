@@ -11,7 +11,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +40,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.michaelrocks.libphonenumber.android.NumberParseException;
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil;
+import io.michaelrocks.libphonenumber.android.Phonenumber;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,6 +74,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
     private FirebaseFirestore mFirestore;
 
     private ProgressDialog  mdialog;
+    private PhoneNumberUtil mPhoneNumberUtil;
 
     public EmailPasswordFragment() {
         // Required empty public constructor
@@ -89,11 +92,32 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
 
+        mPhoneNumberUtil = PhoneNumberUtil.createInstance(getActivity());
+
+        preparePhoneNumber();
 
         inEditPassword.addTextChangedListener(this);
 
 
         return mRootView;
+    }
+
+    private void preparePhoneNumber() {
+        inPhoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+
+                String number = inPhoneNumber.getEditText().toString().trim();
+                //loses focus
+                if (!hasFocus){
+                    try {
+                        Phonenumber.PhoneNumber kenyaNumberProto = mPhoneNumberUtil.parse(number, "KE");
+                    } catch (NumberParseException e) {
+                        System.err.println("NumberParseException was thrown: " + e.toString());
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -149,8 +173,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
         String email = inEmail.getEditText().getText().toString().trim();
         String password = inPassword.getEditText().getText().toString().trim();
 
-        if(!TextUtils.isEmpty(displayname) && !TextUtils.isEmpty(phonenumber) && !TextUtils.isEmpty(email)
-                && !TextUtils.isEmpty(password)){
+        if(validate()){
 
             //TODO: refactor with sweet dialogue
             /*
@@ -246,6 +269,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
         Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
         startActivity(loginIntent);
     }
+
     private void UserAuthToastExceptions(@NonNull Task<AuthResult> authtask) {
         String error = "";
         try {
@@ -262,5 +286,51 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
         }
         //Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
         errorPrompt("Oops...",error);
+    }
+
+    public boolean validate() {
+        boolean valid = true;
+
+        String displayname = inDisplayName.getEditText().toString();
+        String phonenum = inPhoneNumber.getEditText().toString();
+        String email = inEmail.getEditText().toString();
+        String password = inPassword.getEditText().toString();
+
+
+        Phonenumber.PhoneNumber kenyaNumberProto = null;
+        try {
+            kenyaNumberProto = mPhoneNumberUtil.parse(phonenum, "KE");
+        } catch (NumberParseException e) {
+            System.err.println("NumberParseException was thrown: " + e.toString());
+        }
+
+        if (displayname.isEmpty()) {
+            inDisplayName.setError("enter a valid username");
+            valid = false;
+        } else {
+            inDisplayName.setError(null);
+        }
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            inEmail.setError("enter a valid email address");
+            valid = false;
+        } else {
+            inEmail.setError(null);
+        }
+
+        if (phonenum.isEmpty() || !mPhoneNumberUtil.isValidNumber(kenyaNumberProto)) {
+            inPhoneNumber.setError("enter a valid phone number");
+            valid = false;
+        } else {
+            inPhoneNumber.setError(null);
+        }
+
+        if (password.isEmpty() || password.length() < 6 ) {
+            inPassword.setError("at least 6 characters");
+            valid = false;
+        } else {
+            inPassword.setError(null);
+        }
+
+        return valid;
     }
 }
