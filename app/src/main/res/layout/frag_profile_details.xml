@@ -48,7 +48,7 @@
                     android:id="@+id/progressBar"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
-                    android:progress="40"
+                    android:progress="70"
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
@@ -189,40 +189,17 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_marginTop="@dimen/padding_normal"
-                    android:layout_width="match_parent"
-                    android:paddingStart="@dimen/padding_normal"
-                    android:paddingEnd="@dimen/padding_normal"
-                    android:layout_height="wrap_content">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:textColor="@android:color/black"
-                        android:hint="@string/phone_number"
-                        android:inputType="number"
-                        android:text="0708440184"
-                        android:textSize="18sp" />
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="#7e7e7e"
+                    android:text="@string/hacela_profile"
+                    android:textSize="14sp"
                     android:paddingStart="@dimen/padding_normal"
-                    android:paddingEnd="@dimen/padding_normal">
+                    android:paddingEnd="@dimen/padding_normal"
+                    android:paddingTop="@dimen/spacing_micro"
+                    android:layout_marginBottom="@dimen/padding_normal"/>
 
-                    <android.support.design.widget.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:textColor="@android:color/black"
-                        android:hint="@string/email"
-                        android:inputType="textEmailAddress"
-                        android:textSize="18sp"
-                        android:text="mrjob@gmail.com" />
-                </android.support.design.widget.TextInputLayout>
                 <android.support.design.widget.TextInputLayout
                     android:layout_marginBottom="@dimen/padding_normal"
                     android:layout_width="match_parent"
@@ -235,68 +212,12 @@
                         android:layout_height="wrap_content"
                         android:enabled="false"
                         android:textColor="@android:color/black"
-                        android:hint="ID Number"
+                        android:hint="Profession"
                         android:inputType="number"
                         android:textSize="18sp"
-                        android:text="34311813" />
+                        android:text="Business" />
                 </android.support.design.widget.TextInputLayout>
 
-            </LinearLayout>
-
-
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_normal"
-            android:paddingTop="@dimen/padding_normal"
-            android:paddingBottom="@dimen/padding_normal"
-            android:paddingStart="@dimen/padding_normal"
-            android:paddingEnd="@dimen/padding_normal"
-            app:cardElevation="@dimen/padding_normal">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_marginBottom="@dimen/padding_normal">
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_marginTop="@dimen/padding_normal"
-                    android:layout_width="match_parent"
-                    android:paddingStart="@dimen/padding_normal"
-                    android:paddingEnd="@dimen/padding_normal"
-                    android:layout_height="wrap_content">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:textColor="@android:color/black"
-                        android:hint="@string/phone_number"
-                        android:inputType="number"
-                        android:text="0708440184"
-                        android:textSize="18sp" />
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/padding_normal"
-                    android:paddingEnd="@dimen/padding_normal">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:textColor="@android:color/black"
-                        android:hint="@string/email"
-                        android:inputType="textEmailAddress"
-                        android:textSize="18sp"
-                        android:text="mrjob@gmail.com" />
-                </android.support.design.widget.TextInputLayout>
                 <android.support.design.widget.TextInputLayout
                     android:layout_marginBottom="@dimen/padding_normal"
                     android:layout_width="match_parent"
@@ -309,10 +230,28 @@
                         android:layout_height="wrap_content"
                         android:enabled="false"
                         android:textColor="@android:color/black"
-                        android:hint="ID Number"
+                        android:hint="Type of Business"
                         android:inputType="number"
                         android:textSize="18sp"
-                        android:text="34311813" />
+                        android:text="Sole Proprietor" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_marginBottom="@dimen/padding_normal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/padding_normal"
+                    android:paddingEnd="@dimen/padding_normal">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:textColor="@android:color/black"
+                        android:hint="Income"
+                        android:inputType="number"
+                        android:textSize="18sp"
+                        android:text="Over Ksh 100,000" />
                 </android.support.design.widget.TextInputLayout>
 
             </LinearLayout>
@@ -320,6 +259,8 @@
 
 
         </android.support.v7.widget.CardView>
+
+
 
 
 

@@ -41,11 +41,9 @@
         android:id="@+id/cardView"
         android:layout_width="0dp"
         android:layout_height="136dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:cardBackgroundColor="@color/colorPrimary"
-        app:cardCornerRadius="@dimen/spacing_micro"
+        app:cardCornerRadius="2dp"
         app:layout_constraintEnd_toStartOf="@+id/gdRight"
         app:layout_constraintStart_toStartOf="@+id/gdLeft"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
@@ -133,6 +131,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

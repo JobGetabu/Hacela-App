@@ -7,10 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
@@ -52,7 +50,7 @@ public class ProfileFragment extends Fragment {
         ButterKnife.bind(this,mRootView);
 
         ((MainActivity) getActivity()).setSupportActionBar(mToolbar);
-        //((MainActivity) getActivity()).getSupportActionBar().setTitle("Profile");
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("");
 
         setHasOptionsMenu(true);
 
@@ -76,7 +74,7 @@ public class ProfileFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @Override
+   /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
@@ -88,7 +86,7 @@ public class ProfileFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
 
 

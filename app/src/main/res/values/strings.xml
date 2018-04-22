@@ -26,7 +26,7 @@
     <string name="login_with">Login with</string>
     <string name="password">Password</string>
     <string name="forgot_password">Forgot Password?</string>
-    <string name="display_name">Display Name</string>
+    <string name="display_name">User Name</string>
     <string name="phone_number">Phone Number</string>
     <string name="email_or_phone_number">Email or Phone Number</string>
     <string name="email">Email</string>
@@ -40,10 +40,79 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="profile_completion">Profile Completion (40%)</string>
+    <string name="profile_completion">Profile Completion (70%)</string>
     <string name="my_balance_n_72_000">My Balance \n Ksh 72,000</string>
     <string name="mavuno_balance_n_ksh_152_000">Mavuno Balance \n Ksh 152,000</string>
     <string name="personal_account">PERSONAL ACCOUNT</string>
     <string name="account">ACCOUNTS</string>
     <string name="profile">Profile</string>
+    <string name="hacela_profile">Hacela Profile</string>
+    <string name="change_photo">Change Photo</string>
+    <string name="full_name">Full Name</string>
+    <string name="gender">Gender</string>
+    <string name="radio_male">Male</string>
+    <string name="radio_female">Female</string>
+    <string name="location">Location</string>
+    <string name="id_number">ID Number</string>
+    <string name="profession">Profession</string>
+    <string name="type_of_business">Type of Business</string>
+
+
+    <!-- Types professions i could think of in 5 minutes -->
+    <string-array name="profession_categories">
+        <!--unique-->
+        <item>Business</item>
+
+        <item>Teacher</item>
+        <item>Laborer</item>
+        <item>HairDresser</item>
+        <item>Tailor</item>
+        <item>Broker</item>
+        <item>Midwife</item>
+        <item>Waiter</item>
+
+        <item>Lawyer</item>
+        <item>Engineer</item>
+        <item>Paramedic</item>
+        <item>Doctor</item>
+        <item>Health Professional</item>
+        <item>Solder</item>
+        <item>Librarian</item>
+        <item>Optician</item>
+        <item>Architect</item>
+        <item>Technician</item>
+
+        <item>Accountant</item>
+        <item>Auditor</item>
+        <item>Programmer</item>
+        <item>Designer</item>
+        <item>Technician</item>
+        <item>Mechanic</item>
+        <item>Plumber</item>
+        <item>Police Officer</item>
+
+        <item>Student</item>
+
+    </string-array>
+
+    <string-array name="business_categories">
+        <item>Wholesaler</item>
+        <item>Shopkeeper</item>
+        <item>Casual</item>
+    </string-array>
+
+    <string-array name="income_range">
+        <item>Income</item>
+        <item>Below 10k</item>
+        <item>Between 10K - 20k</item>
+        <item>Between 20K - 40k</item>
+        <item>Between 40K - 90k</item>
+        <item>Above 100k</item>
+    </string-array>
+
+    <string-array name="group_admin">
+        <item>Chairperson</item>
+        <item>Treasurer</item>
+        <item>Secretary</item>
+    </string-array>
 </resources>
