@@ -143,14 +143,15 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
     @OnClick({R.id.reg_btn_signup})
     public void regBtnEmailPasswordClick(){
 
-        final String displayname = inDisplayName.getEditText().getText().toString();
-        final String phonenumber = inPhoneNumber.getEditText().getText().toString();
-        String email = inEmail.getEditText().getText().toString();
-        String password = inPassword.getEditText().getText().toString();
+        final String displayname = inDisplayName.getEditText().getText().toString().trim();
+        final String phonenumber = inPhoneNumber.getEditText().getText().toString().trim();
+        String email = inEmail.getEditText().getText().toString().trim();
+        String password = inPassword.getEditText().getText().toString().trim();
 
         if(!TextUtils.isEmpty(displayname) && !TextUtils.isEmpty(phonenumber) && !TextUtils.isEmpty(email)
                 && !TextUtils.isEmpty(password)){
 
+            //TODO refactor with sweet dialogue
             mdialog = new ProgressDialog(getActivity());
             mdialog.setTitle("Registration");
             mdialog.setMessage("Please wait while we create your account...");

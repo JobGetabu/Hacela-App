@@ -1,15 +1,12 @@
 package com.job.hacelaapp.profileCore;
 
-import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.support.annotation.NonNull;
+import android.arch.lifecycle.ViewModel;
 
 /**
  * Created by Job on Sunday : 4/22/2018.
  */
-public class DetailsEditActivityViewModel extends AndroidViewModel {
+public class DetailsEditActivityViewModel extends ViewModel {
 
-    public DetailsEditActivityViewModel(@NonNull Application application) {
-        super(application);
-    }
+    //few db references
+
 }
