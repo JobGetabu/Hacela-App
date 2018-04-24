@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
  */
 public class ProfileFragment extends Fragment {
 
-    @BindView(R.id.profile_pager_toolbar)
+    @BindView(R.id.profile_page_toolbar)
     android.support.v7.widget.Toolbar mToolbar;
     @BindView(R.id.profile_sliding_tabs)
     TabLayout tabLayout;

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
@@ -35,6 +36,7 @@ import com.ybs.passwordstrengthmeter.PasswordStrength;
 import java.util.HashMap;
 import java.util.Map;
 
+import am.appwise.components.ni.NoInternetDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -73,11 +75,25 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
     private FirebaseFirestore mFirestore;
 
     private PhoneNumberUtil mPhoneNumberUtil;
+    private NoInternetDialog noInternetDialog;
+
 
     public EmailPasswordFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //dialogue cant sign up on no network
+        noInternetDialog = new NoInternetDialog.Builder(EmailPasswordFragment.this)
+                .setBgGradientOrientation(45)
+                .setCancelable(true)
+                .setBgGradientStart(getResources().getColor(R.color.app_gradient_start))
+                .setBgGradientEnd(getResources().getColor(R.color.app_gradient_end))
+                .build();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -176,6 +192,9 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
         String password = inPassword.getEditText().getText().toString().trim();
 
         if (validate()) {
+
+            //check connection
+            noInternetDialog.showDialog();
 
             Phonenumber.PhoneNumber kenyaNumberProto = null;
             try {
@@ -276,6 +295,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
 
     private void sendToLogin() {
         Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
+        loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(loginIntent);
     }
 
@@ -343,4 +363,5 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
         Log.d(TAG, "validate: " + valid + "phone -> " + kenyaNumberProto);
         return valid;
     }
+
 }

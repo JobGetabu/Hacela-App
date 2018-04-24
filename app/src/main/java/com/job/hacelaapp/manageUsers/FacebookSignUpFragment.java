@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import am.appwise.components.ni.NoInternetDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -59,12 +61,25 @@ public class FacebookSignUpFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
 
+    private NoInternetDialog noInternetDialog;
 
     public FacebookSignUpFragment() {
         // Required empty public constructor
     }
 
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //dialogue cant sign up on no network
+        noInternetDialog = new NoInternetDialog.Builder(FacebookSignUpFragment.this)
+                .setBgGradientOrientation(45)
+                .setCancelable(true)
+                .setBgGradientStart(getResources().getColor(R.color.app_gradient_start))
+                .setBgGradientEnd(getResources().getColor(R.color.app_gradient_end))
+                .build();
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -96,6 +111,10 @@ public class FacebookSignUpFragment extends Fragment {
         Fragment fragment = FacebookSignUpFragment.this;
         mfbButton.setEnabled(false);
         Log.d(TAG, "mfbButton disabled");
+
+        //check connection
+        noInternetDialog.showDialog();
+
         LoginManager.getInstance().logInWithReadPermissions(fragment, Arrays.asList("email", "public_profile"));
         LoginManager.getInstance().registerCallback(mCallbackManager,new FacebookCallback<LoginResult>() {
             @Override

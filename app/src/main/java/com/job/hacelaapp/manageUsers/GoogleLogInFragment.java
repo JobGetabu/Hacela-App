@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -37,6 +38,7 @@ import com.job.hacelaapp.R;
 import java.util.HashMap;
 import java.util.Map;
 
+import am.appwise.components.ni.NoInternetDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -59,11 +61,25 @@ public class GoogleLogInFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
+    private NoInternetDialog noInternetDialog;
 
     public GoogleLogInFragment() {
         // Required empty public constructor
     }
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //dialogue cant sign up on no network
+        noInternetDialog = new NoInternetDialog.Builder(GoogleLogInFragment.this)
+                .setBgGradientOrientation(45)
+                .setCancelable(true)
+                .setBgGradientStart(getResources().getColor(R.color.app_gradient_start))
+                .setBgGradientEnd(getResources().getColor(R.color.app_gradient_end))
+                .build();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,6 +106,10 @@ public class GoogleLogInFragment extends Fragment {
 
     @OnClick(R.id.frgbtn_login_google)
     public void loginWithGoogleClick(){
+
+        //check connection
+        noInternetDialog.showDialog();
+
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
         mBtnGoogleLogin.setEnabled(false);

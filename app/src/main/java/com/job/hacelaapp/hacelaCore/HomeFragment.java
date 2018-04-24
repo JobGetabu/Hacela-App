@@ -19,15 +19,21 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.manageUsers.LoginActivity;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
+
+    @BindView(R.id.home_page_toolbar)
+    android.support.v7.widget.Toolbar mToolbar;
 
     private  View mRootView;
 
@@ -46,6 +52,9 @@ public class HomeFragment extends Fragment {
         mRootView = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this,mRootView);
         setHasOptionsMenu(true);
+
+        ((MainActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("");
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -102,5 +111,13 @@ public class HomeFragment extends Fragment {
         Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
         loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(loginIntent);
+    }
+
+    @OnClick(R.id.button2)
+    public void signOut(View view){
+        mAuth.signOut();
+        signOutGoogle();
+        signOutFaceBook();
+        sendToLogin();
     }
 }

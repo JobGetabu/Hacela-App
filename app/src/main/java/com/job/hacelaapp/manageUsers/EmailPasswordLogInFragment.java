@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -28,6 +29,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 
+import am.appwise.components.ni.NoInternetDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -51,8 +53,23 @@ public class EmailPasswordLogInFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
 
+    private NoInternetDialog noInternetDialog;
+
     public EmailPasswordLogInFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //dialogue cant sign up on no network
+        noInternetDialog = new NoInternetDialog.Builder(EmailPasswordLogInFragment.this)
+                .setBgGradientOrientation(45)
+                .setCancelable(true)
+                .setBgGradientStart(getResources().getColor(R.color.app_gradient_start))
+                .setBgGradientEnd(getResources().getColor(R.color.app_gradient_end))
+                .build();
     }
 
 
@@ -98,6 +115,9 @@ public class EmailPasswordLogInFragment extends Fragment {
         Log.d(TAG, "loginWithEmailPasswordClick: Email & password:" + email + "   " + password);
 
         if (validate()) {
+
+            //check connection
+            noInternetDialog.showDialog();
 
             final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
             pDialog.getProgressHelper().setBarColor(Color.parseColor("#f9ab60"));
@@ -203,5 +223,12 @@ public class EmailPasswordLogInFragment extends Fragment {
 
         Log.d(TAG, "validate: " + valid + "-> " + email);
         return valid;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (noInternetDialog != null)
+            noInternetDialog.onDestroy();
     }
 }
