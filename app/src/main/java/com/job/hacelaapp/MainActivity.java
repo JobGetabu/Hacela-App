@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onTabSelected(int position, boolean wasSelected) {
 
-            //TODO change fragments
+            //change fragments
             if (!wasSelected) {
                 mNoSwipePager.setCurrentItem(position);
                 Log.d(TAG, "onTabSelected: AT :" + position);
@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
                 sendToLogin();
                 break;
             *//*case R.id.profile_menu_edit:
-                Toast.makeText(this, "TODO: Edit profile", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Edit profile", Toast.LENGTH_SHORT).show();
                 break;*//*
         }
 

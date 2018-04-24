@@ -38,8 +38,6 @@
     <string name="bottomnav_title_2">Account</string>
     <string name="bottomnav_title_3">Chat</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="profile_completion">Profile Completion (70%)</string>
     <string name="my_balance_n_72_000">My Balance \n Ksh 72,000</string>
     <string name="mavuno_balance_n_ksh_152_000">Mavuno Balance \n Ksh 152,000</string>
