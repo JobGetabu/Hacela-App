@@ -32,6 +32,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     RegistrationFragmentsAdapter registrationFragmentsAdapter;
 
+    //TODO: Handle offline detection
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

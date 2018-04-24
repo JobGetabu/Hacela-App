@@ -1,11 +1,13 @@
 package com.job.hacelaapp.profileCore;
 
+import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +20,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.job.hacelaapp.R;
 
 import butterknife.BindView;
@@ -82,8 +83,8 @@ public class DetailsEditActivity extends AppCompatActivity {
 
     }
 
-    @OnClick({R.id.details_tv_income,R.id.details_tv_income_line})
-    public void setmIncomeClick(){
+    @OnClick({R.id.details_tv_income, R.id.details_tv_income_line})
+    public void setmIncomeClick() {
         //Creating the instance of PopupMenu
         PopupMenu popup = new PopupMenu(DetailsEditActivity.this, mProfessionLine);
         //Inflating the Popup using xml file
@@ -107,23 +108,19 @@ public class DetailsEditActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.details_tv_profession, R.id.details_tv_profession_line})
-    public void setmProfessionClick(){
-        new MaterialDialog.Builder(this)
-                .title(R.string.profession)
-                .items(R.array.profession_categories)
-                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        /**
-                         * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
-                         * returning false here won't allow the newly selected radio button to actually be selected.
-                         **/
+    public void setmProfessionClick() {
 
-                        makeToast(text.toString() +"int id: "+which);
-                        return true;
+        new AlertDialog.Builder(this)
+                .setSingleChoiceItems(R.array.profession_categories, 0, null)
+                .setPositiveButton(R.string.choose, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                        int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                        Object selectedItem = ((AlertDialog) dialog).getListView().getItemAtPosition(selectedPosition);
+                        // Do something useful withe the position of the selected radio button
+                        makeToast(selectedItem.toString() + "int id: " + selectedPosition);
                     }
                 })
-                .positiveText(R.string.choose)
                 .show();
     }
 
@@ -132,37 +129,38 @@ public class DetailsEditActivity extends AppCompatActivity {
         return ContextCompat.getDrawable(this, mdrawable);
     }
 
-    private void makeToast(String message){
+    private void makeToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-    @OnClick({R.id.detailsedit_btn_changeimg,R.id.detailsedit_tv_changeimg})
-    public void changeProfileImageClick(){
+
+    @OnClick({R.id.detailsedit_btn_changeimg, R.id.detailsedit_tv_changeimg})
+    public void changeProfileImageClick() {
         //TODO:
         makeToast("TODO: Change prof pic");
     }
 
 
     @OnClick(R.id.details_btn_cancel)
-    public void cancelEditClick(){
+    public void cancelEditClick() {
         finish();
     }
 
     @OnClick(R.id.details_btn_save)
-    public void saveProfileChanges(){
+    public void saveProfileChanges() {
         //TODO:
         makeToast("TODO: Save changes gender:" + selectedGender());
     }
 
-    private String selectedGender(){
+    private String selectedGender() {
         int selectedId = radioSexGroup.getCheckedRadioButtonId();
 
-        switch (selectedId){
+        switch (selectedId) {
             case R.id.details_radiomale:
                 return "Male";
             case R.id.details_radiofemale:
                 return "Female";
-                default:
-                    return "";
+            default:
+                return "";
         }
     }
 }

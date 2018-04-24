@@ -46,6 +46,8 @@ public class LoginActivity extends AppCompatActivity {
         //firebase
         mAuth = FirebaseAuth.getInstance();
 
+        //TODO: Handle offline detection
+
         loginFragmentsAdapter = new LoginFragmentsAdapter(getSupportFragmentManager());
         mainLoginPager.setAdapter(loginFragmentsAdapter);
 
