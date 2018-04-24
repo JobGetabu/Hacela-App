@@ -14,6 +14,8 @@
 
     <color name="colorTextGrey">#252424</color>
 
+    <color name="promptColor">#A5DC86</color>
+
     <!-- Green -->
     <color name="green_temp">#23A96E</color>
     <color name="green_dark">#159204</color>

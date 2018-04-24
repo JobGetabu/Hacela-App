@@ -1,8 +1,8 @@
 package com.job.hacelaapp.manageUsers;
 
 
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -41,6 +41,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,7 +59,6 @@ public class FacebookSignUpFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
 
-    private ProgressDialog mdialog;
 
     public FacebookSignUpFragment() {
         // Required empty public constructor
@@ -88,22 +88,6 @@ public class FacebookSignUpFragment extends Fragment {
         //since we cnt call finish
         mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainIntent);
-    }
-    private void UserAuthToastExceptions(@NonNull Task<AuthResult> authtask) {
-        String error = "";
-        try {
-            throw authtask.getException();
-        } catch (FirebaseAuthWeakPasswordException e) {
-            error = "Weak Password!";
-        } catch (FirebaseAuthInvalidCredentialsException e) {
-            error = "Invalid email";
-        } catch (FirebaseAuthUserCollisionException e) {
-            error = "Existing Account";
-        } catch (Exception e) {
-            error = "Unknown Error Occured";
-            e.printStackTrace();
-        }
-        Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
     }
 
     @OnClick(R.id.frgbtn_signup_facebook)
@@ -152,11 +136,11 @@ public class FacebookSignUpFragment extends Fragment {
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
-        mdialog = new ProgressDialog(getActivity());
-        mdialog.setTitle("Logging in");
-        mdialog.setMessage("Please wait logging in...");
-        mdialog.setCanceledOnTouchOutside(false);
-        mdialog.show();
+        final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#f9ab60"));
+        pDialog.setTitleText("Logging in...");
+        pDialog.setCancelable(false);
+        pDialog.show();
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
@@ -190,19 +174,19 @@ public class FacebookSignUpFragment extends Fragment {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> dbtask) {
                                             if(dbtask.isSuccessful()){
-                                                mdialog.dismiss();
+                                                pDialog.dismissWithAnimation();
                                                 sendToMain();
                                             }else {
-                                                mdialog.dismiss();
+                                                pDialog.dismiss();
+                                                errorPrompt();
                                                 Log.d(TAG, "onComplete: error"+dbtask.getException().toString());
-                                                Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_LONG).show();
                                             }
                                         }
                                     });
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            mdialog.dismiss();
+                            pDialog.dismiss();
                             UserAuthToastExceptions(task);
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(getActivity(), "Authentication failed.",
@@ -213,5 +197,38 @@ public class FacebookSignUpFragment extends Fragment {
                         // ...
                     }
                 });
+    }
+
+    private void errorPrompt() {
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Oops...")
+                .setContentText("Something went wrong!")
+                .show();
+    }
+
+    private void errorPrompt(String title, String message) {
+
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                .setTitleText(title)
+                .setContentText(message)
+                .show();
+    }
+
+    private void UserAuthToastExceptions(@NonNull Task<AuthResult> authtask) {
+        String error = "";
+        try {
+            throw authtask.getException();
+        } catch (FirebaseAuthWeakPasswordException e) {
+            error = "Weak Password!";
+        } catch (FirebaseAuthInvalidCredentialsException e) {
+            error = "Invalid email";
+        } catch (FirebaseAuthUserCollisionException e) {
+            error = "Existing Account";
+        } catch (Exception e) {
+            error = "Unknown Error Occured";
+            e.printStackTrace();
+        }
+        //Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
+        errorPrompt("Oops...", error);
     }
 }

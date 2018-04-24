@@ -1,7 +1,6 @@
 package com.job.hacelaapp.manageUsers;
 
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -73,7 +72,6 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
 
-    private ProgressDialog  mdialog;
     private PhoneNumberUtil mPhoneNumberUtil;
 
     public EmailPasswordFragment() {
@@ -86,7 +84,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mRootView = inflater.inflate(R.layout.fragment_email_password, container, false);
-        ButterKnife.bind(this,mRootView);
+        ButterKnife.bind(this, mRootView);
 
         //firebase
         mAuth = FirebaseAuth.getInstance();
@@ -109,9 +107,13 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
 
                 String number = inPhoneNumber.getEditText().toString().trim();
                 //loses focus
-                if (!hasFocus){
+                if (!hasFocus) {
                     try {
                         Phonenumber.PhoneNumber kenyaNumberProto = mPhoneNumberUtil.parse(number, "KE");
+
+                        String ss = mPhoneNumberUtil.format(kenyaNumberProto, PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+                        inPhoneNumber.getEditText().setText(ss.trim().replaceAll("\\s", ""));
+
                     } catch (NumberParseException e) {
                         System.err.println("NumberParseException was thrown: " + e.toString());
                     }
@@ -137,7 +139,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
 
     private void updatePasswordStrengthView(String password) {
 
-       // = (ProgressBar) mRootView.findViewById(R.id.reg_progressBar);
+        // = (ProgressBar) mRootView.findViewById(R.id.reg_progressBar);
         //= (TextView) mRootView.findViewById(R.id.reg_password_strength);
 
         if (TextView.VISIBLE != inPasswordStrength.getVisibility())
@@ -166,47 +168,54 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
     }
 
     @OnClick({R.id.reg_btn_signup})
-    public void regBtnEmailPasswordClick(){
+    public void regBtnEmailPasswordClick() {
 
         final String displayname = inDisplayName.getEditText().getText().toString().trim();
-        final String phonenumber = inPhoneNumber.getEditText().getText().toString().trim();
+        String phonenumber = inPhoneNumber.getEditText().getText().toString().trim();
         String email = inEmail.getEditText().getText().toString().trim();
         String password = inPassword.getEditText().getText().toString().trim();
 
-        if(validate()){
+        if (validate()) {
 
-            //TODO: refactor with sweet dialogue
-            /*
-            mdialog = new ProgressDialog(getActivity());
-            mdialog.setTitle("Registration");
-            mdialog.setMessage("Please wait while we create your account...");
-            mdialog.setCanceledOnTouchOutside(false);
-            mdialog.show();
-            */
+            Phonenumber.PhoneNumber kenyaNumberProto = null;
+            try {
+                kenyaNumberProto = mPhoneNumberUtil.parse(phonenumber, "KE");
+            } catch (NumberParseException e) {
+                System.err.println("NumberParseException was thrown: " + e.toString());
+            }
+            if (kenyaNumberProto != null) {
+                String ss = mPhoneNumberUtil.format(kenyaNumberProto, PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+
+                phonenumber = ss.trim().replaceAll("\\s", "");
+
+                Log.d(TAG, "regBtnEmailPasswordClick: PhoneNumber" + phonenumber);
+            }
+
             final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
             pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
             pDialog.setTitleText("Creating Account...");
             pDialog.setCancelable(false);
             pDialog.show();
 
-            mAuth.createUserWithEmailAndPassword(email,password)
+            final String finalPhonenumber = phonenumber;
+            mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> authtask) {
-                            if (authtask.isSuccessful()){
+                            if (authtask.isSuccessful()) {
 
                                 String device_token = FirebaseInstanceId.getInstance().getToken();
                                 String mCurrentUserid = mAuth.getCurrentUser().getUid();
 
                                 Map<String, Object> userMap = new HashMap<>();
-                                userMap.put("devicetoken",device_token);
-                                userMap.put("displayname",displayname);
-                                userMap.put("photourl","");
+                                userMap.put("devicetoken", device_token);
+                                userMap.put("displayname", displayname);
+                                userMap.put("photourl", "");
 
                                 Map<String, Object> userAuthMap = new HashMap<>();
-                                userAuthMap.put("phonenumber",phonenumber);
-                                userAuthMap.put("fbConnected",false);
-                                userAuthMap.put("googleConnected",false);
+                                userAuthMap.put("phonenumber", finalPhonenumber);
+                                userAuthMap.put("fbConnected", false);
+                                userAuthMap.put("googleConnected", false);
 
 
                                 // Get a new write batch
@@ -224,20 +233,20 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
                                 batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> dbtask) {
-                                        if(dbtask.isSuccessful()){
-                                            //mdialog.dismiss();
+                                        if (dbtask.isSuccessful()) {
+                                            pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                                             pDialog.dismissWithAnimation();
                                             sendToLogin();
-                                        }else {
-                                            //mdialog.dismiss();
+                                        } else {
                                             pDialog.dismiss();
-                                            Log.d(TAG, "onComplete: error"+dbtask.getException().toString());
+                                            Log.d(TAG, "onComplete: error" + dbtask.getException().toString());
                                             errorPrompt();
                                         }
                                     }
                                 });
-                            }else {
+                            } else {
                                 //mdialog.dismiss();
+                                //pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
                                 pDialog.dismiss();
                                 UserAuthToastExceptions(authtask);
                             }
@@ -245,20 +254,20 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
                     });
 
 
-        }else {
+        } else {
             //TODO: Error prompting logic input validation
         }
 
     }
 
-    private void errorPrompt(){
+    private void errorPrompt() {
         new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                 .setTitleText("Oops...")
                 .setContentText("Something went wrong!")
                 .show();
     }
 
-    private void errorPrompt(String title,String message){
+    private void errorPrompt(String title, String message) {
         new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                 .setTitleText(title)
                 .setContentText(message)
@@ -285,16 +294,16 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
             e.printStackTrace();
         }
         //Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
-        errorPrompt("Oops...",error);
+        errorPrompt("Oops...", error);
     }
 
     public boolean validate() {
         boolean valid = true;
 
-        String displayname = inDisplayName.getEditText().toString();
-        String phonenum = inPhoneNumber.getEditText().toString();
-        String email = inEmail.getEditText().toString();
-        String password = inPassword.getEditText().toString();
+        String displayname = inDisplayName.getEditText().getText().toString();
+        String phonenum = inPhoneNumber.getEditText().getText().toString();
+        String email = inEmail.getEditText().getText().toString();
+        String password = inPassword.getEditText().getText().toString();
 
 
         Phonenumber.PhoneNumber kenyaNumberProto = null;
@@ -324,13 +333,14 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
             inPhoneNumber.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 6 ) {
+        if (password.isEmpty() || password.length() < 6) {
             inPassword.setError("at least 6 characters");
             valid = false;
         } else {
             inPassword.setError(null);
         }
 
+        Log.d(TAG, "validate: " + valid + "phone -> " + kenyaNumberProto);
         return valid;
     }
 }

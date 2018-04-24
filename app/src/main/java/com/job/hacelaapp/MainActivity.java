@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean notificationVisible = false;
     private BottomBarAdapter pagerAdapter;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         //firebase
         mAuth = FirebaseAuth.getInstance();
+        authListner();
 
         //bottom nav items
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_0),
@@ -210,4 +213,18 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }*/
+
+    //auth state listner
+    private void authListner(){
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user == null) {
+                    // Sign in logic here.
+                    sendToLogin();
+                }
+            }
+        };
+    }
 }
