@@ -157,12 +157,12 @@ public class GoogleLogInFragment extends Fragment {
                             String device_token = FirebaseInstanceId.getInstance().getToken();
                             String mCurrentUserid = mAuth.getCurrentUser().getUid();
 
-
+                            //TODO: refactor this not to write to DB each time...check if account exists
 
                             Map<String, Object> userMap = new HashMap<>();
 
                             userMap.put("device_token",device_token);
-                            userMap.put("displayname",user.getDisplayName());
+                            userMap.put("username",user.getDisplayName());
                             userMap.put("photourl",user.getPhotoUrl().toString());
 
                             mFirestore.collection("Users").document(mCurrentUserid).set(userMap, SetOptions.merge())

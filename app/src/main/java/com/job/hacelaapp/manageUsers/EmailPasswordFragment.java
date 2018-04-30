@@ -186,7 +186,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
     @OnClick({R.id.reg_btn_signup})
     public void regBtnEmailPasswordClick() {
 
-        final String displayname = inDisplayName.getEditText().getText().toString().trim();
+        final String username = inDisplayName.getEditText().getText().toString().trim();
         String phonenumber = inPhoneNumber.getEditText().getText().toString().trim();
         String email = inEmail.getEditText().getText().toString().trim();
         String password = inPassword.getEditText().getText().toString().trim();
@@ -228,7 +228,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
 
                                 Map<String, Object> userMap = new HashMap<>();
                                 userMap.put("devicetoken", device_token);
-                                userMap.put("displayname", displayname);
+                                userMap.put("username", username);
                                 userMap.put("photourl", "");
 
                                 Map<String, Object> userAuthMap = new HashMap<>();

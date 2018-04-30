@@ -172,7 +172,7 @@ public class FacebookLogInFragment extends Fragment {
                             FirebaseUser user = mAuth.getCurrentUser();
 
                             //test with log cat the information passed
-                            Log.d("USER INFO","Display name: "+ user.getDisplayName());
+                            Log.d("USER INFO","User name: "+ user.getDisplayName());
                             Log.d("USER INFO", "email :"+user.getEmail());
                             Log.d("USER INFO", "phone number:  "+user.getPhoneNumber()); //null
                             Log.d("USER INFO", "ID: "+ user.getUid());
@@ -182,10 +182,12 @@ public class FacebookLogInFragment extends Fragment {
                             String device_token = FirebaseInstanceId.getInstance().getToken();
                             String mCurrentUserid = mAuth.getCurrentUser().getUid();
 
+                            //TODO: refactor this not to write to DB each time...check if account exists
+
                             Map<String, Object> userMap = new HashMap<>();
 
-                            userMap.put("device_token",device_token);
-                            userMap.put("displayname",user.getDisplayName());
+                            userMap.put("devicetoken",device_token);
+                            userMap.put("username",user.getDisplayName());
                             userMap.put("photourl",user.getPhotoUrl().toString());
 
                             mFirestore.collection("Users").document(mCurrentUserid).set(userMap)

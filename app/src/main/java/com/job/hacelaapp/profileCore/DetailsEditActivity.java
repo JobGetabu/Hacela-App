@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -151,6 +152,7 @@ public class DetailsEditActivity extends AppCompatActivity {
         makeToast("TODO: Save changes gender:" + selectedGender());
     }
 
+    @NonNull
     private String selectedGender() {
         int selectedId = radioSexGroup.getCheckedRadioButtonId();
 

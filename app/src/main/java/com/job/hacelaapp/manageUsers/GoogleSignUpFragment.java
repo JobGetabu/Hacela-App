@@ -166,8 +166,8 @@ public class GoogleSignUpFragment extends Fragment {
 
                             Map<String, Object> userMap = new HashMap<>();
 
-                            userMap.put("device_token",device_token);
-                            userMap.put("displayname",user.getDisplayName());
+                            userMap.put("devicetoken",device_token);
+                            userMap.put("username",user.getDisplayName());
                             userMap.put("photourl",user.getPhotoUrl().toString());
 
                             mFirestore.collection("Users").document(mCurrentUserid).set(userMap)
@@ -193,7 +193,7 @@ public class GoogleSignUpFragment extends Fragment {
                             pDialog.dismissWithAnimation();
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Snackbar.make(mRootView.findViewById(R.id.frg_framelayout_google), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-                            //updateUI(null);
+
                             mGoogleBtn.setEnabled(true);
                         }
 

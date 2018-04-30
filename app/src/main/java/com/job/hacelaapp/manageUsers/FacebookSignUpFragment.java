@@ -184,8 +184,8 @@ public class FacebookSignUpFragment extends Fragment {
 
                             Map<String, Object> userMap = new HashMap<>();
 
-                            userMap.put("device_token",device_token);
-                            userMap.put("displayname",user.getDisplayName());
+                            userMap.put("devicetoken",device_token);
+                            userMap.put("username",user.getDisplayName());
                             userMap.put("photourl",user.getPhotoUrl().toString());
 
                             mFirestore.collection("Users").document(mCurrentUserid).set(userMap)
@@ -195,6 +195,9 @@ public class FacebookSignUpFragment extends Fragment {
                                             if(dbtask.isSuccessful()){
                                                 pDialog.dismissWithAnimation();
                                                 sendToMain();
+
+                                                //TODO: take person to confirm phone number screen
+
                                             }else {
                                                 pDialog.dismiss();
                                                 errorPrompt();
@@ -208,8 +211,6 @@ public class FacebookSignUpFragment extends Fragment {
                             pDialog.dismiss();
                             UserAuthToastExceptions(task);
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(getActivity(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
 
                         }
 
