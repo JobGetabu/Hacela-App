@@ -328,35 +328,6 @@ public class FacebookLogInFragment extends Fragment {
                 });
     }
 
-    //can't be executed sequentially
-    @Deprecated
-    private Boolean userAlreadyExists(String currentUserid) {
-        //hit the db and check if user info exists
-
-        final Boolean[] docExists = new Boolean[1];
-        DocumentReference docReference = mFirestore.collection("Users").document(currentUserid);
-        docReference.get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                                docExists[0] = true;
-                            } else {
-                                Log.d(TAG, "No such document");
-                                docExists[0] = false;
-                            }
-                        } else {
-                            Log.d(TAG, "get failed with ", task.getException());
-                            //docExists[0] = null;
-                        }
-                    }
-                });
-           return docExists[0];
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
