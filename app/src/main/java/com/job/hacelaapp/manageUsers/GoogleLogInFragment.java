@@ -289,8 +289,8 @@ public class GoogleLogInFragment extends Fragment {
     private void writingToUsersAuth(String mCurrentUserid){
         Map<String, Object> userAuthMap = new HashMap<>();
         userAuthMap.put("phonenumber", "");
-        userAuthMap.put("fbConnected", true);
-        userAuthMap.put("googleConnected", false);
+        userAuthMap.put("fbConnected", false);
+        userAuthMap.put("googleConnected", true);
 
         // Set the value of 'UsersAuth'
         DocumentReference usersAuthRef = mFirestore.collection("UsersAuth").document(mCurrentUserid);
