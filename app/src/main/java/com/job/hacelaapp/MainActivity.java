@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }*/
 
-    //auth state listner
+    //auth state listener for live changes
     private void authListner(){
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -226,5 +226,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //TODO: check if User doc exists dead trigger approach
+        //handling sloppy connections conundrums
     }
 }

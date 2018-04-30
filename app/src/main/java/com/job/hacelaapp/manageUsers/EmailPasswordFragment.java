@@ -211,7 +211,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
             }
 
             final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
-            pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+            pDialog.getProgressHelper().setBarColor(Color.parseColor("#f9ab60"));
             pDialog.setTitleText("Creating Account...");
             pDialog.setCancelable(false);
             pDialog.show();
@@ -241,12 +241,12 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
                                 WriteBatch batch = mFirestore.batch();
 
                                 // Set the value of 'Users'
-                                DocumentReference UsersRef = mFirestore.collection("Users").document(mCurrentUserid);
-                                batch.set(UsersRef, userMap);
+                                DocumentReference usersRef = mFirestore.collection("Users").document(mCurrentUserid);
+                                batch.set(usersRef, userMap);
 
                                 // Set the value of 'UsersAuth'
-                                DocumentReference UsersAuthRef = mFirestore.collection("UsersAuth").document(mCurrentUserid);
-                                batch.set(UsersAuthRef, userAuthMap);
+                                DocumentReference usersAuthRef = mFirestore.collection("UsersAuth").document(mCurrentUserid);
+                                batch.set(usersAuthRef, userAuthMap);
 
                                 // Commit the batch
                                 batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {

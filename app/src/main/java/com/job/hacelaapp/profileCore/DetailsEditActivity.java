@@ -1,6 +1,7 @@
 package com.job.hacelaapp.profileCore;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -12,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +23,10 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.manageUsers.LoginActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,15 +68,36 @@ public class DetailsEditActivity extends AppCompatActivity {
     @BindView(R.id.detailsedit_radioSex)
     RadioGroup radioSexGroup;
 
+    public static final String TAG = "DetailsEditActivity";
+
+    private FirebaseAuth mAuth;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            sendToLogin();
+        }else {
+            //tests
+            Log.d(TAG, "onStart: logged in as :"+currentUser.getEmail());
+
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_edit);
         ButterKnife.bind(this);
 
-        //TODO: Design the details screen'
-
         setSupportActionBar(mToolbar);
+
+        //firebase
+        mAuth = FirebaseAuth.getInstance();
+
 
         // Get the ActionBar here to configure the way it behaves.
         final ActionBar ab = getSupportActionBar();
@@ -164,5 +190,11 @@ public class DetailsEditActivity extends AppCompatActivity {
             default:
                 return "";
         }
+    }
+
+    private void sendToLogin() {
+        Intent loginIntent = new Intent(DetailsEditActivity.this, LoginActivity.class);
+        startActivity(loginIntent);
+        finish();
     }
 }
