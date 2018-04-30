@@ -29,8 +29,9 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
@@ -153,36 +154,40 @@ public class GoogleLogInFragment extends Fragment {
                             Log.d(TAG, "signInWithCredential:success");
                             final FirebaseUser user = mAuth.getCurrentUser();
 
+                            final String device_token = FirebaseInstanceId.getInstance().getToken();
+                            final String mCurrentUserid = mAuth.getCurrentUser().getUid();
 
-                            String device_token = FirebaseInstanceId.getInstance().getToken();
-                            String mCurrentUserid = mAuth.getCurrentUser().getUid();
+                            // refactor this not to write to DB each time...check if account exists
 
-                            //TODO: refactor this not to write to DB each time...check if account exists
-
-                            Map<String, Object> userMap = new HashMap<>();
-
-                            userMap.put("device_token",device_token);
-                            userMap.put("username",user.getDisplayName());
-                            userMap.put("photourl",user.getPhotoUrl().toString());
-
-                            mFirestore.collection("Users").document(mCurrentUserid).set(userMap, SetOptions.merge())
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            DocumentReference docReference = mFirestore.collection("Users").document(mCurrentUserid);
+                            docReference.get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                         @Override
-                                        public void onComplete(@NonNull Task<Void> dbtask) {
-                                            if(dbtask.isSuccessful()){
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document = task.getResult();
+                                                if (document.exists()) {
+                                                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
 
-                                                pDialog.dismissWithAnimation();
-                                                mBtnGoogleLogin.setEnabled(true);
-                                                sendToMain();
-                                            }else {
-                                                pDialog.dismiss();
-                                                errorPrompt();
-                                                Log.d(TAG, "onComplete: error"+dbtask.getException().toString());
+                                                    //update token only
+                                                    updateTokenOnly(mCurrentUserid, device_token, pDialog);
+
+                                                } else {
+                                                    Log.d(TAG, "No such document");
+
+                                                    writingToUsersAuth(mCurrentUserid);
+                                                    //write to db
+                                                    writingToUsers(pDialog, device_token, user, mCurrentUserid);
+
+                                                    //TODO: since is first time send to profile completion screen or phone auth
+
+                                                }
+                                            } else {
+                                                Log.d(TAG, "get failed with ", task.getException());
+                                                //docExists[0] = null;
                                             }
                                         }
                                     });
-
-
                         } else {
                             // If sign in fails, display a message to the user.
                             pDialog.dismissWithAnimation();
@@ -234,6 +239,79 @@ public class GoogleLogInFragment extends Fragment {
             e.printStackTrace();
         }
         //Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
-        errorPrompt("Oops...", error);
+        errorPrompt("Oops... \n", error);
+    }
+
+    private void writingToUsers(final SweetAlertDialog pDialog, String device_token, FirebaseUser user, String mCurrentUserid){
+        Map<String, Object> userMap = new HashMap<>();
+
+        userMap.put("devicetoken",device_token);
+        userMap.put("username",user.getDisplayName());
+        userMap.put("photourl",user.getPhotoUrl().toString());
+
+        mFirestore.collection("Users").document(mCurrentUserid).set(userMap)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> dbtask) {
+                        if(dbtask.isSuccessful()){
+                            pDialog.dismissWithAnimation();
+                            sendToMain();
+                        }else {
+                            pDialog.dismiss();
+                            errorPrompt();
+                            Log.d(TAG, "onComplete: error "+dbtask.getException());
+                        }
+                    }
+                });
+    }
+
+    private void updateTokenOnly(final String mCurrentUserid,
+                                 final String device_token,
+                                 final SweetAlertDialog pDialog){
+
+        mFirestore.collection("Users").document(mCurrentUserid).update("devicetoken",device_token)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> dbtask) {
+                        if(dbtask.isSuccessful()){
+                            pDialog.dismissWithAnimation();
+                            sendToMain();
+                        }else {
+                            pDialog.dismiss();
+                            errorPrompt();
+                            Log.d(TAG, "onComplete: error "+dbtask.getException());
+                        }
+                    }
+                });
+    }
+
+    //possibly first time log in
+    private void writingToUsersAuth(String mCurrentUserid){
+        Map<String, Object> userAuthMap = new HashMap<>();
+        userAuthMap.put("phonenumber", "");
+        userAuthMap.put("fbConnected", true);
+        userAuthMap.put("googleConnected", false);
+
+        // Set the value of 'UsersAuth'
+        DocumentReference usersAuthRef = mFirestore.collection("UsersAuth").document(mCurrentUserid);
+
+        usersAuthRef.set(userAuthMap)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Log.d(TAG, "onComplete: successful");
+                        }else {
+                            Log.d(TAG, "onComplete: userAuth database error"+task.getException());
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (noInternetDialog != null)
+            noInternetDialog.onDestroy();
     }
 }

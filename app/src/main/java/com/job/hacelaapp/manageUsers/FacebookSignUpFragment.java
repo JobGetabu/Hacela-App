@@ -289,8 +289,8 @@ public class FacebookSignUpFragment extends Fragment {
                                  final SweetAlertDialog pDialog){
 
         pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-        pDialog.setTitle("Account already exists");
-        pDialog.setTitleText("Logging you in...");
+
+        pDialog.setTitleText("Account already exists \n Logging you in...");
 
         mFirestore.collection("Users").document(mCurrentUserid).update("devicetoken",device_token)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
