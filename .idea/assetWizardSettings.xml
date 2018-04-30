@@ -83,9 +83,9 @@
                           <map>
                             <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="ic_camera" />
+                            <entry key="outputName" value="ic_approval" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\getab\Desktop\Projects\ProjectHacela\Design\icon assets\ic_camera.svg" />
+                            <entry key="sourceFile" value="C:\Users\getab\Desktop\Projects\ProjectHacela\Design\icon assets\approval.svg" />
                           </map>
                         </option>
                       </PersistentState>

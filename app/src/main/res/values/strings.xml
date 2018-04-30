@@ -65,6 +65,7 @@
     <string name="between_20k_40k">Between 20K - 40k</string>
     <string name="between_40k_90k">Between 40K - 90k</string>
     <string name="b_above_100k">Above 100k</string>
+    <string name="connected_accounts">Connected Accounts</string>
 
 
     <!-- Types professions i could think of in 5 minutes -->

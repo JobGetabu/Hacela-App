@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="statusBarSize">24dp</dimen>
+    <dimen name="d24">24dp</dimen>
+    <dimen name="d16">16dp</dimen>
+    <dimen name="d32">32dp</dimen>
 
     <dimen name="spacing_normal">8dp</dimen>
     <dimen name="spacing_micro">4dp</dimen>

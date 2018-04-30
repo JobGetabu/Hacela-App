@@ -3,6 +3,8 @@ package com.job.hacelaapp.dataSource;
 /**
  * Created by Job on Sunday : 4/22/2018.
  */
+//maps db UsersAuth
+
 public class UserAuthInfo {
     private Boolean googleconnected;
     private Boolean fbconnected;
