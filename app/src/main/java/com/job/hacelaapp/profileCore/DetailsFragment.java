@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.UserBasicInfo;
+import com.job.hacelaapp.viewmodel.DetailsEditActivityViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

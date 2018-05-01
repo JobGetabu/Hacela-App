@@ -1,4 +1,4 @@
-package com.job.hacelaapp.profileCore;
+package com.job.hacelaapp.viewmodel;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
@@ -14,6 +14,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.job.hacelaapp.appExecutor.DefaultExecutorSupplier;
+import com.job.hacelaapp.appExecutor.Priority;
+import com.job.hacelaapp.appExecutor.PriorityRunnable;
 import com.job.hacelaapp.dataSource.UserBasicInfo;
 import com.job.hacelaapp.repository.FirebaseQueryLiveData;
 
@@ -28,8 +31,9 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
     //few db references
     private String currentUserId;
 
-   public DocumentReference USERSREF = null;
-
+    private DocumentReference USERSREF;
+    private DocumentReference USERSAUTHREF;
+    private DocumentReference USERSPROFILE;
 
 
     private FirebaseQueryLiveData mLiveDataUsersdata;
@@ -40,7 +44,7 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
 
     private MediatorLiveData<UserBasicInfo> usersLiveData = new MediatorLiveData<>();
 
-    public DetailsEditActivityViewModel(@NonNull Application application,FirebaseAuth mAuth,FirebaseFirestore mFirestore) {
+    public DetailsEditActivityViewModel(@NonNull Application application, FirebaseAuth mAuth, FirebaseFirestore mFirestore) {
         super(application);
 
         //firebase
@@ -48,12 +52,13 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
         this.mFirestore = mFirestore;
         this.currentUserId = mAuth.getCurrentUser().getUid();
 
+        //init
         USERSREF = mFirestore.collection("Users").document(currentUserId);
-         final DocumentReference USERSAUTHREF = mFirestore.collection("UsersAuth").document(currentUserId);
-         final DocumentReference USERSPROFILE = mFirestore.collection("UsersProfile").document(currentUserId);
+        USERSAUTHREF = mFirestore.collection("UsersAuth").document(currentUserId);
+        USERSPROFILE = mFirestore.collection("UsersProfile").document(currentUserId);
 
-        Log.d("DetailsEditActivity", "DetailsEditActivityViewModel: "+mAuth.getCurrentUser().getEmail());
-        Log.d("DetailsEditActivity", "DetailsEditActivityViewModel: "+USERSREF);
+        Log.d("DetailsEditActivity", "DetailsEditActivityViewModel: " + mAuth.getCurrentUser().getEmail());
+        Log.d("DetailsEditActivity", "DetailsEditActivityViewModel: " + USERSREF);
 
 
         mLiveDataUsersdata = new FirebaseQueryLiveData(USERSREF);
@@ -63,15 +68,15 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
             @Override
             public void onChanged(@Nullable final DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot != null) {
-                    //TODO: testing
 
-                    Log.d("DetailsEditActivity", "DetailsEdit :::: "+documentSnapshot.getData());
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            usersLiveData.postValue(documentSnapshot.toObject(UserBasicInfo.class));
-                        }
-                    }).start();
+                    DefaultExecutorSupplier.getInstance().forBackgroundTasks()
+                            .submit(new PriorityRunnable(Priority.HIGH) {
+                                @Override
+                                public void run() {
+                                    // do some background work here at high priority.
+                                    usersLiveData.postValue(documentSnapshot.toObject(UserBasicInfo.class));
+                                }
+                            });
                 } else {
                     usersLiveData.setValue(null);
                 }
@@ -79,11 +84,10 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
         });
     }
 
+
+
     /**
-     * A creator is used to inject the product ID into the ViewModel
-     * <p>
-     * This creator is to showcase how to inject dependencies into ViewModels. It's not
-     * actually necessary in this case, as the product ID can be passed in a public method.
+     * Factory for instantiating the viewmodel
      */
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
 
@@ -101,7 +105,7 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
             //noinspection unchecked
-            return (T) new DetailsEditActivityViewModel(mApplication,mAuth, mFirestore);
+            return (T) new DetailsEditActivityViewModel(mApplication, mAuth, mFirestore);
         }
     }
 }
