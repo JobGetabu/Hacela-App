@@ -53,11 +53,12 @@
                 app:civ_border_width="4dp" />
 
             <TextView
+                android:id="@+id/profile_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
-                android:text="Display Name"
+                android:text="@string/display_name"
                 android:textColor="@color/lightGrey"
                 android:textSize="24sp" />
 

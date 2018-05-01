@@ -68,6 +68,7 @@
     <string name="connected_accounts">Connected Accounts</string>
 
 
+
     <!-- Types professions i could think of in 5 minutes -->
     <string-array name="profession_categories">
         <!--unique-->

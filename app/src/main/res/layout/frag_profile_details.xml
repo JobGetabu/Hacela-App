@@ -36,6 +36,7 @@
 
 
                 <TextView
+                    android:id="@+id/frg_details_tvprofilecompletion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingEnd="@dimen/padding_normal"
@@ -43,11 +44,12 @@
                     android:textAlignment="center"
                     android:textSize="18sp"
                     android:textStyle="bold"
+                    android:focusable="true"
                     android:text="@string/profile_completion"
                     />
 
                 <ProgressBar
-                    android:id="@+id/progressBar"
+                    android:id="@+id/frg_details_progressprofilecompletion"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:progress="70"
@@ -75,11 +77,11 @@
                     android:textColor="@android:color/black"
                     android:hint="@string/phone_number"
                     android:inputType="number"
-                    android:text="0708440184"
                     android:textSize="18sp" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/frg_details_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/padding_normal"
@@ -93,9 +95,11 @@
                     android:hint="@string/email"
                     android:inputType="textEmailAddress"
                     android:textSize="18sp"
-                    android:text="mrjob@gmail.com" />
+                    
+                    />
             </android.support.design.widget.TextInputLayout>
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/frg_details_idnumber"
                     android:layout_marginBottom="@dimen/padding_normal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -107,10 +111,10 @@
                         android:layout_height="wrap_content"
                         android:enabled="false"
                         android:textColor="@android:color/black"
-                        android:hint="ID Number"
+                        android:hint="@string/id_number"
                         android:inputType="number"
                         android:textSize="18sp"
-                        android:text="34311813" />
+                        />
                 </android.support.design.widget.TextInputLayout>
 
             </LinearLayout>
@@ -155,35 +159,38 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/imageView4"
+                    android:id="@+id/frg_details_fbicon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="32dp"
                     android:layout_marginTop="8dp"
+                    
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/imageView5"
+                    app:layout_constraintEnd_toStartOf="@+id/frg_details_googleicon"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView7"
                     app:layout_constraintVertical_bias="0.45"
-                    app:srcCompat="@drawable/fb_icon" />
+                    app:srcCompat="@drawable/fb_icon"
+                    android:contentDescription="@string/image_default_content_description"
+                    />
 
                 <ImageView
-                    android:id="@+id/imageView5"
+                    android:id="@+id/frg_details_googleicon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="32dp"
                     android:layout_marginTop="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/imageView6"
+                    app:layout_constraintEnd_toStartOf="@+id/frg_details_emailicon"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/imageView4"
+                    app:layout_constraintStart_toEndOf="@+id/frg_details_fbicon"
                     app:layout_constraintTop_toBottomOf="@+id/textView7"
                     app:layout_constraintVertical_bias="0.466"
                     app:srcCompat="@drawable/ic_googleplus_icon" />
 
                 <ImageView
-                    android:id="@+id/imageView6"
+                    android:id="@+id/frg_details_emailicon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="32dp"
@@ -191,40 +198,46 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/imageView5"
+                    app:layout_constraintStart_toEndOf="@+id/frg_details_googleicon"
                     app:layout_constraintTop_toBottomOf="@+id/textView7"
                     app:layout_constraintVertical_bias="0.466"
                     app:srcCompat="@drawable/gmail_icon" />
 
                 <ImageView
-                    android:id="@+id/imageView7"
+                    android:id="@+id/frg_details_tick_fbicon"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="28dp"
                     android:layout_marginTop="28dp"
-                    app:layout_constraintStart_toStartOf="@+id/imageView4"
-                    app:layout_constraintTop_toTopOf="@+id/imageView4"
-                    app:srcCompat="@drawable/ic_approval" />
+                    app:layout_constraintStart_toStartOf="@+id/frg_details_fbicon"
+                    app:layout_constraintTop_toTopOf="@+id/frg_details_fbicon"
+                    app:srcCompat="@drawable/ic_approval"
+                    android:visibility="invisible"
+                    />
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/frg_details_tick_googleicon"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="28dp"
                     android:layout_marginTop="28dp"
-                    app:layout_constraintStart_toStartOf="@+id/imageView5"
-                    app:layout_constraintTop_toTopOf="@+id/imageView5"
-                    app:srcCompat="@drawable/ic_approval" />
+                    app:layout_constraintStart_toStartOf="@+id/frg_details_googleicon"
+                    app:layout_constraintTop_toTopOf="@+id/frg_details_googleicon"
+                    app:srcCompat="@drawable/ic_approval"
+                    android:visibility="invisible"
+                    />
 
                 <ImageView
-                    android:id="@+id/imageView8"
+                    android:id="@+id/frg_details_tick_emailicon"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginTop="28dp"
-                    app:layout_constraintStart_toStartOf="@+id/imageView6"
-                    app:layout_constraintTop_toTopOf="@+id/imageView6"
-                    app:srcCompat="@drawable/ic_approval" />
+                    app:layout_constraintStart_toStartOf="@+id/frg_details_emailicon"
+                    app:layout_constraintTop_toTopOf="@+id/frg_details_emailicon"
+                    app:srcCompat="@drawable/ic_approval"
+                    android:visibility="invisible"
+                    />
             </android.support.constraint.ConstraintLayout>
 
         </android.support.v7.widget.CardView>
@@ -262,6 +275,7 @@
                     />
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/frg_details_profession"
                     android:layout_marginBottom="@dimen/padding_normal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -273,13 +287,15 @@
                         android:layout_height="wrap_content"
                         android:enabled="false"
                         android:textColor="@android:color/black"
-                        android:hint="Profession"
+                        android:hint="@string/profession"
                         android:inputType="number"
                         android:textSize="18sp"
-                        android:text="Business" />
+
+                        />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/frg_details_typeofbiz"
                     android:layout_marginBottom="@dimen/padding_normal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -291,13 +307,15 @@
                         android:layout_height="wrap_content"
                         android:enabled="false"
                         android:textColor="@android:color/black"
-                        android:hint="Type of Business"
+                        android:hint="@string/type_of_business"
                         android:inputType="number"
                         android:textSize="18sp"
-                        android:text="Sole Proprietor" />
+
+                        />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/frg_details_income"
                     android:layout_marginBottom="@dimen/padding_normal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -309,10 +327,11 @@
                         android:layout_height="wrap_content"
                         android:enabled="false"
                         android:textColor="@android:color/black"
-                        android:hint="Income"
+                        android:hint="@string/income"
                         android:inputType="number"
                         android:textSize="18sp"
-                        android:text="Over Ksh 100,000" />
+
+                        />
                 </android.support.design.widget.TextInputLayout>
 
             </LinearLayout>

@@ -9,13 +9,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.UserBasicInfo;
@@ -23,19 +25,45 @@ import com.job.hacelaapp.viewmodel.DetailsEditActivityViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class DetailsFragment extends Fragment {
 
+
+    TextView mUserName;
+    CircleImageView mProfileImage;
+
+
     @BindView(R.id.frg_details_phonenumber)
     TextInputLayout mPhonenumber;
+    @BindView(R.id.frg_details_tvprofilecompletion)
+    TextView mProfileCompletiontext;
+    @BindView(R.id.frg_details_email)
+    TextInputLayout mEmailaddress;
+    @BindView(R.id.frg_details_idnumber)
+    TextInputLayout mIdNumber;
+    @BindView(R.id.frg_details_tick_fbicon)
+    ImageView mFbtick;
+    @BindView(R.id.frg_details_tick_googleicon)
+    ImageView mGoogleTick;
+    @BindView(R.id.frg_details_tick_emailicon)
+    ImageView mEmailTick;
+
+    @BindView(R.id.frg_details_profession)
+    TextInputLayout mProfession;
+    @BindView(R.id.frg_details_typeofbiz)
+    TextInputLayout mTypeofBiz;
+    @BindView(R.id.frg_details_income)
+    TextInputLayout mIncome;
 
     private View mRootView;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
+    private FirebaseUser mCurrentUser;
 
     private DetailsEditActivityViewModel model;
 
@@ -61,8 +89,15 @@ public class DetailsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mUserName = getActivity().findViewById(R.id.profile_username);
+        mProfileImage = getActivity().findViewById(R.id.profile_image);
+
+
+        //firebase
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
+        mCurrentUser = mAuth.getCurrentUser();
+
 
         DetailsEditActivityViewModel.Factory factory = new DetailsEditActivityViewModel.Factory(
                 getActivity().getApplication(), mAuth, mFirestore);
@@ -70,15 +105,6 @@ public class DetailsFragment extends Fragment {
         model = ViewModelProviders.of(this, factory)
                 .get(DetailsEditActivityViewModel.class);
 
-        MediatorLiveData<UserBasicInfo> data = model.getUsersLiveData();
-
-        data.observe(this, new Observer<UserBasicInfo>() {
-            @Override
-            public void onChanged(@Nullable UserBasicInfo userBasicInfo) {
-                Log.d(TAG, "onChanged: data retrieved is "+userBasicInfo.toString());
-                mPhonenumber.getEditText().setText(userBasicInfo.getUsername());
-            }
-        });
 
     }
 
@@ -95,5 +121,19 @@ public class DetailsFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //set ui with Users data
+    private void setUpBasicInfo(){
+        MediatorLiveData<UserBasicInfo> data = model.getUsersLiveData();
+
+        data.observe(this, new Observer<UserBasicInfo>() {
+            @Override
+            public void onChanged(@Nullable UserBasicInfo userBasicInfo) {
+
+                mUserName.setText(userBasicInfo.getUsername());
+                mEmailaddress.getEditText().setText(mCurrentUser.getEmail());
+            }
+        });
     }
 }
