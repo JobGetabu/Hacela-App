@@ -41,4 +41,13 @@ public class UserBasicInfo {
     public void setPhotourl(String photourl) {
         this.photourl = photourl;
     }
+
+    @Override
+    public String toString() {
+        return "UserBasicInfo{" +
+                "devicetoken='" + devicetoken + '\'' +
+                ", username='" + username + '\'' +
+                ", photourl='" + photourl + '\'' +
+                '}';
+    }
 }

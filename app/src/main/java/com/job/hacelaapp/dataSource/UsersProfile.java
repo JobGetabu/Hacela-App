@@ -74,4 +74,16 @@ public class UsersProfile {
     public void setGroups(UsersGroups groups) {
         this.groups = groups;
     }
+
+    @Override
+    public String toString() {
+        return "UsersProfile{" +
+                "profession='" + profession + '\'' +
+                ", typeOfBusiness='" + typeOfBusiness + '\'' +
+                ", income='" + income + '\'' +
+                ", profileCompletion=" + profileCompletion +
+                ", fullname='" + fullname + '\'' +
+                ", groups=" + groups +
+                '}';
+    }
 }

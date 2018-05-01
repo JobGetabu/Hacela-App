@@ -42,4 +42,13 @@ public class UserAuthInfo {
     public void setPhonenumber(String phonenumber) {
         this.phonenumber = phonenumber;
     }
+
+    @Override
+    public String toString() {
+        return "UserAuthInfo{" +
+                "googleconnected=" + googleconnected +
+                ", fbconnected=" + fbconnected +
+                ", phonenumber='" + phonenumber + '\'' +
+                '}';
+    }
 }

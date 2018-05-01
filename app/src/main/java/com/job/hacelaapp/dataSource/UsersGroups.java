@@ -16,7 +16,8 @@ public class UsersGroups {
     @Nullable
     private Date endDate;
 
-    public UsersGroups(UUID groupId, boolean isMember, Date startDate,@Nullable Date endDate) {
+
+    public UsersGroups(UUID groupId, boolean isMember, Date startDate, @Nullable Date endDate) {
         this.groupId = groupId;
         this.isMember = isMember;
         this.startDate = startDate;
@@ -53,5 +54,15 @@ public class UsersGroups {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    @Override
+    public String toString() {
+        return "UsersGroups{" +
+                "groupId=" + groupId +
+                ", isMember=" + isMember +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
     }
 }
