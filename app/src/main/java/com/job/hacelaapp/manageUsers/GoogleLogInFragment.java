@@ -35,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.util.IsPlayServicesAvailable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -114,6 +115,14 @@ public class GoogleLogInFragment extends Fragment {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
         mBtnGoogleLogin.setEnabled(false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        IsPlayServicesAvailable playServicesAvailable = new IsPlayServicesAvailable();
+        playServicesAvailable.checksForGoogleServicesAvailability(getContext(),getActivity());
     }
 
     @Override
@@ -319,4 +328,5 @@ public class GoogleLogInFragment extends Fragment {
         if (noInternetDialog != null)
             noInternetDialog.onDestroy();
     }
+
 }

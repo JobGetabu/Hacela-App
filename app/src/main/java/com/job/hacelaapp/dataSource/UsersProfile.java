@@ -17,6 +17,10 @@ public class UsersProfile {
     private String fullname;
     private UsersGroups groups;
 
+    private String gender;
+    private String idnumber;
+
+
     public UsersProfile(String profession, @Nullable String typeOfBusiness, String income,
                         int profileCompletion, String fullname, UsersGroups groups) {
         this.profession = profession;

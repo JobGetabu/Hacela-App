@@ -4,6 +4,7 @@ package com.job.hacelaapp.hacelaCore;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,6 +54,14 @@ public class HomeFragment extends Fragment {
         ButterKnife.bind(this,mRootView);
         setHasOptionsMenu(true);
 
+
+        return mRootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
         ((MainActivity) getActivity()).setSupportActionBar(mToolbar);
         ((MainActivity) getActivity()).getSupportActionBar().setTitle("");
 
@@ -66,8 +75,6 @@ public class HomeFragment extends Fragment {
 
         //firebase
         mAuth = FirebaseAuth.getInstance();
-
-        return mRootView;
     }
 
     @Override

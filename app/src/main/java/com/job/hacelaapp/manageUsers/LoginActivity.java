@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.adapter.LoginFragmentsAdapter;
+import com.job.hacelaapp.util.IsPlayServicesAvailable;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 import butterknife.BindView;
@@ -56,6 +57,10 @@ public class LoginActivity extends AppCompatActivity {
 
         mainLoginPager.setCurrentItem(0);
         mPageChange(0);
+
+        IsPlayServicesAvailable playServicesAvailable = new IsPlayServicesAvailable();
+        playServicesAvailable.checksForGoogleServicesAvailability(this,LoginActivity.this);
+
     }
 
     @OnClick(R.id.login_btn_email)
