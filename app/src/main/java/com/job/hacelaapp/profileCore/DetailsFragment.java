@@ -4,6 +4,7 @@ package com.job.hacelaapp.profileCore;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.job.hacelaapp.HacelaApplication;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.UserBasicInfo;
 import com.job.hacelaapp.viewmodel.DetailsEditActivityViewModel;
@@ -82,16 +84,8 @@ public class DetailsFragment extends Fragment {
         setHasOptionsMenu(true);
         ButterKnife.bind(this,mRootView);
 
-        return mRootView;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        mUserName = getActivity().findViewById(R.id.profile_username);
-        mProfileImage = getActivity().findViewById(R.id.profile_image);
-
+        mUserName = getActivity().findViewById(R.id.profile_frg_username);
+        mProfileImage = getActivity().findViewById(R.id.profile_frg_image);
 
         //firebase
         mAuth = FirebaseAuth.getInstance();
@@ -104,6 +98,26 @@ public class DetailsFragment extends Fragment {
 
         model = ViewModelProviders.of(this, factory)
                 .get(DetailsEditActivityViewModel.class);
+
+        //UI observers
+
+
+        setMyImage(mProfileImage, mCurrentUser.getPhotoUrl().toString());
+
+        setUpBasicInfo(model);
+
+        return mRootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+
+
+
+
+
 
 
     }
@@ -124,7 +138,7 @@ public class DetailsFragment extends Fragment {
     }
 
     //set ui with Users data
-    private void setUpBasicInfo(){
+    private void setUpBasicInfo(DetailsEditActivityViewModel model){
         MediatorLiveData<UserBasicInfo> data = model.getUsersLiveData();
 
         data.observe(this, new Observer<UserBasicInfo>() {
@@ -133,7 +147,20 @@ public class DetailsFragment extends Fragment {
 
                 mUserName.setText(userBasicInfo.getUsername());
                 mEmailaddress.getEditText().setText(mCurrentUser.getEmail());
+                //setMyImage(mProfileImage, userBasicInfo.getPhotourl());
             }
         });
+    }
+
+    private void setMyImage(final CircleImageView circleImageView, final String url){
+        HacelaApplication.picassoWithCache
+                .load(url)
+                .placeholder(R.drawable.ic_profile_placeholder)
+                .error(R.drawable.ic_profile_placeholder)
+                .into(circleImageView);
+    }
+
+    private void setMyImage(final Context context, final ImageView imageView, final String url){
+
     }
 }
