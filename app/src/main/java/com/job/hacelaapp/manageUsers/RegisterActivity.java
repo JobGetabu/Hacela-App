@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.adapter.RegistrationFragmentsAdapter;
+import com.job.hacelaapp.util.IsPlayServicesAvailable;
 import com.tbuonomo.viewpagerdotsindicator.WormDotsIndicator;
 
 import butterknife.BindView;
@@ -49,6 +50,8 @@ public class RegisterActivity extends AppCompatActivity {
         mainRegisterPager.setCurrentItem(0);
         mPageChange(0);
 
+        IsPlayServicesAvailable playServicesAvailable = new IsPlayServicesAvailable();
+        playServicesAvailable.checksForGoogleServicesAvailability(this,RegisterActivity.this);
     }
 
     @OnClick(R.id.register_btn_email)

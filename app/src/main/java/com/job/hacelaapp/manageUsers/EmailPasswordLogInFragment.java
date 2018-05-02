@@ -227,8 +227,10 @@ public class EmailPasswordLogInFragment extends Fragment {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         if (noInternetDialog != null)
             noInternetDialog.onDestroy();
+
+
+        super.onDestroy();
     }
 }

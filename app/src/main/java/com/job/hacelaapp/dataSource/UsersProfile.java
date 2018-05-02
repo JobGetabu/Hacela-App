@@ -19,7 +19,7 @@ public class UsersProfile {
 
     private String gender;
     private String idnumber;
-
+    private Location location;
 
     public UsersProfile(String profession, @Nullable String typeOfBusiness, String income,
                         int profileCompletion, String fullname, UsersGroups groups) {

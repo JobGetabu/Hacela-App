@@ -66,7 +66,9 @@
     <string name="between_40k_90k">Between 40K - 90k</string>
     <string name="b_above_100k">Above 100k</string>
     <string name="connected_accounts">Connected Accounts</string>
-
+    <string name="permission_rationale_location">Hacela would like to know your location inorder to personalise your experience</string>
+    <string name="permission_location_denied_explanation">You have not granted location permission to Hacela.  Personalize your experience with Hacela</string>
+    <string name="settings">settings</string>
 
 
     <!-- Types professions i could think of in 5 minutes -->
