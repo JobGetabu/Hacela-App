@@ -203,6 +203,11 @@ public class FacebookLogInFragment extends Fragment {
                                                 } else {
                                                     Log.d(TAG, "No such document");
 
+                                                    //logging in with no pre account
+                                                    pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                                    pDialog.setTitleText("Account doesn't exists! \n Creating one...");
+
+
                                                     writingToUsersAuth(mCurrentUserid);
                                                     //write to db
                                                     writingToUsers(pDialog, device_token, user, mCurrentUserid);
@@ -309,8 +314,8 @@ public class FacebookLogInFragment extends Fragment {
     private void writingToUsersAuth(String mCurrentUserid){
         Map<String, Object> userAuthMap = new HashMap<>();
         userAuthMap.put("phonenumber", "");
-        userAuthMap.put("fbConnected", true);
-        userAuthMap.put("googleConnected", false);
+        userAuthMap.put("fbconnected", true);
+        userAuthMap.put("googleconnected", false);
 
         // Set the value of 'UsersAuth'
         DocumentReference usersAuthRef = mFirestore.collection("UsersAuth").document(mCurrentUserid);

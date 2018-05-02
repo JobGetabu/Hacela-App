@@ -8,7 +8,6 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -17,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.job.hacelaapp.appExecutor.DefaultExecutorSupplier;
 import com.job.hacelaapp.appExecutor.Priority;
 import com.job.hacelaapp.appExecutor.PriorityRunnable;
+import com.job.hacelaapp.dataSource.UserAuthInfo;
 import com.job.hacelaapp.dataSource.UserBasicInfo;
 import com.job.hacelaapp.repository.FirebaseQueryLiveData;
 
@@ -28,21 +28,19 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
-    //few db references
     private String currentUserId;
 
+    //few db references
     private DocumentReference USERSREF;
     private DocumentReference USERSAUTHREF;
     private DocumentReference USERSPROFILE;
 
 
-    private FirebaseQueryLiveData mLiveDataUsersdata;
+    public static final String TAG = "DetailsEditVM";
 
-    public MediatorLiveData<UserBasicInfo> getUsersLiveData() {
-        return usersLiveData;
-    }
 
     private MediatorLiveData<UserBasicInfo> usersLiveData = new MediatorLiveData<>();
+    private MediatorLiveData<UserAuthInfo> userAuthInfoMediatorLiveData = new MediatorLiveData<>();
 
     public DetailsEditActivityViewModel(@NonNull Application application, FirebaseAuth mAuth, FirebaseFirestore mFirestore) {
         super(application);
@@ -57,14 +55,16 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
         USERSAUTHREF = mFirestore.collection("UsersAuth").document(currentUserId);
         USERSPROFILE = mFirestore.collection("UsersProfile").document(currentUserId);
 
-        Log.d("DetailsEditActivity", "DetailsEditActivityViewModel: " + mAuth.getCurrentUser().getEmail());
-        Log.d("DetailsEditActivity", "DetailsEditActivityViewModel: " + USERSREF);
-
-
-        mLiveDataUsersdata = new FirebaseQueryLiveData(USERSREF);
-
         // Set up the MediatorLiveData to convert DataSnapshot objects into POJO objects
-        usersLiveData.addSource(mLiveDataUsersdata, new Observer<DocumentSnapshot>() {
+
+        workOnUsersLiveData();
+        workOnUserAuthInfoMediatorLiveData();
+
+    }
+
+    private void workOnUsersLiveData(){
+        FirebaseQueryLiveData mData = new FirebaseQueryLiveData(USERSREF);
+        usersLiveData.addSource(mData, new Observer<DocumentSnapshot>() {
             @Override
             public void onChanged(@Nullable final DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot != null) {
@@ -84,7 +84,37 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
         });
     }
 
+    private void workOnUserAuthInfoMediatorLiveData(){
+        FirebaseQueryLiveData mData = new FirebaseQueryLiveData(USERSAUTHREF);
+        userAuthInfoMediatorLiveData.addSource(mData, new Observer<DocumentSnapshot>() {
+            @Override
+            public void onChanged(@Nullable final DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot != null){
 
+                    DefaultExecutorSupplier.getInstance().forBackgroundTasks()
+                            .execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // do some background work here.
+                                    userAuthInfoMediatorLiveData.postValue(documentSnapshot.toObject(UserAuthInfo.class));
+                                }
+                            });
+
+                }else {
+                    userAuthInfoMediatorLiveData.setValue(null);
+                }
+            }
+        });
+    }
+
+
+    public MediatorLiveData<UserBasicInfo> getUsersLiveData() {
+        return usersLiveData;
+    }
+
+    public MediatorLiveData<UserAuthInfo> getUserAuthInfoMediatorLiveData() {
+        return userAuthInfoMediatorLiveData;
+    }
 
     /**
      * Factory for instantiating the viewmodel

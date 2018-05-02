@@ -48,7 +48,7 @@
                 android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
-
+                tools:src="@drawable/ic_profile_placeholder"
                 app:civ_border_color="@android:color/white"
                 app:civ_border_width="4dp" />
 
@@ -59,11 +59,10 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
                 android:text="@string/display_name"
-                android:textColor="@color/lightGrey"
+                android:textColor="#eaeaea"
                 android:textSize="24sp" />
 
         </LinearLayout>
-
 
 
         <android.support.design.widget.TabLayout

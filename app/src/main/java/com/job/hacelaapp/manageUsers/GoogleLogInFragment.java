@@ -175,6 +175,10 @@ public class GoogleLogInFragment extends Fragment {
                                                 } else {
                                                     Log.d(TAG, "No such document");
 
+                                                    //logging in with no pre account
+                                                    pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                                    pDialog.setTitleText("Account doesn't exists! \n Creating one...");
+
                                                     writingToUsersAuth(mCurrentUserid);
                                                     //write to db
                                                     writingToUsers(pDialog, device_token, user, mCurrentUserid);
@@ -269,6 +273,7 @@ public class GoogleLogInFragment extends Fragment {
                                  final String device_token,
                                  final SweetAlertDialog pDialog){
 
+
         mFirestore.collection("Users").document(mCurrentUserid).update("devicetoken",device_token)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -289,8 +294,8 @@ public class GoogleLogInFragment extends Fragment {
     private void writingToUsersAuth(String mCurrentUserid){
         Map<String, Object> userAuthMap = new HashMap<>();
         userAuthMap.put("phonenumber", "");
-        userAuthMap.put("fbConnected", false);
-        userAuthMap.put("googleConnected", true);
+        userAuthMap.put("fbconnected", false);
+        userAuthMap.put("googleconnected", true);
 
         // Set the value of 'UsersAuth'
         DocumentReference usersAuthRef = mFirestore.collection("UsersAuth").document(mCurrentUserid);

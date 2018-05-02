@@ -312,8 +312,8 @@ public class FacebookSignUpFragment extends Fragment {
     private void writingToUsersAuth(String mCurrentUserid){
         Map<String, Object> userAuthMap = new HashMap<>();
         userAuthMap.put("phonenumber", "");
-        userAuthMap.put("fbConnected", true);
-        userAuthMap.put("googleConnected", false);
+        userAuthMap.put("fbconnected", true);
+        userAuthMap.put("googleconnected", false);
 
         // Set the value of 'UsersAuth'
         DocumentReference usersAuthRef = mFirestore.collection("UsersAuth").document(mCurrentUserid);

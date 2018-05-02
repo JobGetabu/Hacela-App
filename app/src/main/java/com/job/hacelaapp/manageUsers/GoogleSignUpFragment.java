@@ -140,7 +140,7 @@ public class GoogleSignUpFragment extends Fragment {
 
         final SweetAlertDialog pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#f9ab60"));
-        pDialog.setTitleText("Logging in...");
+        pDialog.setTitleText("Creating Account...");
         pDialog.setCancelable(false);
         pDialog.show();
 
@@ -303,8 +303,8 @@ public class GoogleSignUpFragment extends Fragment {
     private void writingToUsersAuth(String mCurrentUserid){
         Map<String, Object> userAuthMap = new HashMap<>();
         userAuthMap.put("phonenumber", "");
-        userAuthMap.put("fbConnected", false);
-        userAuthMap.put("googleConnected", true);
+        userAuthMap.put("fbconnected", false);
+        userAuthMap.put("googleconnected", true);
 
         // Set the value of 'UsersAuth'
         DocumentReference usersAuthRef = mFirestore.collection("UsersAuth").document(mCurrentUserid);

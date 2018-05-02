@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.job.hacelaapp.HacelaApplication;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.dataSource.UserAuthInfo;
 import com.job.hacelaapp.dataSource.UserBasicInfo;
 import com.job.hacelaapp.viewmodel.DetailsEditActivityViewModel;
 
@@ -82,7 +84,15 @@ public class DetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         mRootView = inflater.inflate(R.layout.frag_profile_details, container, false);
         setHasOptionsMenu(true);
-        ButterKnife.bind(this,mRootView);
+        ButterKnife.bind(this, mRootView);
+
+        return mRootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
 
         mUserName = getActivity().findViewById(R.id.profile_frg_username);
         mProfileImage = getActivity().findViewById(R.id.profile_frg_image);
@@ -101,24 +111,8 @@ public class DetailsFragment extends Fragment {
 
         //UI observers
 
-
-        setMyImage(mProfileImage, mCurrentUser.getPhotoUrl().toString());
-
         setUpBasicInfo(model);
-
-        return mRootView;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-
-
-
-
-
-
+        setUpAuthInfo(model);
 
     }
 
@@ -128,7 +122,7 @@ public class DetailsFragment extends Fragment {
         int id = item.getItemId();
         switch (id) {
             case R.id.profile_menu_edit:
-                Intent detailsEditIntent = new Intent(getActivity(),DetailsEditActivity.class);
+                Intent detailsEditIntent = new Intent(getActivity(), DetailsEditActivity.class);
                 startActivity(detailsEditIntent);
 
                 break;
@@ -138,21 +132,46 @@ public class DetailsFragment extends Fragment {
     }
 
     //set ui with Users data
-    private void setUpBasicInfo(DetailsEditActivityViewModel model){
+    private void setUpBasicInfo(DetailsEditActivityViewModel model) {
         MediatorLiveData<UserBasicInfo> data = model.getUsersLiveData();
 
         data.observe(this, new Observer<UserBasicInfo>() {
             @Override
             public void onChanged(@Nullable UserBasicInfo userBasicInfo) {
 
-                mUserName.setText(userBasicInfo.getUsername());
-                mEmailaddress.getEditText().setText(mCurrentUser.getEmail());
-                //setMyImage(mProfileImage, userBasicInfo.getPhotourl());
+                if (userBasicInfo != null) {
+
+                    mUserName.setText(userBasicInfo.getUsername());
+                    mEmailaddress.getEditText().setText(mCurrentUser.getEmail());
+                    setMyImage(mProfileImage, userBasicInfo.getPhotourl());
+                }
             }
         });
     }
 
-    private void setMyImage(final CircleImageView circleImageView, final String url){
+    private void setUpAuthInfo(DetailsEditActivityViewModel model) {
+
+        MediatorLiveData<UserAuthInfo> data = model.getUserAuthInfoMediatorLiveData();
+
+        data.observe(this, new Observer<UserAuthInfo>() {
+            @Override
+            public void onChanged(@Nullable UserAuthInfo userAuthInfo) {
+                if (userAuthInfo != null) {
+                    mPhonenumber.getEditText().setText(userAuthInfo.getPhonenumber());
+                    Log.d(TAG, "onChanged: "+userAuthInfo.toString());
+                    if (userAuthInfo.getFbconnected()) mFbtick.setVisibility(View.VISIBLE);
+                    else mFbtick.setVisibility(View.INVISIBLE);
+                    if (userAuthInfo.getGoogleconnected()) mGoogleTick.setVisibility(View.VISIBLE);
+                    else mGoogleTick.setVisibility(View.INVISIBLE);
+                    if (userAuthInfo.getGoogleconnected()) mEmailTick.setVisibility(View.VISIBLE);
+                    else mEmailTick.setVisibility(View.INVISIBLE);
+
+                }
+            }
+        });
+    }
+
+    private void setMyImage(final CircleImageView circleImageView, final String url) {
         HacelaApplication.picassoWithCache
                 .load(url)
                 .placeholder(R.drawable.ic_profile_placeholder)
@@ -160,7 +179,11 @@ public class DetailsFragment extends Fragment {
                 .into(circleImageView);
     }
 
-    private void setMyImage(final Context context, final ImageView imageView, final String url){
-
+    private void setMyImage(final Context context, final ImageView imageView, final String url) {
+        HacelaApplication.picassoWithCache
+                .load(url)
+                .placeholder(R.drawable.ic_profile_placeholder)
+                .error(R.drawable.ic_profile_placeholder)
+                .into(imageView);
     }
 }
