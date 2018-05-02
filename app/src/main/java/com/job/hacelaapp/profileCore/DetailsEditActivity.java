@@ -1,6 +1,5 @@
 package com.job.hacelaapp.profileCore;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,9 +14,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
@@ -44,6 +41,7 @@ import com.job.hacelaapp.BuildConfig;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.manageUsers.LoginActivity;
 import com.job.hacelaapp.service.LocationMonitoringService;
+import com.job.hacelaapp.util.PermissionProvider;
 
 import am.appwise.components.ni.NoInternetDialog;
 import butterknife.BindView;
@@ -94,6 +92,7 @@ public class DetailsEditActivity extends AppCompatActivity {
     private boolean mAlreadyStartedService = false;
     private NoInternetDialog noInternetDialog;
     private FusedLocationProviderClient mFusedLocationClient;
+    private PermissionProvider permissionProvider;
 
 
     @Override
@@ -121,6 +120,9 @@ public class DetailsEditActivity extends AppCompatActivity {
 
         //firebase
         mAuth = FirebaseAuth.getInstance();
+
+        //util
+        permissionProvider = new PermissionProvider(this,DetailsEditActivity.this);
 
         // Get the ActionBar here to configure the way it behaves.
         final ActionBar ab = getSupportActionBar();
@@ -261,7 +263,7 @@ public class DetailsEditActivity extends AppCompatActivity {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         //Now make sure about location permission.
-        if (checkPermissions()) {
+        if (permissionProvider.checkPermissions()) {
 
             mFusedLocationClient.getLastLocation()
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -282,8 +284,8 @@ public class DetailsEditActivity extends AppCompatActivity {
                             }
                         }
                     });
-        } else if (!checkPermissions()) {
-            requestPermissions();
+        } else if (!permissionProvider.checkPermissions()) {
+            permissionProvider.requestPermissions();
         }
     }
 
@@ -305,70 +307,17 @@ public class DetailsEditActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Return the current state of the permissions needed.
-     */
-    private boolean checkPermissions() {
-        int permissionState1 = ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION);
-
-        int permissionState2 = ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION);
-
-        return permissionState1 == PackageManager.PERMISSION_GRANTED && permissionState2 == PackageManager.PERMISSION_GRANTED;
-
-    }
-
-    /**
-     * Start permissions requests.
-     */
-    private void requestPermissions() {
-
-        boolean shouldProvideRationale =
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION);
-
-        boolean shouldProvideRationale2 =
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION);
-
-
-        // Provide an additional rationale to the user. This would happen if the user denied the
-        // request previously, but didn't check the "Don't ask again" checkbox.
-        if (shouldProvideRationale || shouldProvideRationale2) {
-            Log.i(TAG, "Displaying permission rationale to provide additional context.");
-            showSnackbar(R.string.permission_rationale_location,
-                    android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            // Request permission
-                            ActivityCompat.requestPermissions(DetailsEditActivity.this,
-                                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                                    REQUEST_PERMISSIONS_REQUEST_CODE);
-                        }
-                    });
-        } else {
-            Log.i(TAG, "Requesting permission");
-            // Request permission. It's possible this can be auto answered if device policy
-            // sets the permission in a given state or the img_user denied the permission
-            // previously and checked "Never ask again".
-            ActivityCompat.requestPermissions(DetailsEditActivity.this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
-    }
-
     private void promptLocationMonitor() {
 
         //Now make sure about location permission.
-        if (checkPermissions()) {
+        if (permissionProvider.checkPermissions()) {
 
             //Step 2: Start the Location Monitor Service
             //Everything is there to start the service.
             //called from onResume
             startLocationMonitor();
-        } else if (!checkPermissions()) {
-            requestPermissions();
+        } else if (!permissionProvider.checkPermissions()) {
+            permissionProvider.requestPermissions();
         }
 
     }
@@ -379,22 +328,6 @@ public class DetailsEditActivity extends AppCompatActivity {
 
         // is executing for the first time.
         promptLocationMonitor();
-    }
-
-    /**
-     * Shows a {@link Snackbar}.
-     *
-     * @param mainTextStringId The id for the string resource for the Snackbar text.
-     * @param actionStringId   The text of the action item.
-     * @param listener         The listener associated with the Snackbar action.
-     */
-    private void showSnackbar(final int mainTextStringId, final int actionStringId,
-                              View.OnClickListener listener) {
-        Snackbar.make(
-                findViewById(android.R.id.content),
-                getString(mainTextStringId),
-                Snackbar.LENGTH_INDEFINITE)
-                .setAction(getString(actionStringId), listener).show();
     }
 
     /**
@@ -426,7 +359,7 @@ public class DetailsEditActivity extends AppCompatActivity {
                 // again" prompts). Therefore, a img_user interface affordance is typically implemented
                 // when permissions are denied. Otherwise, your app could appear unresponsive to
                 // touches or interactions which have required permissions.
-                showSnackbar(R.string.permission_location_denied_explanation,
+                permissionProvider.showSnackbar(R.string.permission_location_denied_explanation,
                         R.string.settings, new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
