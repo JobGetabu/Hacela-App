@@ -25,6 +25,7 @@ import com.job.hacelaapp.HacelaApplication;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.UserAuthInfo;
 import com.job.hacelaapp.dataSource.UserBasicInfo;
+import com.job.hacelaapp.dataSource.UsersProfile;
 import com.job.hacelaapp.viewmodel.DetailsEditActivityViewModel;
 
 import butterknife.BindView;
@@ -113,6 +114,7 @@ public class DetailsFragment extends Fragment {
 
         setUpBasicInfo(model);
         setUpAuthInfo(model);
+        setUpProfileInfo(model);
 
     }
 
@@ -169,6 +171,25 @@ public class DetailsFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void setUpProfileInfo(DetailsEditActivityViewModel model){
+
+        MediatorLiveData<UsersProfile> data = model.getUsersProfileMediatorLiveData();
+
+        data.observe(this, new Observer<UsersProfile>() {
+            @Override
+            public void onChanged(@Nullable UsersProfile usersProfile) {
+
+                if (usersProfile != null){
+
+                    mProfession.getEditText().setText(usersProfile.getProfession());
+                    mTypeofBiz.getEditText().setText(usersProfile.getTypeOfBusiness());
+                    mIncome.getEditText().setText(usersProfile.getIncome());
+                }
+            }
+        });
+
     }
 
     private void setMyImage(final CircleImageView circleImageView, final String url) {

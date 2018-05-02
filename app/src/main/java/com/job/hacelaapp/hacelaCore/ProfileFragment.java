@@ -74,21 +74,4 @@ public class ProfileFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-   /* @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.profile_menu_edit:
-                Toast.makeText(getActivity(), "TODO: Override In Profile Edit profile", Toast.LENGTH_SHORT).show();
-                DetailsFragment.makesnack();
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
-
-
-
-
 }

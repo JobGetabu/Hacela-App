@@ -18,6 +18,7 @@ import com.job.hacelaapp.appExecutor.Priority;
 import com.job.hacelaapp.appExecutor.PriorityRunnable;
 import com.job.hacelaapp.dataSource.UserAuthInfo;
 import com.job.hacelaapp.dataSource.UserBasicInfo;
+import com.job.hacelaapp.dataSource.UsersProfile;
 import com.job.hacelaapp.repository.FirebaseQueryLiveData;
 
 /**
@@ -41,6 +42,8 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
 
     private MediatorLiveData<UserBasicInfo> usersLiveData = new MediatorLiveData<>();
     private MediatorLiveData<UserAuthInfo> userAuthInfoMediatorLiveData = new MediatorLiveData<>();
+    private MediatorLiveData<UsersProfile> usersProfileMediatorLiveData = new MediatorLiveData<>();
+
 
     public DetailsEditActivityViewModel(@NonNull Application application, FirebaseAuth mAuth, FirebaseFirestore mFirestore) {
         super(application);
@@ -59,7 +62,7 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
 
         workOnUsersLiveData();
         workOnUserAuthInfoMediatorLiveData();
-
+        workOnUsersProfileMediatorLiveData();
     }
 
     private void workOnUsersLiveData(){
@@ -107,6 +110,29 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
         });
     }
 
+    private void workOnUsersProfileMediatorLiveData(){
+        FirebaseQueryLiveData mData = new FirebaseQueryLiveData(USERSPROFILE);
+        usersProfileMediatorLiveData.addSource(mData, new Observer<DocumentSnapshot>() {
+            @Override
+            public void onChanged(@Nullable final DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot != null){
+
+                    DefaultExecutorSupplier.getInstance().forBackgroundTasks()
+                            .execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // do some background work here.
+                                    usersProfileMediatorLiveData.postValue(documentSnapshot.toObject(UsersProfile.class));
+                                }
+                            });
+
+                }else {
+                    usersProfileMediatorLiveData.setValue(null);
+                }
+            }
+        });
+    }
+
 
     public MediatorLiveData<UserBasicInfo> getUsersLiveData() {
         return usersLiveData;
@@ -114,6 +140,10 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
 
     public MediatorLiveData<UserAuthInfo> getUserAuthInfoMediatorLiveData() {
         return userAuthInfoMediatorLiveData;
+    }
+
+    public MediatorLiveData<UsersProfile> getUsersProfileMediatorLiveData() {
+        return usersProfileMediatorLiveData;
     }
 
     /**
