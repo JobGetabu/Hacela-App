@@ -69,6 +69,10 @@
     <string name="permission_rationale_location">Hacela would like to know your location inorder to personalise your experience</string>
     <string name="permission_location_denied_explanation">You have not granted location permission to Hacela.  Personalize your experience with Hacela</string>
     <string name="settings">settings</string>
+    <string name="service_not_available">service not available</string>
+    <string name="invalid_lat_long_used">invalid latitude or longitude used</string>
+    <string name="no_address_found">No Address Found</string>
+    <string name="address_found">Address Found</string>
 
 
     <!-- Types professions i could think of in 5 minutes -->

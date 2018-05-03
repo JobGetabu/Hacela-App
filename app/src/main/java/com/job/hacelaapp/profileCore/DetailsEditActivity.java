@@ -7,15 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -41,6 +38,7 @@ import com.job.hacelaapp.BuildConfig;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.manageUsers.LoginActivity;
 import com.job.hacelaapp.service.LocationMonitoringService;
+import com.job.hacelaapp.util.AddressResultReceiver;
 import com.job.hacelaapp.util.PermissionProvider;
 
 import am.appwise.components.ni.NoInternetDialog;
@@ -91,9 +89,9 @@ public class DetailsEditActivity extends AppCompatActivity {
 
     private boolean mAlreadyStartedService = false;
     private NoInternetDialog noInternetDialog;
-    private FusedLocationProviderClient mFusedLocationClient;
     private PermissionProvider permissionProvider;
-
+    protected Location mLastLocation;
+    private AddressResultReceiver mResultReceiver;
 
     @Override
     public void onStart() {
@@ -138,7 +136,11 @@ public class DetailsEditActivity extends AppCompatActivity {
         handleLastKnownLocation();
 
         //build no net dialogue
-        //dialogue cant saving on no network
+        setUpNoNetDialogue();
+
+    }
+
+    private void setUpNoNetDialogue(){
         noInternetDialog = new NoInternetDialog.Builder(this)
                 .setBgGradientOrientation(45)
                 .setCancelable(true)
@@ -188,11 +190,6 @@ public class DetailsEditActivity extends AppCompatActivity {
                 .show();
     }
 
-    private Drawable fetchDrawable(@DrawableRes int mdrawable) {
-        // Facade Design Pattern
-        return ContextCompat.getDrawable(this, mdrawable);
-    }
-
     private void makeToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
@@ -202,7 +199,6 @@ public class DetailsEditActivity extends AppCompatActivity {
         //TODO:
         makeToast("TODO: Change prof pic");
     }
-
 
     @OnClick(R.id.details_btn_cancel)
     public void cancelEditClick() {
@@ -260,7 +256,7 @@ public class DetailsEditActivity extends AppCompatActivity {
     @SuppressLint("MissingPermission")
     private void handleLastKnownLocation() {
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         //Now make sure about location permission.
         if (permissionProvider.checkPermissions()) {
@@ -282,13 +278,16 @@ public class DetailsEditActivity extends AppCompatActivity {
                             }else {
                                 Log.d(TAG, "onSuccess: No last location cached");
                             }
+
+                            //TODO:handling address
+
+
                         }
                     });
         } else if (!permissionProvider.checkPermissions()) {
             permissionProvider.requestPermissions();
         }
     }
-
     //Start the Location Monitor Service
     private void startLocationMonitor() {
 
@@ -330,9 +329,7 @@ public class DetailsEditActivity extends AppCompatActivity {
         promptLocationMonitor();
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
+    //Callback received when a permissions request has been completed.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {

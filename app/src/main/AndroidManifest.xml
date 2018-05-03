@@ -46,6 +46,12 @@
         <service
             android:name=".service.LocationMonitoringService" />
 
+        <!-- Add the address location service !-->
+        <service
+            android:name=".service.FetchAddressIntentService"
+            android:exported="false"/>
+
+
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
