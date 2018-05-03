@@ -148,25 +148,28 @@
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
+                <TextView
                     android:id="@+id/details_phonenumber"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding_normal">
+                    android:layout_marginTop="32dp"
+                    android:text="@string/phone_number"
+                    android:textSize="20sp" />
 
-                    <android.support.design.widget.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/phone_number"
-                        android:imeOptions="actionNext"
-                        android:inputType="phone"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
+                <View
+                    android:id="@+id/details_phonenumber_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="@dimen/padding_normal"
+                    android:layout_marginTop="3dp"
+                    android:background="#717171" />
+
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/details_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_marginTop="@dimen/padding_normal">
 
                     <android.support.design.widget.TextInputEditText
@@ -279,7 +282,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding_normal"
-                    android:text="Type of Business"
+                    android:text="@string/type_of_business"
                     android:visibility="gone"
                     android:textSize="20sp" />
 
@@ -293,12 +296,12 @@
                     android:background="#717171" />
 
                 <android.support.design.widget.TextInputLayout
+                    android:id="@+id/details_idnumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding_normal">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/details_idnumber"
+                    <android.support.design.widget.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/id_number"

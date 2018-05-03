@@ -17,9 +17,36 @@ public class UsersProfile {
     private String fullname;
     private UsersGroups groups;
 
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setIdnumber(String idnumber) {
+        this.idnumber = idnumber;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
     private String gender;
     private String idnumber;
     private Location location;
+
+    public String getGender() {
+        return gender;
+    }
+
+    public String getIdnumber() {
+        return idnumber;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public UsersProfile() {
+    }
 
     public UsersProfile(String profession, @Nullable String typeOfBusiness, String income,
                         int profileCompletion, String fullname, UsersGroups groups) {

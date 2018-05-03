@@ -1,29 +1,30 @@
 package com.job.hacelaapp.profileCore;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -31,20 +32,31 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.WriteBatch;
 import com.job.hacelaapp.BuildConfig;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.dataSource.UserAuthInfo;
+import com.job.hacelaapp.dataSource.UserBasicInfo;
+import com.job.hacelaapp.dataSource.UsersProfile;
 import com.job.hacelaapp.manageUsers.LoginActivity;
 import com.job.hacelaapp.service.LocationMonitoringService;
-import com.job.hacelaapp.util.AddressResultReceiver;
+import com.job.hacelaapp.util.ImageProcessor;
 import com.job.hacelaapp.util.PermissionProvider;
+import com.job.hacelaapp.viewmodel.DetailsEditActivityViewModel;
 
 import am.appwise.components.ni.NoInternetDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class DetailsEditActivity extends AppCompatActivity {
@@ -64,12 +76,16 @@ public class DetailsEditActivity extends AppCompatActivity {
     @BindView(R.id.details_fullname)
     TextInputLayout mFullName;
     @BindView(R.id.details_phonenumber)
-    TextInputLayout mPhoneNumber;
+    TextView mPhoneNumber;
+    @BindView(R.id.details_phonenumber_line)
+    View mPhoneNumberLine;
     @BindView(R.id.details_location)
     TextInputLayout location;
     @BindView(R.id.details_idnumber)
-    AutoCompleteTextView mIdNum;
+    TextInputLayout mIdNum;
 
+    @BindView(R.id.details_tv_income)
+    TextView mIncome;
     @BindView(R.id.details_tv_profession)
     TextView mProfession;
     @BindView(R.id.details_tv_typeofbiz)
@@ -85,13 +101,25 @@ public class DetailsEditActivity extends AppCompatActivity {
     public static final String TAG = "EditActivity";
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
 
+    private String photoFile="";
+
+    //few db references
+    private DocumentReference USERSREF;
+    private DocumentReference USERSAUTHREF;
+    private DocumentReference USERSPROFILE;
+
+
     private FirebaseAuth mAuth;
+    private FirebaseFirestore mFirestore;
+    private String currentUserId;
 
     private boolean mAlreadyStartedService = false;
     private NoInternetDialog noInternetDialog;
     private PermissionProvider permissionProvider;
-    protected Location mLastLocation;
-    private AddressResultReceiver mResultReceiver;
+
+    private DetailsEditActivityViewModel model;
+    private ImageProcessor imageProcessor;
+
 
     @Override
     public void onStart() {
@@ -118,6 +146,10 @@ public class DetailsEditActivity extends AppCompatActivity {
 
         //firebase
         mAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
+        currentUserId = mAuth.getCurrentUser().getUid();
+
+
 
         //util
         permissionProvider = new PermissionProvider(this,DetailsEditActivity.this);
@@ -131,12 +163,26 @@ public class DetailsEditActivity extends AppCompatActivity {
         ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
 
 
+        imageProcessor = new ImageProcessor();
+
         //location service registered
         handleLocation();
         handleLastKnownLocation();
 
         //build no net dialogue
         setUpNoNetDialogue();
+
+        //read db data
+        DetailsEditActivityViewModel.Factory factory = new DetailsEditActivityViewModel.Factory(
+                getApplication(), mAuth, mFirestore);
+
+        model = ViewModelProviders.of(this, factory)
+                .get(DetailsEditActivityViewModel.class);
+
+        //UI observers
+        setUpBasicInfo(model);
+        setUpAuthInfo(model);
+        setUpProfileInfo(model);
 
     }
 
@@ -151,31 +197,23 @@ public class DetailsEditActivity extends AppCompatActivity {
 
     @OnClick({R.id.details_tv_income, R.id.details_tv_income_line})
     public void setmIncomeClick() {
-        //Creating the instance of PopupMenu
-        PopupMenu popup = new PopupMenu(DetailsEditActivity.this, mProfessionLine);
-        //Inflating the Popup using xml file
-        popup.getMenuInflater()
-                .inflate(R.menu.income_menu, popup.getMenu());
+        new AlertDialog.Builder(this)
+                .setSingleChoiceItems(R.array.income_range, 0, null)
+                .setPositiveButton(R.string.choose, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                        int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                        Object selectedItem = ((AlertDialog) dialog).getListView().getItemAtPosition(selectedPosition);
+                        // Do something useful with the position of the selected radio button
 
-        popup.setGravity(Gravity.END);
-        //registering popup with OnMenuItemClickListener
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                Toast.makeText(
-                        DetailsEditActivity.this,
-                        "You Clicked : " + item.getTitle(),
-                        Toast.LENGTH_SHORT
-                ).show();
-                return true;
-            }
-        });
-
-        popup.show(); //showing popup menu
+                        mIncome.setText(selectedItem.toString());
+                    }
+                })
+                .show();
     }
 
     @OnClick({R.id.details_tv_profession, R.id.details_tv_profession_line})
     public void setmProfessionClick() {
-
         new AlertDialog.Builder(this)
                 .setSingleChoiceItems(R.array.profession_categories, 0, null)
                 .setPositiveButton(R.string.choose, new DialogInterface.OnClickListener() {
@@ -183,8 +221,54 @@ public class DetailsEditActivity extends AppCompatActivity {
                         dialog.dismiss();
                         int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
                         Object selectedItem = ((AlertDialog) dialog).getListView().getItemAtPosition(selectedPosition);
+                        // Do something useful with the position of the selected radio button
+                        mProfession.setText(selectedItem.toString());
+
+                        if (selectedItem.toString().equals("Business")){
+                            mTypeOfBiz.setVisibility(View.VISIBLE);
+                            mTypeOfBizLine.setVisibility(View.VISIBLE);
+                        }else {
+                            mTypeOfBiz.setVisibility(View.GONE);
+                            mTypeOfBizLine.setVisibility(View.GONE);
+                        }
+                    }
+                })
+                .show();
+    }
+
+    @OnClick({R.id.details_tv_typeofbiz, R.id.details_tv_typeofbiz_line})
+    public void setmTypeOfBizClick() {
+
+        new AlertDialog.Builder(this)
+                .setSingleChoiceItems(R.array.business_categories, 0, null)
+                .setPositiveButton(R.string.choose, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                        int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
+                        Object selectedItem = ((AlertDialog) dialog).getListView().getItemAtPosition(selectedPosition);
                         // Do something useful withe the position of the selected radio button
-                        makeToast(selectedItem.toString() + "int id: " + selectedPosition);
+                        mTypeOfBiz.setText(selectedItem.toString());
+
+                    }
+                })
+                .show();
+    }
+
+    @OnClick({R.id.details_phonenumber, R.id.details_phonenumber_line})
+    public void setmPhoneNumberClick() {
+        new AlertDialog.Builder(this)
+                .setTitle("Change Phone Number")
+                .setMessage("This will be the number you send and receive money from !")
+                .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        makeToast("Change phone number activity");
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
                     }
                 })
                 .show();
@@ -207,8 +291,9 @@ public class DetailsEditActivity extends AppCompatActivity {
 
     @OnClick(R.id.details_btn_save)
     public void saveProfileChanges() {
-        //TODO:
-        makeToast("TODO: Save changes gender:" + selectedGender());
+        if (validate()){
+            writeUpdateToDb();
+        }
     }
 
     @NonNull
@@ -223,6 +308,13 @@ public class DetailsEditActivity extends AppCompatActivity {
             default:
                 return "";
         }
+    }
+
+    private void selectGender(String genderStr){
+        if(genderStr.equals("Male"))
+            radioSexGroup.check(R.id.details_radiomale);
+        else
+            radioSexGroup.check(R.id.details_radiofemale);
     }
 
     private void sendToLogin() {
@@ -375,6 +467,155 @@ public class DetailsEditActivity extends AppCompatActivity {
         }
     }
 
+
+    //set ui with Users data
+    private void setUpBasicInfo(DetailsEditActivityViewModel model) {
+        MediatorLiveData<UserBasicInfo> data = model.getUsersLiveData();
+
+        data.observe(this, new Observer<UserBasicInfo>() {
+            @Override
+            public void onChanged(@Nullable UserBasicInfo userBasicInfo) {
+
+                if (userBasicInfo != null) {
+
+                    mUsername.getEditText().setText(userBasicInfo.getUsername());
+                    imageProcessor.setMyImage(mProfPic, userBasicInfo.getPhotourl());
+                }
+            }
+        });
+    }
+
+    //set ui with UsersAuth data
+    private void setUpAuthInfo(DetailsEditActivityViewModel model) {
+
+        MediatorLiveData<UserAuthInfo> data = model.getUserAuthInfoMediatorLiveData();
+
+        data.observe(this, new Observer<UserAuthInfo>() {
+            @Override
+            public void onChanged(@Nullable UserAuthInfo userAuthInfo) {
+                if (userAuthInfo != null) {
+                    mPhoneNumber.setText(userAuthInfo.getPhonenumber());
+                }
+            }
+        });
+    }
+
+    //set ui with UsersProfile data
+    private void setUpProfileInfo(DetailsEditActivityViewModel model){
+
+        MediatorLiveData<UsersProfile> data = model.getUsersProfileMediatorLiveData();
+
+        data.observe(this, new Observer<UsersProfile>() {
+            @Override
+            public void onChanged(@Nullable UsersProfile usersProfile) {
+
+                if (usersProfile != null){
+
+                    mFullName.getEditText().setText(usersProfile.getFullname());
+                    selectGender(usersProfile.getGender());
+                    mIdNum.getEditText().setText(usersProfile.getIdnumber());
+                    mIncome.setText(usersProfile.getIncome());
+                    mProfession.setText(usersProfile.getProfession());
+                    if (usersProfile.getProfession().equals("Business")){
+                        mTypeOfBiz.setVisibility(View.VISIBLE);
+                        mTypeOfBizLine.setVisibility(View.VISIBLE);
+                        mTypeOfBiz.setText(usersProfile.getTypeOfBusiness());
+                    }else {
+                        mTypeOfBiz.setVisibility(View.GONE);
+                        mTypeOfBizLine.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
+
+    }
+
+    //writing updates to db
+    private void writeUpdateToDb(){
+
+        noInternetDialog.showDialog();
+
+        final SweetAlertDialog pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#f9ab60"));
+        pDialog.setTitleText("Saving Changes...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        //init
+        USERSREF = mFirestore.collection("Users").document(currentUserId);
+        USERSAUTHREF = mFirestore.collection("UsersAuth").document(currentUserId);
+        USERSPROFILE = mFirestore.collection("UsersProfile").document(currentUserId);
+
+        //set up our pojos
+        UserAuthInfo userAuthInfo = new UserAuthInfo();
+        userAuthInfo.setPhonenumber(mPhoneNumber.getText().toString());
+
+        UserBasicInfo userBasicInfo = new UserBasicInfo();
+        userBasicInfo.setUsername(mUsername.getEditText().getText().toString());
+        if(!photoFile.isEmpty()) userBasicInfo.setPhotourl(photoFile);
+
+        //location  and be updated, get from SharedPrefs
+        //and groups not set here
+        UsersProfile usersProfile = new UsersProfile();
+        usersProfile.setFullname(mFullName.getEditText().getText().toString());
+        usersProfile.setIncome(mIncome.getText().toString());
+        usersProfile.setGender(selectedGender());
+        usersProfile.setProfession(mProfession.getText().toString());
+        usersProfile.setTypeOfBusiness(mTypeOfBiz.getText().toString());
+        usersProfile.setIdnumber(mIdNum.getEditText().getText().toString());
+
+        // Get a new write batch
+        WriteBatch batch = mFirestore.batch();
+        batch.set(USERSAUTHREF,userAuthInfo, SetOptions.mergeFields("phonenumber"));
+        batch.set(USERSREF,userBasicInfo,SetOptions.mergeFields("username","photourl"));
+        batch.set(USERSPROFILE, usersProfile, SetOptions.merge());
+
+        // Commit the batch
+        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> dbtask) {
+                if (dbtask.isSuccessful()) {
+                    pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                    pDialog.dismissWithAnimation();
+                    finish();
+                } else {
+                    pDialog.dismiss();
+                    Log.d(TAG, "onComplete: error" + dbtask.getException().toString());
+                    errorPrompt();
+                }
+            }
+        });
+    }
+    private void errorPrompt() {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Oops...")
+                .setContentText("Something went wrong!")
+                .show();
+    }
+
+    public boolean validate() {
+        boolean valid = true;
+
+        String displayname = mUsername.getEditText().getText().toString();
+        String fullname = mFullName.getEditText().getText().toString();
+
+
+        if (displayname.isEmpty()) {
+            mUsername.setError("enter a valid username");
+            valid = false;
+        } else {
+            mUsername.setError(null);
+        }
+        if (fullname.isEmpty()) {
+            mFullName.setError("enter a name");
+            valid = false;
+        } else {
+            mFullName.setError(null);
+        }
+
+        return valid;
+    }
+
     private void deRegisterLocationMonitor() {
         //Stop location sharing service to app server.........
         stopService(new Intent(this, LocationMonitoringService.class));
@@ -396,4 +637,5 @@ public class DetailsEditActivity extends AppCompatActivity {
 }
 
 //TODO
+//calculate profile completion
 //Handle location stuff in settings rather than profile settings

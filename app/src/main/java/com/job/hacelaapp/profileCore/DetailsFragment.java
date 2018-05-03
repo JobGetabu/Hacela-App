@@ -4,7 +4,6 @@ package com.job.hacelaapp.profileCore;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,11 +20,11 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.job.hacelaapp.HacelaApplication;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.UserAuthInfo;
 import com.job.hacelaapp.dataSource.UserBasicInfo;
 import com.job.hacelaapp.dataSource.UsersProfile;
+import com.job.hacelaapp.util.ImageProcessor;
 import com.job.hacelaapp.viewmodel.DetailsEditActivityViewModel;
 
 import butterknife.BindView;
@@ -71,6 +70,7 @@ public class DetailsFragment extends Fragment {
     private FirebaseUser mCurrentUser;
 
     private DetailsEditActivityViewModel model;
+    private ImageProcessor imageProcessor;
 
     public static final String TAG = "DetailsFragment";
 
@@ -103,6 +103,7 @@ public class DetailsFragment extends Fragment {
         mFirestore = FirebaseFirestore.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
 
+        imageProcessor = new ImageProcessor();
 
         DetailsEditActivityViewModel.Factory factory = new DetailsEditActivityViewModel.Factory(
                 getActivity().getApplication(), mAuth, mFirestore);
@@ -145,12 +146,13 @@ public class DetailsFragment extends Fragment {
 
                     mUserName.setText(userBasicInfo.getUsername());
                     mEmailaddress.getEditText().setText(mCurrentUser.getEmail());
-                    setMyImage(mProfileImage, userBasicInfo.getPhotourl());
+                    imageProcessor.setMyImage(mProfileImage, userBasicInfo.getPhotourl());
                 }
             }
         });
     }
 
+    //set ui with UsersAuth data
     private void setUpAuthInfo(DetailsEditActivityViewModel model) {
 
         MediatorLiveData<UserAuthInfo> data = model.getUserAuthInfoMediatorLiveData();
@@ -173,6 +175,7 @@ public class DetailsFragment extends Fragment {
         });
     }
 
+    //set ui with UsersProfile data
     private void setUpProfileInfo(DetailsEditActivityViewModel model){
 
         MediatorLiveData<UsersProfile> data = model.getUsersProfileMediatorLiveData();
@@ -190,21 +193,5 @@ public class DetailsFragment extends Fragment {
             }
         });
 
-    }
-
-    private void setMyImage(final CircleImageView circleImageView, final String url) {
-        HacelaApplication.picassoWithCache
-                .load(url)
-                .placeholder(R.drawable.ic_profile_placeholder)
-                .error(R.drawable.ic_profile_placeholder)
-                .into(circleImageView);
-    }
-
-    private void setMyImage(final Context context, final ImageView imageView, final String url) {
-        HacelaApplication.picassoWithCache
-                .load(url)
-                .placeholder(R.drawable.ic_profile_placeholder)
-                .error(R.drawable.ic_profile_placeholder)
-                .into(imageView);
     }
 }
