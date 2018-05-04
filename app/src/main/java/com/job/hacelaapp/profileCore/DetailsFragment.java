@@ -187,6 +187,7 @@ public class DetailsFragment extends Fragment {
 
                 if (usersProfile != null){
 
+                    mIdNumber.getEditText().setText(usersProfile.getIdnumber());
                     mProfession.getEditText().setText(usersProfile.getProfession());
                     mTypeofBiz.getEditText().setText(usersProfile.getTypeOfBusiness());
                     mIncome.getEditText().setText(usersProfile.getIncome());

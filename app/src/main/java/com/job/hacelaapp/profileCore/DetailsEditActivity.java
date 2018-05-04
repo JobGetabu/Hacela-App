@@ -24,6 +24,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
@@ -58,6 +59,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.michaelrocks.libphonenumber.android.NumberParseException;
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil;
+import io.michaelrocks.libphonenumber.android.Phonenumber;
 
 public class DetailsEditActivity extends AppCompatActivity {
 
@@ -101,7 +105,7 @@ public class DetailsEditActivity extends AppCompatActivity {
     public static final String TAG = "EditActivity";
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
 
-    private String photoFile="";
+    private String photoFile = "";
 
     //few db references
     private DocumentReference USERSREF;
@@ -119,6 +123,7 @@ public class DetailsEditActivity extends AppCompatActivity {
 
     private DetailsEditActivityViewModel model;
     private ImageProcessor imageProcessor;
+
 
 
     @Override
@@ -150,9 +155,8 @@ public class DetailsEditActivity extends AppCompatActivity {
         currentUserId = mAuth.getCurrentUser().getUid();
 
 
-
         //util
-        permissionProvider = new PermissionProvider(this,DetailsEditActivity.this);
+        permissionProvider = new PermissionProvider(this, DetailsEditActivity.this);
 
         // Get the ActionBar here to configure the way it behaves.
         final ActionBar ab = getSupportActionBar();
@@ -164,6 +168,7 @@ public class DetailsEditActivity extends AppCompatActivity {
 
 
         imageProcessor = new ImageProcessor();
+
 
         //location service registered
         handleLocation();
@@ -186,7 +191,7 @@ public class DetailsEditActivity extends AppCompatActivity {
 
     }
 
-    private void setUpNoNetDialogue(){
+    private void setUpNoNetDialogue() {
         noInternetDialog = new NoInternetDialog.Builder(this)
                 .setBgGradientOrientation(45)
                 .setCancelable(true)
@@ -224,10 +229,10 @@ public class DetailsEditActivity extends AppCompatActivity {
                         // Do something useful with the position of the selected radio button
                         mProfession.setText(selectedItem.toString());
 
-                        if (selectedItem.toString().equals("Business")){
+                        if (selectedItem.toString().equals("Business")) {
                             mTypeOfBiz.setVisibility(View.VISIBLE);
                             mTypeOfBizLine.setVisibility(View.VISIBLE);
-                        }else {
+                        } else {
                             mTypeOfBiz.setVisibility(View.GONE);
                             mTypeOfBizLine.setVisibility(View.GONE);
                         }
@@ -254,24 +259,65 @@ public class DetailsEditActivity extends AppCompatActivity {
                 .show();
     }
 
+
     @OnClick({R.id.details_phonenumber, R.id.details_phonenumber_line})
     public void setmPhoneNumberClick() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.change_Phone_Number)
-                .setMessage(R.string.this_will_be_the_number_you)
-                .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        makeToast("Change phone number activity");
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        View lView = inflater.inflate(R.layout.dialogue_phoneauth, null);
+        final TextInputLayout inputLayout = (TextInputLayout) lView.findViewById(R.id.dialogue_phoneauth_phonenum);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setView(lView)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
+                    public void onClick(DialogInterface dialog, int i) {
                         dialog.dismiss();
                     }
                 })
-                .show();
+                .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        if (inputLayout.getVisibility() == View.GONE) {
+                            inputLayout.setVisibility(View.VISIBLE);
+                        }
+                        if (inputLayout.getVisibility() == View.VISIBLE) {
+                            if (validateOnclick(inputLayout)) {
+                                String phoneNumber = inputLayout.getEditText().getText().toString();
+                                makeToast(phoneNumber);
+                                dialog.dismiss();
+                            }
+                        }
+                    }
+                });
+
+
+
+        builder.create();
+        builder.show();
+
+    }
+
+    private boolean validateOnclick(final TextInputLayout inputLayout) {
+
+        PhoneNumberUtil mPhoneNumberUtil = PhoneNumberUtil.createInstance(this);
+        boolean valid = true;
+
+        String phonenum = inputLayout.getEditText().getText().toString();
+
+        Phonenumber.PhoneNumber kenyaNumberProto = null;
+        try {
+            kenyaNumberProto = mPhoneNumberUtil.parse(phonenum, "KE");
+        } catch (NumberParseException e) {
+            System.err.println("NumberParseException was thrown: " + e.toString());
+        }
+
+        if (phonenum.isEmpty() || !mPhoneNumberUtil.isValidNumber(kenyaNumberProto)) {
+            inputLayout.setError("enter a valid phone number");
+            valid = false;
+        } else {
+            inputLayout.setError(null);
+        }
+        return valid;
     }
 
     private void makeToast(String message) {
@@ -291,7 +337,7 @@ public class DetailsEditActivity extends AppCompatActivity {
 
     @OnClick(R.id.details_btn_save)
     public void saveProfileChanges() {
-        if (validate()){
+        if (validate()) {
             writeUpdateToDb();
         }
     }
@@ -310,8 +356,8 @@ public class DetailsEditActivity extends AppCompatActivity {
         }
     }
 
-    private void selectGender(String genderStr){
-        if(genderStr.equals("Male"))
+    private void selectGender(String genderStr) {
+        if (genderStr.equals("Male"))
             radioSexGroup.check(R.id.details_radiomale);
         else
             radioSexGroup.check(R.id.details_radiofemale);
@@ -367,7 +413,7 @@ public class DetailsEditActivity extends AppCompatActivity {
                                 //check for last known location instead and if available use deregister location monitor
                                 Log.d(TAG, "LAST KNOWN LOCATION: Location found: " + "lat :" + latitude + " log: " + longitude);
                                 deRegisterLocationMonitor();
-                            }else {
+                            } else {
                                 Log.d(TAG, "onSuccess: No last location cached");
                             }
 
@@ -380,6 +426,7 @@ public class DetailsEditActivity extends AppCompatActivity {
             permissionProvider.requestPermissions();
         }
     }
+
     //Start the Location Monitor Service
     private void startLocationMonitor() {
 
@@ -495,7 +542,7 @@ public class DetailsEditActivity extends AppCompatActivity {
             public void onChanged(@Nullable UserAuthInfo userAuthInfo) {
                 if (userAuthInfo != null) {
                     if (!userAuthInfo.getPhonenumber().isEmpty())
-                    mPhoneNumber.setText(userAuthInfo.getPhonenumber());
+                        mPhoneNumber.setText(userAuthInfo.getPhonenumber());
 
                 }
             }
@@ -503,7 +550,7 @@ public class DetailsEditActivity extends AppCompatActivity {
     }
 
     //set ui with UsersProfile data
-    private void setUpProfileInfo(DetailsEditActivityViewModel model){
+    private void setUpProfileInfo(DetailsEditActivityViewModel model) {
 
         MediatorLiveData<UsersProfile> data = model.getUsersProfileMediatorLiveData();
 
@@ -511,18 +558,18 @@ public class DetailsEditActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable UsersProfile usersProfile) {
 
-                if (usersProfile != null){
+                if (usersProfile != null) {
 
                     mFullName.getEditText().setText(usersProfile.getFullname());
                     selectGender(usersProfile.getGender());
                     mIdNum.getEditText().setText(usersProfile.getIdnumber());
                     mIncome.setText(usersProfile.getIncome());
                     mProfession.setText(usersProfile.getProfession());
-                    if (usersProfile.getProfession().equals("Business")){
+                    if (usersProfile.getProfession().equals("Business")) {
                         mTypeOfBiz.setVisibility(View.VISIBLE);
                         mTypeOfBizLine.setVisibility(View.VISIBLE);
                         mTypeOfBiz.setText(usersProfile.getTypeOfBusiness());
-                    }else {
+                    } else {
                         mTypeOfBiz.setVisibility(View.GONE);
                         mTypeOfBizLine.setVisibility(View.GONE);
                     }
@@ -533,7 +580,7 @@ public class DetailsEditActivity extends AppCompatActivity {
     }
 
     //writing updates to db
-    private void writeUpdateToDb(){
+    private void writeUpdateToDb() {
 
         noInternetDialog.showDialog();
 
@@ -554,8 +601,8 @@ public class DetailsEditActivity extends AppCompatActivity {
 
         UserBasicInfo userBasicInfo = new UserBasicInfo();
         userBasicInfo.setUsername(mUsername.getEditText().getText().toString());
-        if(!photoFile.isEmpty()) userBasicInfo.setPhotourl(photoFile);
-        else userBasicInfo.setPhotourl(mAuth.getCurrentUser().getPhotoUrl().toString()  );
+        if (!photoFile.isEmpty()) userBasicInfo.setPhotourl(photoFile);
+        else userBasicInfo.setPhotourl(mAuth.getCurrentUser().getPhotoUrl().toString());
 
         //location  and be updated, get from SharedPrefs
         //and groups not set here
@@ -569,8 +616,8 @@ public class DetailsEditActivity extends AppCompatActivity {
 
         // Get a new write batch
         WriteBatch batch = mFirestore.batch();
-        batch.set(USERSAUTHREF,userAuthInfo, SetOptions.mergeFields("phonenumber"));
-        batch.set(USERSREF,userBasicInfo,SetOptions.mergeFields("username","photourl"));
+        batch.set(USERSAUTHREF, userAuthInfo, SetOptions.mergeFields("phonenumber"));
+        batch.set(USERSREF, userBasicInfo, SetOptions.mergeFields("username", "photourl"));
         batch.set(USERSPROFILE, usersProfile, SetOptions.merge());
 
         // Commit the batch
@@ -589,6 +636,7 @@ public class DetailsEditActivity extends AppCompatActivity {
             }
         });
     }
+
     private void errorPrompt() {
         new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                 .setTitleText("Oops...")
