@@ -73,6 +73,8 @@
     <string name="invalid_lat_long_used">invalid latitude or longitude used</string>
     <string name="no_address_found">No Address Found</string>
     <string name="address_found">Address Found</string>
+    <string name="this_will_be_the_number_you">This will be the number you send and receive money.</string>
+    <string name="change_Phone_Number">Change Phone Number</string>
 
 
     <!-- Types professions i could think of in 5 minutes -->

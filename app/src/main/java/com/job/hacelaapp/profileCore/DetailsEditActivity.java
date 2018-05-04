@@ -257,8 +257,8 @@ public class DetailsEditActivity extends AppCompatActivity {
     @OnClick({R.id.details_phonenumber, R.id.details_phonenumber_line})
     public void setmPhoneNumberClick() {
         new AlertDialog.Builder(this)
-                .setTitle("Change Phone Number")
-                .setMessage("This will be the number you send and receive money from !")
+                .setTitle(R.string.change_Phone_Number)
+                .setMessage(R.string.this_will_be_the_number_you)
                 .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         makeToast("Change phone number activity");
@@ -494,7 +494,9 @@ public class DetailsEditActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable UserAuthInfo userAuthInfo) {
                 if (userAuthInfo != null) {
+                    if (!userAuthInfo.getPhonenumber().isEmpty())
                     mPhoneNumber.setText(userAuthInfo.getPhonenumber());
+
                 }
             }
         });
@@ -553,6 +555,7 @@ public class DetailsEditActivity extends AppCompatActivity {
         UserBasicInfo userBasicInfo = new UserBasicInfo();
         userBasicInfo.setUsername(mUsername.getEditText().getText().toString());
         if(!photoFile.isEmpty()) userBasicInfo.setPhotourl(photoFile);
+        else userBasicInfo.setPhotourl(mAuth.getCurrentUser().getPhotoUrl().toString()  );
 
         //location  and be updated, get from SharedPrefs
         //and groups not set here

@@ -161,6 +161,7 @@ public class DetailsFragment extends Fragment {
             @Override
             public void onChanged(@Nullable UserAuthInfo userAuthInfo) {
                 if (userAuthInfo != null) {
+                    if (!userAuthInfo.getPhonenumber().isEmpty())
                     mPhonenumber.getEditText().setText(userAuthInfo.getPhonenumber());
                     Log.d(TAG, "onChanged: "+userAuthInfo.toString());
                     if (userAuthInfo.getFbconnected()) mFbtick.setVisibility(View.VISIBLE);
