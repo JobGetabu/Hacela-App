@@ -31,15 +31,13 @@ public class HacelaApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
-        //set disk caching with the picasso library
-        /*
+       /* //set disk caching with the picasso library
         Picasso.Builder builder = new Picasso.Builder(this);
-        builder.downloader(new OkHttpDownloader(this,Integer.MAX_VALUE));
+        builder.downloader(new OkHttp3Downloader(this,Integer.MAX_VALUE));
         Picasso built = builder.build();
         built.setIndicatorsEnabled(true);
         built.setLoggingEnabled(true);
-        Picasso.setSingletonInstance(built);
-        */
+        Picasso.setSingletonInstance(built);*/
 
         //hacking disk cache
         File httpCacheDirectory = new File(getCacheDir(), "picasso-cache");

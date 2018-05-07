@@ -55,7 +55,7 @@
                     />
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/circleImageView"
+                    android:id="@+id/cimrr"
                     android:layout_width="230dp"
                     android:layout_height="230dp"
                     android:layout_gravity="center_horizontal"
@@ -80,9 +80,9 @@
                     android:layout_marginTop="64dp"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
-                    app:layout_constraintEnd_toEndOf="@+id/circleImageView"
-                    app:layout_constraintStart_toStartOf="@+id/circleImageView"
-                    app:layout_constraintTop_toTopOf="@+id/circleImageView"
+                    app:layout_constraintEnd_toEndOf="@+id/cimrr"
+                    app:layout_constraintStart_toStartOf="@+id/cimrr"
+                    app:layout_constraintTop_toTopOf="@+id/cimrr"
                     app:srcCompat="@drawable/ic_camera" />
 
                 <TextView
@@ -99,9 +99,9 @@
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/circleImageView"
-                    app:layout_constraintEnd_toEndOf="@+id/circleImageView"
-                    app:layout_constraintStart_toStartOf="@+id/circleImageView"
+                    app:layout_constraintBottom_toBottomOf="@+id/cimrr"
+                    app:layout_constraintEnd_toEndOf="@+id/cimrr"
+                    app:layout_constraintStart_toStartOf="@+id/cimrr"
                     app:layout_constraintTop_toBottomOf="@+id/detailsedit_btn_changeimg"
                     app:layout_constraintVertical_bias="0.0" />
 

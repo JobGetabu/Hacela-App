@@ -51,8 +51,8 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mRootView = inflater.inflate(R.layout.fragment_home, container, false);
-        ButterKnife.bind(this,mRootView);
         setHasOptionsMenu(true);
+        ButterKnife.bind(this,mRootView);
 
 
         return mRootView;

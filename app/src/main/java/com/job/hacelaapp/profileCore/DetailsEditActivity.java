@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
@@ -33,6 +34,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -42,7 +44,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.job.hacelaapp.BuildConfig;
+import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.UserAuthInfo;
 import com.job.hacelaapp.dataSource.UserBasicInfo;
@@ -53,6 +59,10 @@ import com.job.hacelaapp.ui.PhoneAuthActivity;
 import com.job.hacelaapp.util.ImageProcessor;
 import com.job.hacelaapp.util.PermissionProvider;
 import com.job.hacelaapp.viewmodel.DetailsEditActivityViewModel;
+import com.theartofdev.edmodo.cropper.CropImage;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 import am.appwise.components.ni.NoInternetDialog;
 import butterknife.BindView;
@@ -102,9 +112,10 @@ public class DetailsEditActivity extends AppCompatActivity {
     @BindView(R.id.detailsedit_radioSex)
     RadioGroup radioSexGroup;
 
-    public static final String TAG = "EditActivity";
+    private static final String TAG = "EditActivity";
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private static final int PHONE_NUMBER_REQUEST_CODE = 114;
+    private static final int PICK_IMAGE_REQUEST = 101;
 
 
     //few db references
@@ -115,6 +126,9 @@ public class DetailsEditActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
+    private FirebaseStorage  storageReference;
+    private StorageReference mProfileImageReference;
+
     private String currentUserId;
 
     private boolean mAlreadyStartedService = false;
@@ -124,10 +138,9 @@ public class DetailsEditActivity extends AppCompatActivity {
     private DetailsEditActivityViewModel model;
     private ImageProcessor imageProcessor;
 
-    private String mResultPhoneNumber;
-    private String mResultPhotoFile = "";
-
-
+    private String mResultPhoneNumber="";
+    private Uri mResultPhotoFile = null;
+    ByteArrayOutputStream mBaos = new ByteArrayOutputStream();
 
 
     @Override
@@ -157,7 +170,8 @@ public class DetailsEditActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
-
+        storageReference = FirebaseStorage.getInstance();
+        mProfileImageReference = storageReference.getReference("images/profile/"+currentUserId+"/image.jpg");
 
         //util
         permissionProvider = new PermissionProvider(this, DetailsEditActivity.this);
@@ -171,7 +185,7 @@ public class DetailsEditActivity extends AppCompatActivity {
         ab.setDisplayShowTitleEnabled(true); // disable the default title element here (for centered title)
 
 
-        imageProcessor = new ImageProcessor();
+        imageProcessor = new ImageProcessor(this);
 
 
         //location service registered
@@ -292,8 +306,12 @@ public class DetailsEditActivity extends AppCompatActivity {
 
     @OnClick({R.id.detailsedit_btn_changeimg, R.id.detailsedit_tv_changeimg})
     public void changeProfileImageClick() {
-        //TODO:
-        makeToast("TODO: Change prof pic");
+        //start image intent
+        Intent imageIntent = new Intent();
+        imageIntent.setType("image/*");
+        imageIntent.setAction(Intent.ACTION_GET_CONTENT);
+        // Always show the chooser (if there are multiple options available)
+        startActivityForResult(Intent.createChooser(imageIntent, "Select Profile Picture"), PICK_IMAGE_REQUEST);
     }
 
     @OnClick(R.id.details_btn_cancel)
@@ -562,18 +580,17 @@ public class DetailsEditActivity extends AppCompatActivity {
         USERSPROFILE = mFirestore.collection("UsersProfile").document(currentUserId);
 
         //set up our pojos
-        UserAuthInfo userAuthInfo = new UserAuthInfo();
+        final UserAuthInfo userAuthInfo = new UserAuthInfo();
         if(!mResultPhoneNumber.isEmpty())  userAuthInfo.setPhonenumber(mResultPhoneNumber);
         else userAuthInfo.setPhonenumber(mPhoneNumber.getText().toString());
 
-        UserBasicInfo userBasicInfo = new UserBasicInfo();
+        final UserBasicInfo userBasicInfo = new UserBasicInfo();
         userBasicInfo.setUsername(mUsername.getEditText().getText().toString());
-        if (!mResultPhotoFile.isEmpty()) userBasicInfo.setPhotourl(mResultPhotoFile);
-        else userBasicInfo.setPhotourl(mAuth.getCurrentUser().getPhotoUrl().toString());
+
 
         //location  and be updated, get from SharedPrefs
         //and groups not set here
-        UsersProfile usersProfile = new UsersProfile();
+        final UsersProfile usersProfile = new UsersProfile();
         usersProfile.setFullname(mFullName.getEditText().getText().toString());
         usersProfile.setIncome(mIncome.getText().toString());
         usersProfile.setGender(selectedGender());
@@ -581,27 +598,102 @@ public class DetailsEditActivity extends AppCompatActivity {
         usersProfile.setTypeOfBusiness(mTypeOfBiz.getText().toString());
         usersProfile.setIdnumber(mIdNum.getEditText().getText().toString());
 
-        // Get a new write batch
-        WriteBatch batch = mFirestore.batch();
-        batch.set(USERSAUTHREF, userAuthInfo, SetOptions.mergeFields("phonenumber"));
-        batch.set(USERSREF, userBasicInfo, SetOptions.mergeFields("username", "photourl"));
-        batch.set(USERSPROFILE, usersProfile, SetOptions.merge());
 
-        // Commit the batch
-        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> dbtask) {
-                if (dbtask.isSuccessful()) {
-                    pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                    pDialog.dismissWithAnimation();
-                    finish();
-                } else {
-                    pDialog.dismiss();
-                    Log.d(TAG, "onComplete: error" + dbtask.getException().toString());
-                    errorPrompt();
+        if (mResultPhotoFile != null){
+            // Commit the batch + image too
+            //prepare compressed image
+
+            // Get the data from an ImageView as bytes
+
+            byte[] data = mBaos.toByteArray();
+
+            final StorageReference ref = mProfileImageReference;
+            final UploadTask uploadTask = ref.putBytes(data);
+
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+
+                        // Handle failures
+                        pDialog.dismiss();
+                        Log.d(TAG, "onComplete: error" + task.getException().toString());
+                        errorPrompt();
+
+                        throw task.getException();
+                    }
+
+                    // Continue with the task to get the download URL
+                    return ref.getDownloadUrl();
                 }
-            }
-        });
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+
+                        userBasicInfo.setPhotourl(downloadUri.toString());
+
+
+                        // Get a new write batch
+                        WriteBatch batch = mFirestore.batch();
+                        batch.set(USERSAUTHREF, userAuthInfo, SetOptions.mergeFields("phonenumber"));
+                        batch.set(USERSREF, userBasicInfo, SetOptions.mergeFields("username", "photourl"));
+                        batch.set(USERSPROFILE, usersProfile, SetOptions.merge());
+
+                        // Commit the batch
+                        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> dbtask) {
+                                if (dbtask.isSuccessful()) {
+                                    pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                    pDialog.dismissWithAnimation();
+
+                                    //better we switch activity to home
+                                    sendToMain();
+
+                                } else {
+                                    pDialog.dismiss();
+                                    Log.d(TAG, "onComplete: error" + dbtask.getException().toString());
+                                    errorPrompt();
+                                }
+                            }
+                        });
+
+
+                    } else {
+                        // Handle failures
+                        pDialog.dismiss();
+                        Log.d(TAG, "onComplete: error" + task.getException().toString());
+                        errorPrompt();
+                    }
+                }
+            });
+        }else {
+
+            // Get a new write batch
+            WriteBatch batch = mFirestore.batch();
+            batch.set(USERSAUTHREF, userAuthInfo, SetOptions.mergeFields("phonenumber"));
+            batch.set(USERSREF, userBasicInfo, SetOptions.mergeFields("username"));
+            batch.set(USERSPROFILE, usersProfile, SetOptions.merge());
+
+            // Commit the batch
+            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> dbtask) {
+                    if (dbtask.isSuccessful()) {
+                        pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                        pDialog.dismissWithAnimation();
+                        finish();
+                    } else {
+                        pDialog.dismiss();
+                        Log.d(TAG, "onComplete: error" + dbtask.getException().toString());
+                        errorPrompt();
+                    }
+                }
+            });
+        }
+
     }
 
     private void errorPrompt() {
@@ -661,11 +753,45 @@ public class DetailsEditActivity extends AppCompatActivity {
             case (PHONE_NUMBER_REQUEST_CODE):
                 if (resultCode == Activity.RESULT_OK) {
                     mResultPhoneNumber = data.getStringExtra(PHONEAUTH_DETAILS);
-                    makeToast(mResultPhoneNumber);
                     // TODO Update your TextView.
+                    mPhoneNumber.setText(mResultPhoneNumber);
+                }
+                break;
+            case (PICK_IMAGE_REQUEST):
+                Uri dataDatauri = data.getData();
+
+                // start cropping activity for pre-acquired image saved on the device
+                imageProcessor.ImageCropper(dataDatauri, this);
+                break;
+
+            case (CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE):
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                if (resultCode == RESULT_OK) {
+                    Uri resultUri = result.getUri();
+                    //test
+
+                    File imagefile = new File(resultUri.getPath());
+                    mResultPhotoFile = resultUri;
+                    Bitmap mCompImage = imageProcessor.compressImageBySixty(imagefile, this);
+                    mProfPic.setImageBitmap(mCompImage);
+                    mCompImage.compress(Bitmap.CompressFormat.JPEG, 65, mBaos);
+                    //push
+
+
+                } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                    Exception error = result.getError();
+                    Log.e(TAG, "onActivityResult: ",error);
                 }
                 break;
         }
+    }
+
+    private void sendToMain(){
+        //clears backstack
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(mainIntent);
+        finish();
     }
 }
 

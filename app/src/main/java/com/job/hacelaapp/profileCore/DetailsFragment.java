@@ -103,7 +103,7 @@ public class DetailsFragment extends Fragment {
         mFirestore = FirebaseFirestore.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
 
-        imageProcessor = new ImageProcessor();
+        imageProcessor = new ImageProcessor(getContext());
 
         DetailsEditActivityViewModel.Factory factory = new DetailsEditActivityViewModel.Factory(
                 getActivity().getApplication(), mAuth, mFirestore);

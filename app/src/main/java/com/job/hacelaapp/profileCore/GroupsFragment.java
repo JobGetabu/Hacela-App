@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 
 import com.job.hacelaapp.R;
 
-import butterknife.ButterKnife;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -33,7 +31,6 @@ public class GroupsFragment extends Fragment {
         // Inflate the layout for this fragment
         mRootView = inflater.inflate(R.layout.frag_profile_groups, container, false);
         setHasOptionsMenu(true);
-        ButterKnife.bind(this, mRootView);
 
 
 

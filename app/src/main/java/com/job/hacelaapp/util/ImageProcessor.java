@@ -8,6 +8,8 @@ import android.widget.ImageView;
 
 import com.job.hacelaapp.HacelaApplication;
 import com.job.hacelaapp.R;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
@@ -21,7 +23,11 @@ import id.zelory.compressor.Compressor;
  */
 public class ImageProcessor {
 
-    public ImageProcessor() { }
+    private Context context;
+    public ImageProcessor(Context context) {
+        this.context = context;
+    }
+
 
     //set images to CircleImageView
     public void setMyImage(final CircleImageView circleImageView, final String url) {
@@ -34,18 +40,37 @@ public class ImageProcessor {
 
     //set images to ImageView
     private void setMyImage(final ImageView imageView, final String url) {
-        HacelaApplication.picassoWithCache
+        Picasso
+                .get()
                 .load(url)
                 .placeholder(R.drawable.ic_profile_placeholder)
                 .error(R.drawable.ic_profile_placeholder)
-                .into(imageView);
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        //no cache download new image
+                        Picasso
+                                .get()
+                                .load(url)
+                                .placeholder(R.drawable.ic_profile_placeholder)
+                                .error(R.drawable.ic_profile_placeholder)
+                                .into(imageView);
+                    }
+                });
     }
 
     public Bitmap compressImageBySixty(File imagefile, Context context){
         Bitmap compressedImage = null;
         try {
             compressedImage = new Compressor(context)
-                    .setQuality(60)
+                    .setMaxWidth(640)
+                    .setMaxHeight(480)
+                    .setQuality(65)
                     .setCompressFormat(Bitmap.CompressFormat.JPEG)
                     .compressToBitmap(imagefile);
         } catch (IOException e) {
@@ -58,7 +83,8 @@ public class ImageProcessor {
 
         CropImage.activity(imageuri)
                 .setAspectRatio(1, 1)
-
+                .setMaxCropResultSize(640,640)
+                .setAutoZoomEnabled(true)
                 .start(activity);
     }
 }

@@ -31,7 +31,7 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.profile_sliding_tabs)
     TabLayout tabLayout;
     @BindView(R.id.profile_noswipepager)
-    NoSwipePager mNoSwipePager;
+    NoSwipePager mViewPager;
 
     private View mRootView;
 
@@ -60,9 +60,10 @@ public class ProfileFragment extends Fragment {
         profileSliderAdapter.addFragments(new GroupsFragment());
         profileSliderAdapter.addFragments(new StatsFragment());
 
-        mNoSwipePager.setAdapter(profileSliderAdapter);
-        mNoSwipePager.setPagingEnabled(true);
-        tabLayout.setupWithViewPager(mNoSwipePager);
+        mViewPager.setAdapter(profileSliderAdapter);
+        mViewPager.setPagingEnabled(true);
+        mViewPager.setOffscreenPageLimit(3);
+        tabLayout.setupWithViewPager(mViewPager);
 
         return mRootView;
     }
