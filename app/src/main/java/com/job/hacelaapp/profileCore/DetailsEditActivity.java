@@ -1,6 +1,7 @@
 package com.job.hacelaapp.profileCore;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -24,7 +25,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RadioGroup;
@@ -49,6 +49,7 @@ import com.job.hacelaapp.dataSource.UserBasicInfo;
 import com.job.hacelaapp.dataSource.UsersProfile;
 import com.job.hacelaapp.manageUsers.LoginActivity;
 import com.job.hacelaapp.service.LocationMonitoringService;
+import com.job.hacelaapp.ui.PhoneAuthActivity;
 import com.job.hacelaapp.util.ImageProcessor;
 import com.job.hacelaapp.util.PermissionProvider;
 import com.job.hacelaapp.viewmodel.DetailsEditActivityViewModel;
@@ -59,9 +60,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.michaelrocks.libphonenumber.android.NumberParseException;
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil;
-import io.michaelrocks.libphonenumber.android.Phonenumber;
+
+import static com.job.hacelaapp.util.Constants.PHONEAUTH_DETAILS;
 
 public class DetailsEditActivity extends AppCompatActivity {
 
@@ -104,8 +104,8 @@ public class DetailsEditActivity extends AppCompatActivity {
 
     public static final String TAG = "EditActivity";
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+    private static final int PHONE_NUMBER_REQUEST_CODE = 114;
 
-    private String photoFile = "";
 
     //few db references
     private DocumentReference USERSREF;
@@ -123,6 +123,10 @@ public class DetailsEditActivity extends AppCompatActivity {
 
     private DetailsEditActivityViewModel model;
     private ImageProcessor imageProcessor;
+
+    private String mResultPhoneNumber;
+    private String mResultPhotoFile = "";
+
 
 
 
@@ -263,61 +267,23 @@ public class DetailsEditActivity extends AppCompatActivity {
     @OnClick({R.id.details_phonenumber, R.id.details_phonenumber_line})
     public void setmPhoneNumberClick() {
 
-        LayoutInflater inflater = this.getLayoutInflater();
-        View lView = inflater.inflate(R.layout.dialogue_phoneauth, null);
-        final TextInputLayout inputLayout = (TextInputLayout) lView.findViewById(R.id.dialogue_phoneauth_phonenum);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setView(lView)
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
+        final Intent i = new Intent(this,PhoneAuthActivity.class);
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.change_Phone_Number)
+                .setMessage(R.string.this_will_be_the_number_you)
+                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        if (inputLayout.getVisibility() == View.GONE) {
-                            inputLayout.setVisibility(View.VISIBLE);
-                        }
-                        if (inputLayout.getVisibility() == View.VISIBLE) {
-                            if (validateOnclick(inputLayout)) {
-                                String phoneNumber = inputLayout.getEditText().getText().toString();
-                                makeToast(phoneNumber);
-                                dialog.dismiss();
-                            }
-                        }
+                .setPositiveButton(R.string.change, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        startActivityForResult(i, PHONE_NUMBER_REQUEST_CODE);
+                        dialog.dismiss();
                     }
-                });
-
-
-
-        builder.create();
-        builder.show();
-
-    }
-
-    private boolean validateOnclick(final TextInputLayout inputLayout) {
-
-        PhoneNumberUtil mPhoneNumberUtil = PhoneNumberUtil.createInstance(this);
-        boolean valid = true;
-
-        String phonenum = inputLayout.getEditText().getText().toString();
-
-        Phonenumber.PhoneNumber kenyaNumberProto = null;
-        try {
-            kenyaNumberProto = mPhoneNumberUtil.parse(phonenum, "KE");
-        } catch (NumberParseException e) {
-            System.err.println("NumberParseException was thrown: " + e.toString());
-        }
-
-        if (phonenum.isEmpty() || !mPhoneNumberUtil.isValidNumber(kenyaNumberProto)) {
-            inputLayout.setError("enter a valid phone number");
-            valid = false;
-        } else {
-            inputLayout.setError(null);
-        }
-        return valid;
+                })
+                .show();
     }
 
     private void makeToast(String message) {
@@ -597,11 +563,12 @@ public class DetailsEditActivity extends AppCompatActivity {
 
         //set up our pojos
         UserAuthInfo userAuthInfo = new UserAuthInfo();
-        userAuthInfo.setPhonenumber(mPhoneNumber.getText().toString());
+        if(!mResultPhoneNumber.isEmpty())  userAuthInfo.setPhonenumber(mResultPhoneNumber);
+        else userAuthInfo.setPhonenumber(mPhoneNumber.getText().toString());
 
         UserBasicInfo userBasicInfo = new UserBasicInfo();
         userBasicInfo.setUsername(mUsername.getEditText().getText().toString());
-        if (!photoFile.isEmpty()) userBasicInfo.setPhotourl(photoFile);
+        if (!mResultPhotoFile.isEmpty()) userBasicInfo.setPhotourl(mResultPhotoFile);
         else userBasicInfo.setPhotourl(mAuth.getCurrentUser().getPhotoUrl().toString());
 
         //location  and be updated, get from SharedPrefs
@@ -684,6 +651,21 @@ public class DetailsEditActivity extends AppCompatActivity {
             noInternetDialog.onDestroy();
 
         super.onDestroy();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+            case (PHONE_NUMBER_REQUEST_CODE):
+                if (resultCode == Activity.RESULT_OK) {
+                    mResultPhoneNumber = data.getStringExtra(PHONEAUTH_DETAILS);
+                    makeToast(mResultPhoneNumber);
+                    // TODO Update your TextView.
+                }
+                break;
+        }
     }
 }
 
