@@ -6,9 +6,11 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.MenuRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -20,12 +22,15 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.UserAuthInfo;
 import com.job.hacelaapp.dataSource.UserBasicInfo;
 import com.job.hacelaapp.dataSource.UsersProfile;
 import com.job.hacelaapp.util.ImageProcessor;
 import com.job.hacelaapp.viewmodel.DetailsEditActivityViewModel;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,8 +40,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * A simple {@link Fragment} subclass.
  */
 public class DetailsFragment extends Fragment {
-
-
     TextView mUserName;
     CircleImageView mProfileImage;
 
@@ -86,6 +89,8 @@ public class DetailsFragment extends Fragment {
         mRootView = inflater.inflate(R.layout.frag_profile_details, container, false);
         setHasOptionsMenu(true);
         ButterKnife.bind(this, mRootView);
+
+
 
         return mRootView;
     }
@@ -195,5 +200,11 @@ public class DetailsFragment extends Fragment {
             }
         });
 
+    }
+
+    private void createMenus(Toolbar actionBarToolBar, @MenuRes int menu){
+        ((MainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(actionBarToolBar);
+        actionBarToolBar.setTitle("");
+        actionBarToolBar.inflateMenu(menu);
     }
 }

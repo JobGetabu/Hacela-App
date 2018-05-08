@@ -55,7 +55,6 @@ public class ProfileFragment extends Fragment {
 
        /* ((MainActivity) getActivity()).setSupportActionBar(mToolbar);
         ((MainActivity) getActivity()).getSupportActionBar().setTitle("");*/
-        createMenus(mToolbar,R.menu.profile_menu);
 
         setHasOptionsMenu(true);
 
