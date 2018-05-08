@@ -3,9 +3,11 @@ package com.job.hacelaapp.hacelaCore;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.MenuRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +25,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.manageUsers.LoginActivity;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +49,6 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,7 +57,9 @@ public class HomeFragment extends Fragment {
         setHasOptionsMenu(true);
         ButterKnife.bind(this,mRootView);
 
-
+        /*((MainActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("");*/
+        createMenus(mToolbar,R.menu.main_home_menu );
         return mRootView;
     }
 
@@ -62,8 +67,7 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((MainActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("");
+
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -126,5 +130,11 @@ public class HomeFragment extends Fragment {
         signOutGoogle();
         signOutFaceBook();
         sendToLogin();
+    }
+
+    private void createMenus(Toolbar actionBarToolBar, @MenuRes int menu){
+        ((MainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(actionBarToolBar);
+        actionBarToolBar.setTitle("");
+        actionBarToolBar.inflateMenu(menu);
     }
 }

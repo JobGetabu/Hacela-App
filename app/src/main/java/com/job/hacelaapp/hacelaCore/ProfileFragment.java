@@ -2,8 +2,10 @@ package com.job.hacelaapp.hacelaCore;
 
 
 import android.os.Bundle;
+import android.support.annotation.MenuRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +19,8 @@ import com.job.hacelaapp.adapter.ProfileSliderAdapter;
 import com.job.hacelaapp.profileCore.DetailsFragment;
 import com.job.hacelaapp.profileCore.GroupsFragment;
 import com.job.hacelaapp.profileCore.StatsFragment;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,8 +53,9 @@ public class ProfileFragment extends Fragment {
         mRootView = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this,mRootView);
 
-        ((MainActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("");
+       /* ((MainActivity) getActivity()).setSupportActionBar(mToolbar);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("");*/
+        createMenus(mToolbar,R.menu.profile_menu);
 
         setHasOptionsMenu(true);
 
@@ -75,4 +80,9 @@ public class ProfileFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    private void createMenus(Toolbar actionBarToolBar, @MenuRes int menu){
+        ((MainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(actionBarToolBar);
+        actionBarToolBar.setTitle("");
+        actionBarToolBar.inflateMenu(menu);
+    }
 }

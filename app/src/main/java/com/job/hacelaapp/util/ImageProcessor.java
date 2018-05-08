@@ -70,7 +70,22 @@ public class ImageProcessor {
             compressedImage = new Compressor(context)
                     .setMaxWidth(640)
                     .setMaxHeight(480)
-                    .setQuality(65)
+                    .setQuality(50)
+                    .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                    .compressToBitmap(imagefile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return compressedImage;
+    }
+
+    public Bitmap compressImageToThump(File imagefile, Context context){
+        Bitmap compressedImage = null;
+        try {
+            compressedImage = new Compressor(context)
+                    .setMaxWidth(640)
+                    .setMaxHeight(480)
+                    .setQuality(20)
                     .setCompressFormat(Bitmap.CompressFormat.JPEG)
                     .compressToBitmap(imagefile);
         } catch (IOException e) {

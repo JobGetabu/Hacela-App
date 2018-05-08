@@ -141,6 +141,7 @@ public class DetailsEditActivity extends AppCompatActivity {
     private String mResultPhoneNumber="";
     private Uri mResultPhotoFile = null;
     ByteArrayOutputStream mBaos = new ByteArrayOutputStream();
+    ByteArrayOutputStream mBaosThump = new ByteArrayOutputStream();
 
 
     @Override
@@ -634,6 +635,9 @@ public class DetailsEditActivity extends AppCompatActivity {
 
                         userBasicInfo.setPhotourl(downloadUri.toString());
 
+                        //upload thump image now
+                        byte[] mydata = mBaosThump.toByteArray();
+                        storageReference.getReference("images/profile/"+currentUserId+"/thumbnail.jpg").putBytes(mydata);
 
                         // Get a new write batch
                         WriteBatch batch = mFirestore.batch();
@@ -773,10 +777,13 @@ public class DetailsEditActivity extends AppCompatActivity {
                     File imagefile = new File(resultUri.getPath());
                     mResultPhotoFile = resultUri;
                     Bitmap mCompImage = imageProcessor.compressImageBySixty(imagefile, this);
-                    mProfPic.setImageBitmap(mCompImage);
-                    mCompImage.compress(Bitmap.CompressFormat.JPEG, 65, mBaos);
-                    //push
 
+                    Bitmap mCompImageThump = imageProcessor.compressImageToThump(imagefile, this);
+                    mProfPic.setImageBitmap(mCompImage);
+                    mCompImage.compress(Bitmap.CompressFormat.JPEG, 50, mBaos);
+                    mCompImageThump.compress(Bitmap.CompressFormat.JPEG, 20, mBaosThump);
+
+                    //push
 
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                     Exception error = result.getError();
