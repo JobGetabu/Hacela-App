@@ -53,9 +53,6 @@ public class ProfileFragment extends Fragment {
         mRootView = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this,mRootView);
 
-       /* ((MainActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("");*/
-
         setHasOptionsMenu(true);
 
         //add fragments to adapter

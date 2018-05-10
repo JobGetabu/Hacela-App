@@ -59,6 +59,7 @@ dependencies {
 
     // ButterKnife (for code brevity)
     implementation 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.google.android.gms:play-services-plus:15.0.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     //social logins
