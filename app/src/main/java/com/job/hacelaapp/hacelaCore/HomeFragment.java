@@ -25,12 +25,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.manageUsers.LoginActivity;
+import com.job.hacelaapp.ui.CreateGroupActivity;
 
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -99,9 +99,17 @@ public class HomeFragment extends Fragment {
                 signOutFaceBook();
                 sendToLogin();
                 break;
+            case R.id.main_home_menu_creategroup:
+                sendToCreateGroup();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void sendToCreateGroup() {
+        Intent createIntent = new Intent(getActivity(), CreateGroupActivity.class);
+        startActivity(createIntent);
     }
 
     private void signOutGoogle() {
@@ -122,14 +130,6 @@ public class HomeFragment extends Fragment {
         Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
         loginIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(loginIntent);
-    }
-
-    @OnClick(R.id.button2)
-    public void signOut(View view){
-        mAuth.signOut();
-        signOutGoogle();
-        signOutFaceBook();
-        sendToLogin();
     }
 
     private void createMenus(Toolbar actionBarToolBar, @MenuRes int menu){

@@ -8,14 +8,6 @@
 
     <include layout="@layout/home_appbar"/>
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:text="sign Out"
-        tools:text="sign out" />
-
     <!--<android.support.v7.widget.RecyclerView
         android:id="@+id/home_activities_list"
         android:layout_width="match_parent"
