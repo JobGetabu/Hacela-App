@@ -33,7 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     RegistrationFragmentsAdapter registrationFragmentsAdapter;
 
-    //TODO: Handle offline detection
+    //TODO: Add phone number registration method
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
