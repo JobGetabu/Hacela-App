@@ -137,6 +137,14 @@
         <item>Secretary</item>
     </string-array>
 
+    <string-array name="group_interval">
+        <item>Every Week</item>
+        <item>Every 2 Weeks</item>
+        <item>Every 3 Weeks</item>
+        <item>Every Month</item>
+        <item>Other Specify</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="create_group">Create Group</string>

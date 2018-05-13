@@ -97,6 +97,9 @@ dependencies {
     //phone-number authenticator
     implementation 'io.michaelrocks:libphonenumber-android:8.9.0'
 
+    //custom fab buttons
+    implementation 'com.robertlevonyan.view:CustomFloatingActionButton:2.0.4'
+
     //test libs
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

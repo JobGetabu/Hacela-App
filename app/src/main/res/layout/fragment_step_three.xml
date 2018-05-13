@@ -12,24 +12,7 @@
         android:layout_height="match_parent">
 
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/stepthree_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:clickable="true"
-            android:src="@drawable/ic_arrow_right"
-            app:fabSize="normal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.91"
-            app:layout_constraintStart_toStartOf="parent"
 
-            app:layout_constraintTop_toBottomOf="@+id/radioGroup2"
-            app:layout_constraintVertical_bias="0.714" />
 
         <RadioGroup
             android:id="@+id/radioGroup2"
@@ -70,6 +53,29 @@
                 android:text="With this the group contribution will financially support of members at a percentage of their contribution \n Also they set aside money for projects and savings " />
 
         </RadioGroup>
+
+        <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
+            android:id="@+id/stepthree_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+
+            app:fabIcon="@drawable/ic_arrow_right"
+            app:fabIconPosition="end"
+            app:fabSize="normal"
+            app:fabText="Next"
+            app:fabType="roundedSquare"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+
+            app:layout_constraintTop_toBottomOf="@+id/radioGroup2"
+            app:layout_constraintVertical_bias="1.0" />
     </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

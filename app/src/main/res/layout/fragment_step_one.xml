@@ -40,20 +40,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
         android:id="@+id/stepone_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="80dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginStart="8dp"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/ic_arrow_right"
+        app:fabIcon="@drawable/ic_arrow_right"
+        app:fabIconPosition="end"
         app:fabSize="normal"
+        app:fabText="Next"
+        app:fabType="roundedSquare"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.884"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+    </com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton>
 
 </android.support.constraint.ConstraintLayout>

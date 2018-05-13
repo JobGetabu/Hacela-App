@@ -14,11 +14,13 @@
 
        <android.support.design.widget.TextInputLayout
            android:id="@+id/textInputLayout3"
-           android:layout_width="368dp"
+           android:layout_width="0dp"
            android:layout_height="wrap_content"
            android:layout_marginEnd="8dp"
            android:layout_marginStart="8dp"
            android:layout_marginTop="144dp"
+           android:paddingStart="@dimen/padding_normal"
+           android:paddingEnd="@dimen/padding_normal"
            app:layout_constraintEnd_toEndOf="parent"
            app:layout_constraintStart_toStartOf="parent"
            app:layout_constraintTop_toTopOf="parent">
@@ -29,24 +31,7 @@
                android:hint="Group Full Name" />
        </android.support.design.widget.TextInputLayout>
 
-       <android.support.design.widget.FloatingActionButton
-           android:id="@+id/steptwo_fab"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginBottom="8dp"
-           android:layout_marginEnd="8dp"
-           android:layout_marginStart="8dp"
-           android:layout_marginTop="8dp"
-           android:clickable="true"
-           android:focusable="true"
-           android:src="@drawable/ic_arrow_right"
-           app:fabSize="normal"
-           app:layout_constraintBottom_toBottomOf="parent"
-           app:layout_constraintEnd_toEndOf="parent"
-           app:layout_constraintHorizontal_bias="0.894"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toBottomOf="@+id/textInputLayout4"
-           app:layout_constraintVertical_bias="0.791" />
+
 
        <android.support.design.widget.TextInputLayout
            android:id="@+id/textInputLayout4"
@@ -55,6 +40,8 @@
            android:layout_marginEnd="8dp"
            android:layout_marginStart="8dp"
            android:layout_marginTop="16dp"
+           android:paddingStart="@dimen/padding_normal"
+           android:paddingEnd="@dimen/padding_normal"
            app:layout_constraintEnd_toEndOf="parent"
            app:layout_constraintStart_toStartOf="parent"
            app:layout_constraintTop_toBottomOf="@+id/textInputLayout3">
@@ -65,6 +52,27 @@
                android:hint="Group Display Name" />
        </android.support.design.widget.TextInputLayout>
 
+       <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
+           android:id="@+id/steptwo_fab"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginBottom="16dp"
+           android:layout_marginEnd="16dp"
+           android:layout_marginStart="8dp"
+           android:layout_marginTop="8dp"
+           android:clickable="true"
+           android:focusable="true"
+           app:fabIcon="@drawable/ic_arrow_right"
+           app:fabIconPosition="end"
+           app:fabSize="normal"
+           app:fabText="Next"
+           app:fabType="roundedSquare"
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintHorizontal_bias="1.0"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toBottomOf="@+id/textInputLayout4"
+           app:layout_constraintVertical_bias="1.0" />
    </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

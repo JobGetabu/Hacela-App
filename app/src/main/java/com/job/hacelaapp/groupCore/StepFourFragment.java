@@ -41,6 +41,8 @@ public class StepFourFragment extends Fragment {
         // Inflate the layout for this fragment
         mRootView =  inflater.inflate(R.layout.fragment_step_four, container, false);
         ButterKnife.bind(this,mRootView);
+
+
         return mRootView;
     }
 

@@ -50,4 +50,5 @@ public class StepTwoFragment extends Fragment {
     public void toStepThree(){
         createGroupViewModel.setPageNumber(2);
     }
+
 }
