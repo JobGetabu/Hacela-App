@@ -4,173 +4,330 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f6f6f6"
     android:fillViewport="true"
     tools:context=".groupCore.StepFourFragment">
 
-   <android.support.constraint.ConstraintLayout
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-       <android.support.v7.widget.AppCompatTextView
-           android:id="@+id/appCompatTextView"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_marginTop="16dp"
-           android:padding="@dimen/padding_normal"
-           android:text="Amount to be contributed by each member "
-           app:layout_constraintEnd_toEndOf="parent"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toTopOf="parent" />
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/appCompatTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="Amount to be contributed by each member "
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-       <android.support.design.widget.TextInputLayout
-           android:id="@+id/textInputLayout"
-           android:layout_width="368dp"
-           android:layout_height="wrap_content"
-           android:layout_marginEnd="8dp"
-           android:layout_marginStart="8dp"
-           android:layout_marginTop="16dp"
-           app:layout_constraintEnd_toEndOf="parent"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
 
-           <android.support.design.widget.TextInputEditText
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:hint="Amount (Ksh)" />
-       </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Amount (Ksh)"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
 
-       <LinearLayout
-           android:id="@+id/linearLayout"
-           android:layout_width="0dp"
-           android:layout_height="wrap_content"
-           android:layout_marginEnd="8dp"
-           android:layout_marginStart="8dp"
-           android:layout_marginTop="16dp"
-           android:orientation="vertical"
-           app:layout_constraintEnd_toEndOf="parent"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
 
-           <TextView
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_marginTop="32dp"
-               android:text="Contribution Interval"
-               android:textSize="20sp" />
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Select contribution intervals"
+                android:textSize="16sp" />
 
-           <View
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Contribution Interval"
+                android:textSize="16sp"
+                android:focusable="true"
+                android:clickable="true"
+                />
 
-               android:layout_width="match_parent"
-               android:layout_height="1dp"
-               android:layout_marginBottom="@dimen/padding_normal"
-               android:layout_marginTop="3dp"
-               android:background="#717171" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/padding_normal"
+                android:layout_marginTop="3dp"
+                android:background="#717171"
+                android:focusable="true"
+                android:clickable="true"
+                />
 
-           <android.support.design.widget.TextInputLayout
+            <RelativeLayout
+                android:id="@+id/stepfour_rlDateTimeRecurrenceInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/d16">
 
-               android:layout_width="368dp"
-               android:layout_height="wrap_content"
-               android:layout_marginEnd="8dp"
-               android:layout_marginStart="8dp"
-               android:layout_marginTop="16dp"
-               android:visibility="visible"
-               app:layout_constraintEnd_toEndOf="parent"
-               app:layout_constraintHorizontal_bias="0.0"
-               app:layout_constraintStart_toStartOf="parent"
-               app:layout_constraintTop_toBottomOf="@+id/textView11">
+                <TextView
+                    android:id="@+id/tvDateLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="date"
+                    android:textAllCaps="true"
+                    android:textColor="?attr/colorAccent"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
-               <android.support.design.widget.TextInputEditText
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:hint="Days Count" />
-           </android.support.design.widget.TextInputLayout>
+                <LinearLayout
+                    android:id="@+id/llDateHolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvDateLabel"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/info_bg"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
-       </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvYear"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/tvMonth"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/tvDay"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:textColor="@android:color/white" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvTimeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/llDateHolder"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="time"
+                    android:textAllCaps="true"
+                    android:textColor="?attr/colorAccent"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/llTimeHolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvTimeLabel"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/info_bg"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tvHour"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/tvMinute"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:textColor="@android:color/white" />
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvRecurrenceLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/llTimeHolder"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Recurrence"
+                    android:textAllCaps="true"
+                    android:textColor="?attr/colorAccent"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/llRecurrenceHolder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvRecurrenceLabel"
+                    android:layout_marginBottom="@dimen/d16"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/info_bg"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvRecurrenceOption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:id="@+id/tvRecurrenceRule"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@android:color/white" />
+                </LinearLayout>
+            </RelativeLayout>
+
+        </LinearLayout>
 
 
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/textView11"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="@dimen/d24"
+            android:text="Payout in a single cycle"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
-       <TextView
-           android:id="@+id/textView11"
-           android:layout_width="0dp"
-           android:layout_height="wrap_content"
-           android:layout_marginEnd="8dp"
-           android:padding="@dimen/padding_normal"
-           android:text="Payout in a single cycle"
-           app:layout_constraintEnd_toEndOf="parent"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayout2"
+            android:layout_width="368dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView11">
 
-       <android.support.design.widget.TextInputLayout
-           android:id="@+id/textInputLayout2"
-           android:layout_width="368dp"
-           android:layout_height="wrap_content"
-           android:layout_marginEnd="8dp"
-           android:layout_marginStart="8dp"
-           android:layout_marginTop="16dp"
-           app:layout_constraintEnd_toEndOf="parent"
-           app:layout_constraintHorizontal_bias="0.0"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toBottomOf="@+id/textView11">
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Payout (Ksh)"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
 
-           <android.support.design.widget.TextInputEditText
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:hint="Payout (Ksh)" />
-       </android.support.design.widget.TextInputLayout>
+        <android.support.constraint.Group
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/stepfour_layoutsavings"
+            />
 
-       <TextView
-           android:id="@+id/textView12"
-           style="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title"
-           android:layout_width="0dp"
-           android:layout_height="wrap_content"
-           android:layout_marginEnd="8dp"
-           android:layout_marginStart="8dp"
-           android:layout_marginTop="16dp"
-           android:text="Penalty Conditions"
-           android:textStyle="bold"
-           app:layout_constraintEnd_toEndOf="parent"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/stepfour_savingslabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="@dimen/d24"
+            android:text="Savings in a single cycle"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
 
-       <android.support.design.widget.TextInputLayout
-           android:id="@+id/stepfour_penalty"
-           android:layout_width="0dp"
-           android:layout_height="wrap_content"
-           android:layout_marginEnd="8dp"
-           android:layout_marginStart="8dp"
-           android:layout_marginTop="16dp"
-           app:layout_constraintEnd_toEndOf="parent"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toBottomOf="@+id/textView12">
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textInputLayout222"
+            android:layout_width="368dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/stepfour_savingslabel">
 
-           <android.support.design.widget.TextInputEditText
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:hint="Penalty Amount (Ksh)" />
-       </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Savings (Ksh)"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
 
-       <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
-           android:id="@+id/stepfour_fab"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_marginBottom="16dp"
-           android:layout_marginEnd="16dp"
-           android:layout_marginStart="8dp"
-           android:layout_marginTop="8dp"
-           android:clickable="true"
-           android:focusable="true"
-           app:fabIcon="@drawable/ic_arrow_right"
-           app:fabIconPosition="end"
-           app:fabSize="normal"
-           app:fabText="Next"
-           app:fabType="roundedSquare"
-           app:layout_constraintBottom_toBottomOf="parent"
-           app:layout_constraintEnd_toEndOf="parent"
-           app:layout_constraintHorizontal_bias="1.0"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
-           app:layout_constraintVertical_bias="1.0" />
+        <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
+            android:id="@+id/stepfour_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:fabIcon="@drawable/ic_arrow_right"
+            app:fabIconPosition="end"
+            app:fabSize="normal"
+            app:fabText="Next"
+            app:fabType="roundedSquare"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
+            app:layout_constraintVertical_bias="1.0" />
 
-   </android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </ScrollView>

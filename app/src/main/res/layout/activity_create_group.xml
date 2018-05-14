@@ -25,13 +25,13 @@
             android:orientation="horizontal"
             android:paddingBottom="@dimen/padding_normal"
             android:paddingTop="@dimen/padding_normal"
-            android:paddingStart="@dimen/spacing_micro"
-            android:paddingEnd="@dimen/spacing_micro"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             app:dotsColor="@color/colorAccent"
-            app:dotsCornerRadius="2dp"
-            app:dotsSize="16dp"
-            app:dotsSpacing="4dp"
-            app:dotsWidthFactor="2.5" />
+            app:dotsCornerRadius="4dp"
+            app:dotsSize="24dp"
+            app:dotsSpacing="8dp"
+            app:dotsWidthFactor="4.5" />
     </LinearLayout>
     <FrameLayout
         android:layout_width="match_parent"

@@ -5,13 +5,95 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="#f6f6f6"
     tools:context=".groupCore.StepFiveFragment">
 
    <android.support.constraint.ConstraintLayout
        android:layout_width="match_parent"
        android:layout_height="match_parent">
 
+       <android.support.v7.widget.AppCompatTextView
+           android:id="@+id/textView12"
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_marginEnd="8dp"
+           android:layout_marginStart="8dp"
+           android:layout_marginTop="24dp"
+           android:text="Penalty Conditions"
+           android:textSize="16sp"
+           android:textStyle="bold"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent" />
 
+       <android.support.v7.widget.LinearLayoutCompat
+           android:id="@+id/linearLayoutCompat"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginEnd="8dp"
+           android:layout_marginStart="8dp"
+           android:layout_marginTop="16dp"
+           android:orientation="vertical"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toBottomOf="@+id/textView12">
+
+
+           <android.support.v7.widget.AppCompatTextView
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="24dp"
+               android:text="Select Penalty"
+               android:textSize="16sp" />
+
+           <View
+               android:layout_width="match_parent"
+               android:layout_height="1dp"
+               android:layout_marginBottom="@dimen/padding_normal"
+               android:layout_marginTop="3dp"
+               android:background="#717171" />
+
+       </android.support.v7.widget.LinearLayoutCompat>
+
+       <android.support.design.widget.TextInputLayout
+           android:id="@+id/stepfive_penalty"
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_marginEnd="8dp"
+           android:layout_marginStart="8dp"
+           android:layout_marginTop="8dp"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintHorizontal_bias="0.0"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toBottomOf="@+id/linearLayoutCompat">
+
+           <android.support.design.widget.TextInputEditText
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:hint="Penalty Amount (Ksh)" />
+       </android.support.design.widget.TextInputLayout>
+
+       <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
+           android:id="@+id/stepfive_fab"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginBottom="16dp"
+           android:layout_marginEnd="16dp"
+           android:layout_marginStart="8dp"
+           android:layout_marginTop="8dp"
+           android:clickable="true"
+           android:focusable="true"
+           app:fabIcon="@drawable/ic_arrow_right"
+           app:fabIconPosition="end"
+           app:fabSize="normal"
+           app:fabText="Finish"
+           app:fabType="roundedSquare"
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintHorizontal_bias="1.0"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toBottomOf="@+id/stepfive_penalty"
+           app:layout_constraintVertical_bias="1.0" />
 
    </android.support.constraint.ConstraintLayout>
 </ScrollView>

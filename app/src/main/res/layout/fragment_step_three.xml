@@ -5,13 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="#f6f6f6"
     tools:context=".groupCore.StepTwoFragment">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
 
 
         <RadioGroup
@@ -21,7 +20,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
 
-            android:layout_marginTop="88dp"
+            android:layout_marginTop="40dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -32,6 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Merry-go-Round"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <android.support.v7.widget.AppCompatTextView
@@ -44,6 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Merry-go-Round and Savings"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <android.support.v7.widget.AppCompatTextView
