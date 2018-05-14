@@ -11,6 +11,10 @@ public class CreateGroupViewModel extends ViewModel {
 
     private MutableLiveData<Integer> pageNumber;
 
+    private MutableLiveData<String> groupFullName;
+
+    private MutableLiveData<String> groupDisplayName;
+
     public CreateGroupViewModel() {
 
         pageNumber = new MutableLiveData<>();

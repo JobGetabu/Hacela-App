@@ -28,6 +28,8 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <RadioButton
+                android:id="@+id/stepthree_merryonly"
+                android:checked="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Merry-go-Round"
@@ -38,9 +40,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_normal"
-                android:text="With this the group contribution will financially support of members only " />
+                android:textAlignment="gravity"
+                android:text="@string/merry_go_round1" />
 
             <RadioButton
+                android:id="@+id/stepthree_merryandsave"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Merry-go-Round and Savings"
@@ -51,7 +55,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_normal"
-                android:text="With this the group contribution will financially support of members at a percentage of their contribution \n Also they set aside money for projects and savings " />
+                android:textAlignment="gravity"
+                android:text="@string/merry_go_round2" />
 
         </RadioGroup>
 

@@ -149,4 +149,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="create_group">Create Group</string>
     <string name="i_e_group_caption_name">i.e group caption name</string>
+    <string name="merry_go_round1">With this type of group, the contribution will financially support of members only</string>
+    <string name="merry_go_round2">With this type of group, the contribution will financially support of members at a percentage of their contribution   Also they set aside money for projects and savings</string>
 </resources>

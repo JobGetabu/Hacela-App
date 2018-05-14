@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayout"
+            android:id="@+id/stepfour_contamount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -54,7 +54,7 @@
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+            app:layout_constraintTop_toBottomOf="@+id/stepfour_contamount">
 
             <android.support.v7.widget.AppCompatTextView
                 android:layout_width="match_parent"
@@ -64,6 +64,7 @@
                 android:textSize="16sp" />
 
             <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/stepfour_continterval"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -190,7 +191,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tvRecurrenceLabel"
+                    android:id="@+id/s4_tvRecurrenceLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/llTimeHolder"
@@ -204,10 +205,10 @@
                     android:textStyle="bold" />
 
                 <LinearLayout
-                    android:id="@+id/llRecurrenceHolder"
+                    android:id="@+id/s4_llRecurrenceHolder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tvRecurrenceLabel"
+                    android:layout_below="@id/s4_tvRecurrenceLabel"
                     android:layout_marginBottom="@dimen/d16"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
@@ -215,7 +216,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tvRecurrenceOption"
+                        android:id="@+id/s4_tvRecurrenceOption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
@@ -224,7 +225,7 @@
                         android:textColor="@android:color/white" />
 
                     <TextView
-                        android:id="@+id/tvRecurrenceRule"
+                        android:id="@+id/s4_tvRecurrenceRule"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
@@ -252,7 +253,7 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayout2"
+            android:id="@+id/stepfour_payout"
             android:layout_width="368dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -274,6 +275,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/stepfour_layoutsavings"
+            android:visibility="visible"
+            app:constraint_referenced_ids="stepfour_savings,stepfour_savingslabel"
             />
 
         <android.support.v7.widget.AppCompatTextView
@@ -288,10 +291,10 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
+            app:layout_constraintTop_toBottomOf="@+id/stepfour_payout" />
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayout222"
+            android:id="@+id/stepfour_savings"
             android:layout_width="368dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -302,8 +305,7 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Savings (Ksh)"
-                android:inputType="number" />
+                android:hint="Savings (Ksh)" />
         </android.support.design.widget.TextInputLayout>
 
         <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
@@ -325,7 +327,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
+            app:layout_constraintTop_toBottomOf="@+id/stepfour_payout"
             app:layout_constraintVertical_bias="1.0" />
 
     </android.support.constraint.ConstraintLayout>
