@@ -3,6 +3,7 @@ package com.job.hacelaapp.hacelaCore;
 
 import android.os.Bundle;
 import android.support.annotation.MenuRes;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -28,10 +29,10 @@ public class ChatFragment extends Fragment {
     Toolbar mToolbar;
 
     private View mRootView;
+
     public ChatFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,5 +60,11 @@ public class ChatFragment extends Fragment {
         ((MainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(actionBarToolBar);
         actionBarToolBar.setTitle("");
         actionBarToolBar.inflateMenu(menu);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
     }
 }

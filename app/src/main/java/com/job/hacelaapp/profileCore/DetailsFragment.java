@@ -169,11 +169,11 @@ public class DetailsFragment extends Fragment {
                     if (!userAuthInfo.getPhonenumber().isEmpty())
                     mPhonenumber.getEditText().setText(userAuthInfo.getPhonenumber());
                     Log.d(TAG, "onChanged: "+userAuthInfo.toString());
-                    if (userAuthInfo.getFbconnected()) mFbtick.setVisibility(View.VISIBLE);
+                    if (userAuthInfo.getFbconnected() != null && userAuthInfo.getFbconnected()) mFbtick.setVisibility(View.VISIBLE);
                     else mFbtick.setVisibility(View.INVISIBLE);
-                    if (userAuthInfo.getGoogleconnected()) mGoogleTick.setVisibility(View.VISIBLE);
+                    if ( userAuthInfo.getGoogleconnected() != null && userAuthInfo.getGoogleconnected()) mGoogleTick.setVisibility(View.VISIBLE);
                     else mGoogleTick.setVisibility(View.INVISIBLE);
-                    if (userAuthInfo.getGoogleconnected()) mEmailTick.setVisibility(View.VISIBLE);
+                    if (userAuthInfo.getGoogleconnected() != null && userAuthInfo.getGoogleconnected()) mEmailTick.setVisibility(View.VISIBLE);
                     else mEmailTick.setVisibility(View.INVISIBLE);
 
                 }

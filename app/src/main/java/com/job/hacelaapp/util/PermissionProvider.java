@@ -91,4 +91,13 @@ public class PermissionProvider {
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(activity.getString(actionStringId), listener).show();
     }
+
+    public void showSnackbar(final String mainTextStringId, final String actionStringId,
+                             View.OnClickListener listener) {
+        Snackbar.make(
+                activity.findViewById(android.R.id.content),
+                mainTextStringId,
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(actionStringId, listener).show();
+    }
 }

@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.adapter.CreateGroupsAdapter;
@@ -15,12 +16,17 @@ import com.job.hacelaapp.groupCore.StepOneFragment;
 import com.job.hacelaapp.groupCore.StepThreeFragment;
 import com.job.hacelaapp.groupCore.StepTwoFragment;
 import com.job.hacelaapp.viewmodel.CreateGroupViewModel;
+import com.maltaisn.recurpicker.Recurrence;
+import com.maltaisn.recurpicker.RecurrencePickerDialog;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class CreateGroupActivity extends AppCompatActivity {
+public class CreateGroupActivity extends AppCompatActivity implements RecurrencePickerDialog.RecurrenceSelectedCallback {
 
     @BindView(R.id.create_groupdots_indicator)
     DotsIndicator mDots;
@@ -29,6 +35,8 @@ public class CreateGroupActivity extends AppCompatActivity {
 
     private CreateGroupViewModel createGroupViewModel;
     private CreateGroupsAdapter createGroupsAdapter;
+    private Recurrence recurrence;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,5 +88,19 @@ public class CreateGroupActivity extends AppCompatActivity {
             getFragmentManager().popBackStack();
         }
 
+    }
+
+
+    //this callbacks are being returned from the stepfour recurrence object
+    @Override
+    public void onRecurrencePickerSelected(Recurrence r) {
+        recurrence = r;
+        SimpleDateFormat dateFormatShort = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);  // 31-12-2017
+        Toast.makeText(this, "Selected "+ r.format(this, dateFormatShort) , Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRecurrencePickerCancelled(Recurrence r) {
+        Toast.makeText(this, "this was cancelled", Toast.LENGTH_SHORT).show();
     }
 }

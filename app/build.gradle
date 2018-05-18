@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.job.hacelaapp"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -100,8 +100,11 @@ dependencies {
     //custom fab buttons
     implementation 'com.robertlevonyan.view:CustomFloatingActionButton:2.0.4'
 
-    //sublime date picker
-    implementation 'com.appeaser.sublimepickerlibrary:sublimepickerlibrary:2.1.1'
+    //recurrent date picker
+    implementation 'com.maltaisn:recurpicker:1.2.5'
+
+    //adding hacela lib
+    implementation project(":hacelapickerlibrary")
 
     //test libs
     testImplementation 'junit:junit:4.12'

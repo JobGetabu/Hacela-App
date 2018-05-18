@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
 import com.job.hacelaapp.HacelaApplication;
@@ -24,6 +25,7 @@ import id.zelory.compressor.Compressor;
 public class ImageProcessor {
 
     private Context context;
+
     public ImageProcessor(Context context) {
         this.context = context;
     }
@@ -31,11 +33,16 @@ public class ImageProcessor {
 
     //set images to CircleImageView
     public void setMyImage(final CircleImageView circleImageView, final String url) {
-        HacelaApplication.picassoWithCache
-                .load(url)
-                .placeholder(R.drawable.ic_profile_placeholder)
-                .error(R.drawable.ic_profile_placeholder)
-                .into(circleImageView);
+        if (url.isEmpty()) {
+            circleImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_profile_placeholder));
+        } else {
+
+            HacelaApplication.picassoWithCache
+                    .load(url)
+                    .placeholder(R.drawable.ic_profile_placeholder)
+                    .error(R.drawable.ic_profile_placeholder)
+                    .into(circleImageView);
+        }
     }
 
     //set images to ImageView
@@ -64,7 +71,7 @@ public class ImageProcessor {
                 });
     }
 
-    public Bitmap compressImageBySixty(File imagefile, Context context){
+    public Bitmap compressImageBySixty(File imagefile, Context context) {
         Bitmap compressedImage = null;
         try {
             compressedImage = new Compressor(context)
@@ -79,7 +86,7 @@ public class ImageProcessor {
         return compressedImage;
     }
 
-    public Bitmap compressImageToThump(File imagefile, Context context){
+    public Bitmap compressImageToThump(File imagefile, Context context) {
         Bitmap compressedImage = null;
         try {
             compressedImage = new Compressor(context)
@@ -94,11 +101,11 @@ public class ImageProcessor {
         return compressedImage;
     }
 
-    public void ImageCropper(Uri imageuri, Activity activity){
+    public void ImageCropper(Uri imageuri, Activity activity) {
 
         CropImage.activity(imageuri)
                 .setAspectRatio(1, 1)
-                .setMaxCropResultSize(640,640)
+                .setMaxCropResultSize(640, 640)
                 .setAutoZoomEnabled(true)
                 .start(activity);
     }
