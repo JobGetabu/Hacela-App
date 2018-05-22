@@ -30,13 +30,13 @@
 
        <android.support.design.widget.TextInputLayout
            android:id="@+id/steptwo_fulname"
+           style="@style/Widget.MaterialComponents.TextInputLayout.OutlineBox"
            android:layout_width="0dp"
            android:layout_height="wrap_content"
-           android:layout_marginEnd="8dp"
-           android:layout_marginStart="8dp"
            android:layout_marginTop="24dp"
-           android:paddingEnd="@dimen/padding_normal"
-           android:paddingStart="@dimen/padding_normal"
+           android:layout_marginEnd="16dp"
+           android:layout_marginStart="16dp"
+
            app:layout_constraintEnd_toEndOf="parent"
            app:layout_constraintStart_toStartOf="parent"
            app:layout_constraintTop_toBottomOf="@+id/textView13">
@@ -44,19 +44,20 @@
            <android.support.design.widget.TextInputEditText
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-               android:hint="Group Full Name" />
+               android:hint="@string/group_full_name"
+               />
        </android.support.design.widget.TextInputLayout>
 
 
        <android.support.design.widget.TextInputLayout
            android:id="@+id/steptwo_displayname"
+           style="@style/Widget.MaterialComponents.TextInputLayout.OutlineBox"
            android:layout_width="0dp"
-           android:layout_height="53dp"
-           android:layout_marginEnd="8dp"
-           android:layout_marginStart="8dp"
-           android:layout_marginTop="24dp"
-           android:paddingEnd="@dimen/padding_normal"
-           android:paddingStart="@dimen/padding_normal"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="@dimen/padding_normal"
+           android:layout_marginEnd="16dp"
+           android:layout_marginStart="16dp"
+           android:hint="@string/group_display_name"
            app:layout_constraintEnd_toEndOf="parent"
            app:layout_constraintStart_toStartOf="parent"
            app:layout_constraintTop_toBottomOf="@+id/steptwo_fulname">
@@ -64,7 +65,6 @@
            <android.support.design.widget.TextInputEditText
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-               android:hint="Group Display Name"
                android:singleLine="true" />
        </android.support.design.widget.TextInputLayout>
 
@@ -102,8 +102,6 @@
            app:layout_constraintStart_toStartOf="parent"
            app:layout_constraintTop_toBottomOf="@+id/steptwo_displayname"
            app:layout_constraintVertical_bias="1.0" />
-
-
 
 
    </android.support.constraint.ConstraintLayout>

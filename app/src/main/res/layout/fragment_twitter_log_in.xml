@@ -19,4 +19,5 @@
         android:textAllCaps="false"
         android:text="@string/sign_in_with_twitter"
         android:textSize="18sp" />
+
 </FrameLayout>

@@ -5,6 +5,11 @@
     <color name="colorPrimaryDark">#4b0747</color>
     <color name="colorAccent">#f9ab60</color>
 
+    <color name="colorPrimaryLight">#b4920662</color>
+    <color name="colorSecondaryDark">#b44b0747</color>
+    <color name="colorSecondaryLight">#964b0747</color>
+    <color name="scrimBackground">#b4f9ab60</color>
+
     <!-- Red -->
     <color name="colorAppBarGrey">#400233</color>
     <color name="colorAppBarDark">#ed920662</color>
