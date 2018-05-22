@@ -14,7 +14,7 @@
         <item name="colorSecondaryLight">@color/colorPrimaryLight</item>
         <item name="colorSecondaryDark">@color/colorSecondaryDark</item>
         <item name="scrimBackground">@color/scrimBackground</item>
-        <item name="snackbarButtonStyle">?attr/borderlessButtonStyle</item>
+        <!--<item name="snackbarButtonStyle">?attr/borderlessButtonStyle</item>-->
     </style>
 
     <!--Text input style-->

@@ -8,14 +8,17 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.Group;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.GroupDescription;
@@ -48,7 +51,16 @@ public class StepFourFragment extends Fragment {
     @BindView(R.id.s4_tvRecurrenceRule)
     TextView tvRecurRule;
 
+    @BindView(R.id.stepfour_contamount)
+    TextInputLayout contamount;
+    @BindView(R.id.stepfour_payout)
+    TextInputLayout contPayout;
+    @BindView(R.id.stepfour_savings)
+    TextInputLayout contSavings;
 
+
+
+    private String contInterval="";
     private View mRootView;
     private DateFormat dateFormatShort;
     private Activity activity;
@@ -108,7 +120,11 @@ public class StepFourFragment extends Fragment {
 
     @OnClick(R.id.stepfour_fab)
     public void toStepFive() {
-        createGroupViewModel.setPageNumber(4);
+
+        if (validate()){
+
+            createGroupViewModel.setPageNumber(4);
+        }
     }
 
     @OnClick({R.id.stepfour_continterval, R.id.stepfour_continterval_line})
@@ -129,14 +145,57 @@ public class StepFourFragment extends Fragment {
                             tvRecurOption.setText("Recurrence Option: "+selectedItem.toString());
                               tvRecurRule.setText("Recurrence Rule  : "+selectedItem.toString());
 
+                            contInterval = selectedItem.toString();
+
                             //todo register changes
                         }else if(selectedItem.toString().equals("Does not repeat")) {
                             rlRecurrence.setVisibility(View.GONE);
                             tvRecurOption.setText("Recurrence Option: ");
                               tvRecurRule.setText("Recurrence Rule  : ");
+
+                            contInterval = "";
                         }
                     }
                 })
                 .show();
+    }
+
+    public boolean validate() {
+        boolean valid = true;
+
+        String amount = contamount.getEditText().getText().toString();
+        String payout = contPayout.getEditText().getText().toString();
+        String saving = contSavings.getEditText().getText().toString();
+        String interval = contInterval;
+
+
+        if (amount.isEmpty() | !TextUtils.isDigitsOnly(amount)) {
+            contamount.setError("enter a valid number");
+            valid = false;
+        } else {
+            contamount.setError(null);
+        }
+
+        if (payout.isEmpty() | !TextUtils.isDigitsOnly(payout)) {
+            contPayout.setError("enter a valid number");
+            valid = false;
+        } else {
+            contPayout.setError(null);
+        }
+
+       if (contSavings.getVisibility() == View.VISIBLE){
+           if (saving.isEmpty() | !TextUtils.isDigitsOnly(saving)) {
+               contSavings.setError("enter a valid number");
+               valid = false;
+           } else {
+               contSavings.setError(null);
+           }
+       }
+
+        if (interval.isEmpty()) {
+            Toast.makeText(getContext(), "Select Contribution Interval", Toast.LENGTH_SHORT).show();
+            valid = false;
+        }
+        return valid;
     }
 }
