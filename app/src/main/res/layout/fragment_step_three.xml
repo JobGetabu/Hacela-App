@@ -14,7 +14,7 @@
 
 
         <RadioGroup
-            android:id="@+id/radioGroup2"
+            android:id="@+id/stepthree_radioGroup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -80,7 +80,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
 
-            app:layout_constraintTop_toBottomOf="@+id/radioGroup2"
+            app:layout_constraintTop_toBottomOf="@+id/stepthree_radioGroup"
             app:layout_constraintVertical_bias="1.0" />
     </android.support.constraint.ConstraintLayout>
 

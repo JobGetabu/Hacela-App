@@ -13,6 +13,9 @@ public class GroupDescription {
         this.description = description;
     }
 
+    public GroupDescription() {
+    }
+
     public String getTypeofgroup() {
         return typeofgroup;
     }

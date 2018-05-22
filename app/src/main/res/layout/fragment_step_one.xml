@@ -34,6 +34,8 @@
         android:layout_marginTop="60dp"
         android:fontFamily="@font/montserrat_bold"
         android:paddingBottom="@dimen/padding_normal"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
         android:paddingTop="@dimen/padding_normal"
         android:text="Hacela will help you manage and control all your chama activities from your phone "
         android:textAlignment="center"

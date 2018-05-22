@@ -89,6 +89,7 @@
                 android:id="@+id/stepfour_rlDateTimeRecurrenceInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginBottom="@dimen/d16">
 
                 <TextView

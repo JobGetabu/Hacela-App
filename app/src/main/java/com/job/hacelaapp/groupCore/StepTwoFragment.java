@@ -4,6 +4,7 @@ package com.job.hacelaapp.groupCore;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.viewmodel.CreateGroupViewModel;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -20,6 +22,10 @@ import butterknife.OnClick;
  */
 public class StepTwoFragment extends Fragment {
 
+    @BindView(R.id.steptwo_fulname)
+    TextInputLayout mGrpfulName;
+    @BindView(R.id.steptwo_displayname)
+    TextInputLayout mGrpDisName;
 
     private View mRootView;
     private CreateGroupViewModel createGroupViewModel;
@@ -48,7 +54,32 @@ public class StepTwoFragment extends Fragment {
 
     @OnClick(R.id.steptwo_fab)
     public void toStepThree(){
-        createGroupViewModel.setPageNumber(2);
+        if (validate()){
+            createGroupViewModel.setPageNumber(2);
+
+        }
+    }
+
+    public boolean validate() {
+        boolean valid = true;
+
+        String fulname = mGrpfulName.getEditText().getText().toString();
+        String disname = mGrpDisName.getEditText().getText().toString();
+
+        if (fulname.isEmpty()) {
+            mGrpfulName.setError("enter a valid group name");
+            valid = false;
+        } else {
+            mGrpfulName.setError(null);
+        }
+
+        if (disname.isEmpty()) {
+            mGrpDisName.setError("enter a valid group display name");
+            valid = false;
+        } else {
+            mGrpDisName.setError(null);
+        }
+        return valid;
     }
 
 }
