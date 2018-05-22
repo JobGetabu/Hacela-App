@@ -33,7 +33,9 @@ public class HacelaApplication extends MultiDexApplication {
             .build();
             firestore.setFirestoreSettings(settings);
 
-     With this change, timestamps stored in Cloud Firestore will be read back as com.google.firebase.Timestamp objects instead of as system java.util.Date objects. So you will also need to update code expecting a java.util.Date to instead expect a Timestamp. For example:
+     With this change, timestamps stored in Cloud Firestore will be read back as
+     com.google.firebase.Timestamp objects instead of as system java.util.Date objects.
+     So you will also need to update code expecting a java.util.Date to instead expect a Timestamp. For example:
 
          // Old:
          java.util.Date date = snapshot.getDate("created_at");

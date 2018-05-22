@@ -21,10 +21,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.dataSource.GroupAccount;
 import com.job.hacelaapp.dataSource.GroupContributionDefault;
 import com.job.hacelaapp.dataSource.GroupDescription;
 import com.job.hacelaapp.dataSource.Groups;
@@ -32,6 +34,9 @@ import com.job.hacelaapp.dataSource.Penalty;
 import com.job.hacelaapp.dataSource.Savings;
 import com.job.hacelaapp.dataSource.Step4OM;
 import com.job.hacelaapp.viewmodel.CreateGroupViewModel;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import am.appwise.components.ni.NoInternetDialog;
 import butterknife.BindView;
@@ -191,6 +196,15 @@ public class StepFiveFragment extends Fragment {
 
         }
 
+
+        GroupAccount groupAccount = new GroupAccount(0);
+
+        Map<String,Object> groupAdminsMap = new HashMap<>();
+        groupAdminsMap.put("userid",currentUserId);
+        groupAdminsMap.put("position","Chairperson");
+        groupAdminsMap.put("fromdate",FieldValue.serverTimestamp());
+        groupAdminsMap.put("status","Active");
+
         //Toast.makeText(getContext(), "" + groups.toString() + "\n" + groupContributionDefault.toString(), Toast.LENGTH_LONG).show();
 
         //uploading to server
@@ -200,6 +214,10 @@ public class StepFiveFragment extends Fragment {
         //init
         DocumentReference GROUPREF = mFirestore.collection("Groups").document(groupId);
         DocumentReference GROUPDEFREF = mFirestore.collection("GroupsContributionDefault").document(groupId);
+        DocumentReference GROUPACCREF = mFirestore.collection("GroupsAccount").document(groupId);
+        DocumentReference GROUPADMINREF = mFirestore.collection("GroupsAdmin").document(groupId);
+
+
 
         //check connection
         noInternetDialog.showDialog();
@@ -217,6 +235,10 @@ public class StepFiveFragment extends Fragment {
         batch.set(GROUPREF, groups);
         //upload group default
         batch.set(GROUPDEFREF,groupContributionDefault);
+        //upload group admins
+        batch.set(GROUPADMINREF,groupAdminsMap);
+        //upload group accounts
+        batch.set(GROUPACCREF,groupAccount);
 
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
