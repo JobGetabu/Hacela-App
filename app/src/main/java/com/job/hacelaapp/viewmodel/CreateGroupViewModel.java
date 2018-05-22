@@ -4,6 +4,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.job.hacelaapp.dataSource.GroupDescription;
+import com.job.hacelaapp.dataSource.Step4OM;
 
 /**
  * Created by Job on Tuesday : 5/8/2018.
@@ -19,12 +20,15 @@ public class CreateGroupViewModel extends ViewModel {
 
     private MutableLiveData<GroupDescription> groupDescriptionMutableLiveData;
 
+    private MutableLiveData<Step4OM> step4OMMutableLiveData;
+
     public CreateGroupViewModel() {
 
         pageNumber = new MutableLiveData<>();
         groupFullName = new MutableLiveData<>();
         groupDisplayName = new MutableLiveData<>();
         groupDescriptionMutableLiveData = new MutableLiveData<>();
+        step4OMMutableLiveData = new MutableLiveData<>();
     }
 
     public MutableLiveData<Integer> getPageNumber() {
@@ -57,5 +61,13 @@ public class CreateGroupViewModel extends ViewModel {
 
     public void setGroupDescriptionMutableLiveData(GroupDescription groupDescription) {
         this.groupDescriptionMutableLiveData.setValue(groupDescription);
+    }
+
+    public MutableLiveData<Step4OM> getStep4OMMutableLiveData() {
+        return step4OMMutableLiveData;
+    }
+
+    public void setStep4OMMutableLiveData(Step4OM step4OMMutableLiveData) {
+        this.step4OMMutableLiveData.setValue(step4OMMutableLiveData);
     }
 }

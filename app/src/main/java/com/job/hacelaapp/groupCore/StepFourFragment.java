@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.GroupDescription;
+import com.job.hacelaapp.dataSource.Step4OM;
 import com.job.hacelaapp.viewmodel.CreateGroupViewModel;
 
 import java.text.DateFormat;
@@ -123,6 +124,16 @@ public class StepFourFragment extends Fragment {
 
         if (validate()){
 
+            //save Step4OM
+            Step4OM step4OM = new Step4OM();
+            step4OM.setAmount(Double.parseDouble(contamount.getEditText().getText().toString().trim()));
+            step4OM.setPayout(Double.parseDouble(contPayout.getEditText().getText().toString().trim()));
+            step4OM.setIntervalPeriod(contInterval);
+            if (contSavings.getVisibility() == View.VISIBLE){
+                step4OM.setSavings(Double.parseDouble(contSavings.getEditText().getText().toString()));
+            }
+            //TODO calculate period interval from choices
+            createGroupViewModel.setStep4OMMutableLiveData(step4OM);
             createGroupViewModel.setPageNumber(4);
         }
     }

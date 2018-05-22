@@ -55,8 +55,10 @@ public class StepTwoFragment extends Fragment {
     @OnClick(R.id.steptwo_fab)
     public void toStepThree(){
         if (validate()){
-            createGroupViewModel.setPageNumber(2);
 
+            createGroupViewModel.setGroupFullName(mGrpfulName.getEditText().getText().toString().trim());
+            createGroupViewModel.setGroupDisplayName(mGrpDisName.getEditText().getText().toString().trim());
+            createGroupViewModel.setPageNumber(2);
         }
     }
 

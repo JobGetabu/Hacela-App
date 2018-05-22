@@ -158,4 +158,6 @@
     <string name="merry_go_round2">With this type of group, the contribution will financially support of members at a percentage of their contribution   Also they set aside money for projects and savings</string>
     <string name="group_full_name">Group Full Name</string>
     <string name="group_display_name">Group Display Name</string>
+    <string name="enable_penalty_for_late_payment">Enable Penalty for late payment</string>
+    <string name="penalty_amount_ksh">Penalty Amount (Ksh)</string>
 </resources>
