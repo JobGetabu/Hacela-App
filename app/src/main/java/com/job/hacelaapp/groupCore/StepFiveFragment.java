@@ -58,6 +58,7 @@ public class StepFiveFragment extends Fragment {
     private View mRootView;
 
     private static final String TAG = "stepfive";
+    private static final int REQUEST_INVITE = 34655;
 
     private CreateGroupViewModel createGroupViewModel;
     private NoInternetDialog noInternetDialog;
@@ -215,7 +216,7 @@ public class StepFiveFragment extends Fragment {
         DocumentReference GROUPREF = mFirestore.collection("Groups").document(groupId);
         DocumentReference GROUPDEFREF = mFirestore.collection("GroupsContributionDefault").document(groupId);
         DocumentReference GROUPACCREF = mFirestore.collection("GroupsAccount").document(groupId);
-        DocumentReference GROUPADMINREF = mFirestore.collection("GroupsAdmin").document(groupId);
+        DocumentReference GROUPADMINREF = mFirestore.collection("GroupsAdmin").document(groupId).collection("Admins").document(currentUserId);
 
 
 
@@ -276,7 +277,7 @@ public class StepFiveFragment extends Fragment {
         startActivity(mainIntent);
     }
 
-    public boolean validate() {
+    private boolean validate() {
         boolean valid = true;
 
         String amount = mPenalty.getEditText().getText().toString();
@@ -288,6 +289,10 @@ public class StepFiveFragment extends Fragment {
             mPenalty.setError(null);
         }
         return valid;
+    }
+
+    private void sendToInviteScreen(){
+
     }
 
     @Override

@@ -129,6 +129,7 @@ public class StepFourFragment extends Fragment {
             step4OM.setAmount(Double.parseDouble(contamount.getEditText().getText().toString().trim()));
             step4OM.setPayout(Double.parseDouble(contPayout.getEditText().getText().toString().trim()));
             step4OM.setIntervalPeriod(contInterval);
+            step4OM.setContPeriod(countDays(contInterval));
             if (contSavings.getVisibility() == View.VISIBLE){
                 step4OM.setSavings(Double.parseDouble(contSavings.getEditText().getText().toString()));
             }
@@ -169,6 +170,32 @@ public class StepFourFragment extends Fragment {
                     }
                 })
                 .show();
+    }
+
+    private int countDays(String repeatoptions){
+        switch (repeatoptions){
+            case "Does not repeat":
+                return 0;
+            case "Every day":
+                return 1;
+            case "Every week":
+                return 7;
+            case "Every month":
+                return 30;
+            case "Every year":
+                return 365;
+            case "Once Every 2 weeks":
+                return 14;
+            case "Once Every 2 months":
+                return 60;
+            case "Once Every 3 months":
+                return  90;
+            case "Once Every 6 months":
+                return 180;
+            default:
+                return 0;
+
+        }
     }
 
     public boolean validate() {
