@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Hacela</string>
+    <string name="app_code">https://f8mhr.app.goo.gl</string>
+
 
     <!--facebook-->
     <string name="facebook_app_id">179544296012408</string>
@@ -160,4 +162,11 @@
     <string name="group_display_name">Group Display Name</string>
     <string name="enable_penalty_for_late_payment">Enable Penalty for late payment</string>
     <string name="penalty_amount_ksh">Penalty Amount (Ksh)</string>
+
+    <!--App normal invitation-->
+    <string name="invitation_title">Join Hacela</string>
+    <string name="invitation_message">Manage and control all your chama activities from your phone</string>
+    <string name="invitation_deep_link">https://f8mhr.app.goo.gl/hacela</string>
+    <string name="invitation_custom_image">https://user-images.githubusercontent.com/22516895/40451662-fe4f8628-5ee7-11e8-8277-befddbe23201.png</string>
+    <string name="invitation_cta">Join</string>
 </resources>

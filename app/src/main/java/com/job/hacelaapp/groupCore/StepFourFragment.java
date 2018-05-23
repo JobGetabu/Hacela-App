@@ -173,29 +173,27 @@ public class StepFourFragment extends Fragment {
     }
 
     private int countDays(String repeatoptions){
-        switch (repeatoptions){
-            case "Does not repeat":
-                return 0;
-            case "Every day":
-                return 1;
-            case "Every week":
-                return 7;
-            case "Every month":
-                return 30;
-            case "Every year":
-                return 365;
-            case "Once Every 2 weeks":
-                return 14;
-            case "Once Every 2 months":
-                return 60;
-            case "Once Every 3 months":
-                return  90;
-            case "Once Every 6 months":
-                return 180;
-            default:
-                return 0;
 
+        if (repeatoptions.equals("Does not repeat")){
+            return 0;
+        }else if (repeatoptions.equals("Every day")){
+            return 1;
+        }else if (repeatoptions.equals("Every week")){
+            return 7;
+        }else if (repeatoptions.equals("Every month")){
+            return 30;
+        }else if (repeatoptions.equals("Every year")){
+            return 365;
+        }else if (repeatoptions.equals("Once Every 2 weeks")){
+            return 14;
+        }else if (repeatoptions.equals("Once Every 2 months")){
+            return 60;
+        }else if (repeatoptions.equals("Once Every 3 months")){
+            return 90;
+        }else if (repeatoptions.equals("Once Every 6 months")) {
+            return 180;
         }
+        return 0;
     }
 
     public boolean validate() {

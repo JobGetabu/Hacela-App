@@ -5,6 +5,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,6 +46,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -66,6 +70,7 @@ public class StepFiveFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
     private String currentUserId;
+    private String currentUserName;
 
     public StepFiveFragment() {
         // Required empty public constructor
@@ -93,6 +98,7 @@ public class StepFiveFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
+        currentUserName = mAuth.getCurrentUser().getDisplayName();
 
         //build no net dialogue
         setUpNoNetDialogue();
@@ -142,6 +148,7 @@ public class StepFiveFragment extends Fragment {
             public void onChanged(@Nullable String s) {
                 if (s != null) {
                     groupdisplayname = s;
+
                 }
             }
         });
@@ -250,7 +257,8 @@ public class StepFiveFragment extends Fragment {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {
                             sDialog.dismissWithAnimation();
-                            sendToMain();
+                            sendToInviteScreen();
+
                         }
                     });
 
@@ -291,8 +299,55 @@ public class StepFiveFragment extends Fragment {
         return valid;
     }
 
+    //Todo extra email setup
+    //Manage and control all your chama activities from your phone  groupdisplayname
+
     private void sendToInviteScreen(){
 
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage("Manage and control all your "+groupdisplayname+" activities from your phone")
+                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+                .setCallToActionText(getString(R.string.invitation_cta))
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                for (String id : ids) {
+                    Log.d(TAG, "onActivityResult: sent invitation " + id);
+
+                    //send to group page
+                    sendToMain();
+                }
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                //close this process to avoid recreation of group.
+
+                SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE);
+                pDialog.getProgressHelper().setBarColor(Color.parseColor("#f9ab60"));
+                pDialog.setTitleText("No members invited");
+                pDialog.setContentText("Don't worry You can still invite them in the group");
+                pDialog.setCancelable(false);
+                pDialog.show();
+                pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                        //send to group page
+                        sendToMain();
+                    }
+                });
+            }
+        }
     }
 
     @Override
