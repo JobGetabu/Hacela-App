@@ -173,4 +173,5 @@
     <!--App to group invitation-->
     <string name="hacela_deep_link">https://f8mhr.app.goo.gl</string>
     <string name="hacela_group_default_link">https://hacela.com/groupinvite</string>
+    <string name="membership_request">Membership Request</string>
 </resources>
