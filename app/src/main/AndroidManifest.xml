@@ -77,7 +77,8 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".ui.CreateGroupActivity" />
-        <activity android:name=".ui.GroupInviteActivity"></activity>
+        <activity android:name=".ui.GroupInviteActivity" />
+        <activity android:name=".ui.GroupControlActivity"></activity>
     </application>
 
 </manifest>

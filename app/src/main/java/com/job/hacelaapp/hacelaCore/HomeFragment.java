@@ -34,6 +34,7 @@ import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.manageUsers.LoginActivity;
 import com.job.hacelaapp.ui.CreateGroupActivity;
+import com.job.hacelaapp.ui.GroupInviteActivity;
 
 import java.util.Objects;
 
@@ -113,6 +114,9 @@ public class HomeFragment extends Fragment {
             case R.id.main_home_menu_creategroup:
                 sendToCreateGroup();
                 break;
+            case R.id.main_home_menu_viewgroup:
+                sendToViewGroup();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -120,6 +124,11 @@ public class HomeFragment extends Fragment {
 
     private void sendToCreateGroup() {
         Intent createIntent = new Intent(getActivity(), CreateGroupActivity.class);
+        startActivity(createIntent);
+    }
+
+    private void sendToViewGroup() {
+        Intent createIntent = new Intent(getActivity(), GroupInviteActivity.class);
         startActivity(createIntent);
     }
 

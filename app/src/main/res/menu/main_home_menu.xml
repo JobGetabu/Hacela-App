@@ -7,6 +7,10 @@
         android:title="@string/create_group"
         />
     <item
+        android:id="@+id/main_home_menu_viewgroup"
+        android:title="View Group"
+        />
+    <item
         android:id="@+id/main_home_menu_signout"
         android:title="@string/sign_out" />
 </menu>
