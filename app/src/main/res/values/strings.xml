@@ -174,4 +174,10 @@
     <string name="hacela_deep_link">https://f8mhr.app.goo.gl</string>
     <string name="hacela_group_default_link">https://hacela.com/groupinvite</string>
     <string name="membership_request">Membership Request</string>
+
+    <!-- transitions and group control strings -->
+    <string name="transition_avatar_border" translatable="false">avatar_border</string>
+    <string name="transition_card" translatable="false">card</string>
+    <string name="transition_background" translatable="false">background</string>
+    <string name="transition_list" translatable="false">list</string>
 </resources>

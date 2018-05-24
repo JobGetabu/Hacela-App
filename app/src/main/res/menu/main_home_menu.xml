@@ -11,6 +11,10 @@
         android:title="View Group"
         />
     <item
+        android:id="@+id/main_home_menu_controlgroup"
+        android:title="Manage Group"
+        />
+    <item
         android:id="@+id/main_home_menu_signout"
         android:title="@string/sign_out" />
 </menu>
