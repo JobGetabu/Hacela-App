@@ -37,8 +37,6 @@ import com.job.hacelaapp.dataSource.Savings;
 import com.job.hacelaapp.dataSource.Step4OM;
 import com.job.hacelaapp.viewmodel.CreateGroupViewModel;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -336,7 +334,7 @@ public class StepFiveFragment extends Fragment {
                 for (String id : ids) {
                     Log.d(TAG, "onActivityResult: sent invitation " + id);
 
-                    //send to group page
+                    //TODO send to group page
                     sendToMain();
                 }
             } else {
@@ -353,31 +351,12 @@ public class StepFiveFragment extends Fragment {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
-                        //send to group page
+                        //TODO send to group page
                         sendToMain();
                     }
                 });
             }
         }
-    }
-
-    private Uri createLongLink(String groupId){
-
-        Uri BASE_URI = Uri.parse("http://hacela.com/");
-
-        Uri APP_URI = BASE_URI.buildUpon().
-                appendQueryParameter("invitedto", groupId).build();
-
-
-        String encodedUri = null;
-        try {
-            encodedUri = URLEncoder.encode(APP_URI.toString(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        Log.v("ENCODED URI: ", encodedUri);
-        Uri deepLink = Uri.parse("https://f8mhr.app.goo.gl/?link="+APP_URI);
-        return deepLink;
     }
 
     @Override
