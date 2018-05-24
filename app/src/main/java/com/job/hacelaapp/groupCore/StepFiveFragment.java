@@ -31,6 +31,7 @@ import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.GroupAccount;
 import com.job.hacelaapp.dataSource.GroupContributionDefault;
 import com.job.hacelaapp.dataSource.GroupDescription;
+import com.job.hacelaapp.dataSource.GroupMembers;
 import com.job.hacelaapp.dataSource.Groups;
 import com.job.hacelaapp.dataSource.Penalty;
 import com.job.hacelaapp.dataSource.Savings;
@@ -216,7 +217,7 @@ public class StepFiveFragment extends Fragment {
         groupAdminsMap.put("fromdate", FieldValue.serverTimestamp());
         groupAdminsMap.put("status", "Active");
 
-        //Toast.makeText(getContext(), "" + groups.toString() + "\n" + groupContributionDefault.toString(), Toast.LENGTH_LONG).show();
+        GroupMembers members = new GroupMembers(currentUserId, "Chairperson",currentUserName);
 
         //uploading to server
 
@@ -225,6 +226,7 @@ public class StepFiveFragment extends Fragment {
         DocumentReference GROUPDEFREF = mFirestore.collection("GroupsContributionDefault").document(groupId);
         DocumentReference GROUPACCREF = mFirestore.collection("GroupsAccount").document(groupId);
         DocumentReference GROUPADMINREF = mFirestore.collection("GroupsAdmin").document(groupId).collection("Admins").document(currentUserId);
+        DocumentReference GROUPMEMBERREF = mFirestore.collection("GroupMembers").document(groupId).collection("Members").document(currentUserId);
 
 
         //check connection
@@ -247,6 +249,8 @@ public class StepFiveFragment extends Fragment {
         batch.set(GROUPADMINREF, groupAdminsMap);
         //upload group accounts
         batch.set(GROUPACCREF, groupAccount);
+        //upload group members
+        batch.set(GROUPMEMBERREF, members );
 
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
