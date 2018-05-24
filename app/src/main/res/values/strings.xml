@@ -169,4 +169,8 @@
     <string name="invitation_deep_link">https://f8mhr.app.goo.gl/hacela</string>
     <string name="invitation_custom_image">https://user-images.githubusercontent.com/22516895/40451662-fe4f8628-5ee7-11e8-8277-befddbe23201.png</string>
     <string name="invitation_cta">Join</string>
+
+    <!--App to group invitation-->
+    <string name="hacela_deep_link">https://f8mhr.app.goo.gl</string>
+    <string name="hacela_group_default_link">https://hacela.com/groupinvite</string>
 </resources>

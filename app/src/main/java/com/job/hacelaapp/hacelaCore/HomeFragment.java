@@ -2,26 +2,34 @@ package com.job.hacelaapp.hacelaCore;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.MenuRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.manageUsers.LoginActivity;
@@ -40,6 +48,7 @@ public class HomeFragment extends Fragment {
     @BindView(R.id.home_page_toolbar)
     android.support.v7.widget.Toolbar mToolbar;
 
+    private static String TAG = "homeFrg";
     private  View mRootView;
 
     GoogleSignInClient mGoogleSignInClient;
@@ -79,6 +88,8 @@ public class HomeFragment extends Fragment {
 
         //firebase
         mAuth = FirebaseAuth.getInstance();
+
+        handleAppInvite();
     }
 
     @Override
@@ -136,5 +147,59 @@ public class HomeFragment extends Fragment {
         ((MainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(actionBarToolBar);
         actionBarToolBar.setTitle("");
         actionBarToolBar.inflateMenu(menu);
+    }
+
+    private void handleAppInvite(){
+
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getActivity().getIntent())
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                        // Get deep link from result (may be null if no link is found)
+                        Uri deepLink = null;
+                        if (pendingDynamicLinkData != null) {
+                            deepLink = pendingDynamicLinkData.getLink();
+                            Log.d(TAG, "onSuccess: "+deepLink);
+                        }
+                        //
+                        // If the user isn't signed in and the pending Dynamic Link is
+                        // an invitation, sign in the user anonymously, and record the
+                        // referrer's UID.
+                        //
+
+                        //TODO handle anonymous login
+
+                       /* FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        if (user == null
+                                && deepLink != null
+                                && deepLink.getBooleanQueryParameter("invitedby")) {
+                            String referrerUid = deepLink.getQueryParameter("invitedby");
+                            createAnonymousAccountWithReferrerInfo(referrerUid);
+                        }*/
+
+                        //display a snack with group id
+                        if (deepLink != null){
+                            String referredGroupUid = deepLink.getQueryParameter("invitedto");
+                            String query = deepLink.getQuery();
+
+                            Log.d(TAG, "onSuccess: "+query);
+                            Log.d(TAG, "onSuccess: "+deepLink.getQueryParameters("invitedto"));
+
+                            if (referredGroupUid != null)
+                            Snackbar.make(
+                                    getActivity().findViewById(android.R.id.content),
+                                    referredGroupUid,
+                                    Snackbar.LENGTH_INDEFINITE).show();
+                            Toast.makeText(getContext()
+                                    , ""+referredGroupUid, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: "+e.getMessage());
+            }
+        });
     }
 }

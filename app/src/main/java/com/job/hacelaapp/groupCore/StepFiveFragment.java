@@ -37,6 +37,8 @@ import com.job.hacelaapp.dataSource.Savings;
 import com.job.hacelaapp.dataSource.Step4OM;
 import com.job.hacelaapp.viewmodel.CreateGroupViewModel;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,6 +73,7 @@ public class StepFiveFragment extends Fragment {
     private FirebaseFirestore mFirestore;
     private String currentUserId;
     private String currentUserName;
+    private String groupId;
 
     public StepFiveFragment() {
         // Required empty public constructor
@@ -99,6 +102,7 @@ public class StepFiveFragment extends Fragment {
         mFirestore = FirebaseFirestore.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
         currentUserName = mAuth.getCurrentUser().getDisplayName();
+        groupId = mFirestore.collection("Groups").document().getId();
 
         //build no net dialogue
         setUpNoNetDialogue();
@@ -169,7 +173,7 @@ public class StepFiveFragment extends Fragment {
 
         //Toast.makeText(getContext(), "\n" + groupfullname + "\n" + groupdisplayname + "\n" + groupDesp + "\n" + step4data, Toast.LENGTH_LONG).show();
 
-        if (step4data == null){
+        if (step4data == null) {
             return;
         }
 
@@ -181,6 +185,7 @@ public class StepFiveFragment extends Fragment {
         GroupContributionDefault groupContributionDefault = new GroupContributionDefault();
         groupContributionDefault.setCycleamount(step4data.getAmount());
         groupContributionDefault.setCycleinterval(step4data.getIntervalPeriod());
+        groupContributionDefault.setCycleperiod(step4data.getContPeriod());
 
         Savings savings;
         if (step4data.getSavings() == 0) {
@@ -207,24 +212,21 @@ public class StepFiveFragment extends Fragment {
 
         GroupAccount groupAccount = new GroupAccount(0);
 
-        Map<String,Object> groupAdminsMap = new HashMap<>();
-        groupAdminsMap.put("userid",currentUserId);
-        groupAdminsMap.put("position","Chairperson");
-        groupAdminsMap.put("fromdate",FieldValue.serverTimestamp());
-        groupAdminsMap.put("status","Active");
+        Map<String, Object> groupAdminsMap = new HashMap<>();
+        groupAdminsMap.put("userid", currentUserId);
+        groupAdminsMap.put("position", "Chairperson");
+        groupAdminsMap.put("fromdate", FieldValue.serverTimestamp());
+        groupAdminsMap.put("status", "Active");
 
         //Toast.makeText(getContext(), "" + groups.toString() + "\n" + groupContributionDefault.toString(), Toast.LENGTH_LONG).show();
 
         //uploading to server
-
-        String groupId = mFirestore.collection("Groups").document().getId();
 
         //init
         DocumentReference GROUPREF = mFirestore.collection("Groups").document(groupId);
         DocumentReference GROUPDEFREF = mFirestore.collection("GroupsContributionDefault").document(groupId);
         DocumentReference GROUPACCREF = mFirestore.collection("GroupsAccount").document(groupId);
         DocumentReference GROUPADMINREF = mFirestore.collection("GroupsAdmin").document(groupId).collection("Admins").document(currentUserId);
-
 
 
         //check connection
@@ -242,16 +244,16 @@ public class StepFiveFragment extends Fragment {
         //upload the group
         batch.set(GROUPREF, groups);
         //upload group default
-        batch.set(GROUPDEFREF,groupContributionDefault);
+        batch.set(GROUPDEFREF, groupContributionDefault);
         //upload group admins
-        batch.set(GROUPADMINREF,groupAdminsMap);
+        batch.set(GROUPADMINREF, groupAdminsMap);
         //upload group accounts
-        batch.set(GROUPACCREF,groupAccount);
+        batch.set(GROUPACCREF, groupAccount);
 
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                     pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
@@ -262,7 +264,7 @@ public class StepFiveFragment extends Fragment {
                         }
                     });
 
-                }else {
+                } else {
                     pDialog.dismiss();
                     Log.d(TAG, "onComplete: error" + task.getException().toString());
                     errorPrompt();
@@ -302,15 +304,24 @@ public class StepFiveFragment extends Fragment {
     //Todo extra email setup
     //Manage and control all your chama activities from your phone  groupdisplayname
 
-    private void sendToInviteScreen(){
+    private void sendToInviteScreen() {
+
+        final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#f9ab60"));
+        pDialog.setTitleText("Just a moment...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        String link = "https://f8mhr.app.goo.gl/?invitedto=" + groupId;
 
         Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
-                .setMessage("Manage and control all your "+groupdisplayname+" activities from your phone")
-                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                .setMessage("Manage and control all your " + groupdisplayname + " activities from your phone")
+                .setDeepLink(Uri.parse(link))
                 .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
                 .setCallToActionText(getString(R.string.invitation_cta))
                 .build();
         startActivityForResult(intent, REQUEST_INVITE);
+
     }
 
     @Override
@@ -348,6 +359,25 @@ public class StepFiveFragment extends Fragment {
                 });
             }
         }
+    }
+
+    private Uri createLongLink(String groupId){
+
+        Uri BASE_URI = Uri.parse("http://hacela.com/");
+
+        Uri APP_URI = BASE_URI.buildUpon().
+                appendQueryParameter("invitedto", groupId).build();
+
+
+        String encodedUri = null;
+        try {
+            encodedUri = URLEncoder.encode(APP_URI.toString(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        Log.v("ENCODED URI: ", encodedUri);
+        Uri deepLink = Uri.parse("https://f8mhr.app.goo.gl/?link="+APP_URI);
+        return deepLink;
     }
 
     @Override
