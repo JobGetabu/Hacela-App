@@ -28,8 +28,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_cancel" />
-                            <entry key="sourceFile" value="C:\Users\getab" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="ic_adduser" />
+                            <entry key="sourceFile" value="C:\Users\getab\Desktop\Projects\ProjectHacela\Design\icon assets\ic_adduser.svg" />
                           </map>
                         </option>
                       </PersistentState>
