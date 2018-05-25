@@ -201,7 +201,7 @@
                 android:layout_gravity="center_horizontal"
                 android:background="@android:color/transparent"
                 android:scaleType="fitXY"
-                app:srcCompat="@drawable/ic_link" />
+                app:srcCompat="@drawable/ic_adduser" />
 
             <TextView
                 android:layout_width="wrap_content"
