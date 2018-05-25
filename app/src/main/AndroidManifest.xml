@@ -79,7 +79,8 @@
         <activity android:name=".ui.CreateGroupActivity" />
         <activity android:name=".ui.GroupInviteActivity" />
         <activity android:name=".ui.GroupControlActivity" />
-        <activity android:name=".ui.GroupInfoEditActivity"></activity>
+        <activity android:name=".ui.GroupInfoEditActivity" />
+        <activity android:name=".ui.GroupContributionEditActivity"></activity>
     </application>
 
 </manifest>

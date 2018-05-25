@@ -272,6 +272,19 @@
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="Edit group information => take to edit screen \n edits allowed = change group type, contribution interval / amount / savings => process,"
+                        android:padding="@dimen/padding_normal"
+                        />
+                </android.support.design.card.MaterialCardView>
+
+                <android.support.design.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/spacing_micro"
+                    >
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:text="remove a member from the group"
                         android:padding="@dimen/padding_normal"
                         />
