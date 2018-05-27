@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             android:theme="@style/AppTheme.AppBarOverlay"
+            android:visibility="gone"
             >
 
             <android.support.design.widget.CollapsingToolbarLayout
@@ -182,6 +183,7 @@
                     android:layout_marginEnd="@dimen/spacing_normal"
                     android:layout_marginBottom="@dimen/padding_normal"
                     android:padding="@dimen/spacing_normal"
+                    android:visibility="gone"
                     >
 
                     <android.support.v7.widget.LinearLayoutCompat
@@ -220,6 +222,7 @@
                     android:layout_marginEnd="@dimen/spacing_normal"
                     android:layout_marginBottom="@dimen/padding_normal"
                     android:padding="@dimen/spacing_normal"
+                    android:visibility="gone"
                     >
 
                     <android.support.v7.widget.LinearLayoutCompat
@@ -269,6 +272,7 @@
                         android:layout_height="wrap_content"
                         android:text="insert a styled recycler view of group members in their order"
                         android:padding="@dimen/padding_normal"
+                        android:visibility="gone"
                         />
                 </android.support.design.card.MaterialCardView>
 
@@ -276,11 +280,11 @@
                 <android.support.design.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_normal"
-                    android:layout_marginEnd="@dimen/spacing_normal"
                     android:layout_marginBottom="@dimen/padding_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:layout_marginStart="@dimen/spacing_normal"
                     android:padding="@dimen/spacing_normal"
-                    >
+                    app:cardElevation="2dp">
 
                     <android.support.constraint.ConstraintLayout
                         android:layout_width="match_parent"
@@ -362,22 +366,54 @@
                 <android.support.design.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/spacing_micro"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:layout_marginBottom="@dimen/padding_normal"
+                    android:padding="@dimen/spacing_normal"
+                    android:visibility="gone"
                     >
-                    <android.support.v7.widget.AppCompatTextView
+
+                    <android.support.v7.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Edit group information => take to edit screen \n edits allowed = photo, diplay name and group name"
-                        android:padding="@dimen/padding_normal"
-                        />
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="normal"
+                            android:textColor="@android:color/black"
+                            android:text="EDIT GROUP"
+                            android:padding="@dimen/padding_normal"
+                            />
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Edit group information"
+                            android:paddingStart="@dimen/padding_normal"
+                            android:paddingEnd="@dimen/padding_normal"
+                            android:paddingBottom="@dimen/padding_normal"
+                            />
+
+                        <android.support.design.button.MaterialButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Edit Group"
+                            android:textAllCaps="false"
+                            android:textSize="16sp"
+                            app:icon="@drawable/ic_edit_profile"
+                            app:cornerRadius="2dp"
+                            app:additionalPaddingLeftForIcon="4dp"
+                            android:layout_marginBottom="@dimen/padding_normal"
+                            />
+                    </android.support.v7.widget.LinearLayoutCompat>
                 </android.support.design.card.MaterialCardView>
-
-
 
                 <android.support.design.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/spacing_micro"
+                    android:visibility="gone"
                     >
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="match_parent"
@@ -390,7 +426,10 @@
                 <android.support.design.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/spacing_micro"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:layout_marginBottom="@dimen/padding_normal"
+                    android:padding="@dimen/spacing_normal"
                     >
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="match_parent"
@@ -403,7 +442,10 @@
                 <android.support.design.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/spacing_micro"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:layout_marginBottom="@dimen/padding_normal"
+                    android:padding="@dimen/spacing_normal"
                     >
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="match_parent"
