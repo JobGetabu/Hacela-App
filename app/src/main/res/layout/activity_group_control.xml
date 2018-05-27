@@ -16,7 +16,6 @@
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             android:theme="@style/AppTheme.AppBarOverlay"
-            android:visibility="gone"
             >
 
             <android.support.design.widget.CollapsingToolbarLayout
@@ -183,7 +182,6 @@
                     android:layout_marginEnd="@dimen/spacing_normal"
                     android:layout_marginBottom="@dimen/padding_normal"
                     android:padding="@dimen/spacing_normal"
-                    android:visibility="gone"
                     >
 
                     <android.support.v7.widget.LinearLayoutCompat
@@ -222,7 +220,6 @@
                     android:layout_marginEnd="@dimen/spacing_normal"
                     android:layout_marginBottom="@dimen/padding_normal"
                     android:padding="@dimen/spacing_normal"
-                    android:visibility="gone"
                     >
 
                     <android.support.v7.widget.LinearLayoutCompat
@@ -276,7 +273,6 @@
                         />
                 </android.support.design.card.MaterialCardView>
 
-
                 <android.support.design.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -284,14 +280,15 @@
                     android:layout_marginEnd="@dimen/spacing_normal"
                     android:layout_marginStart="@dimen/spacing_normal"
                     android:padding="@dimen/spacing_normal"
-                    app:cardElevation="2dp">
+                    app:cardElevation="2dp"
+                    >
 
                     <android.support.constraint.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:id="@+id/textView17"
+                            android:id="@+id/textView17zz"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
@@ -299,13 +296,13 @@
                             android:layout_marginTop="16dp"
                             android:text="GROUP TRANSACTIONS"
                             android:textColor="@android:color/black"
-                            app:layout_constraintEnd_toStartOf="@+id/imageView4"
+                            app:layout_constraintEnd_toStartOf="@+id/imageView4zz"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <ImageView
-                            android:id="@+id/imageView4"
+                            android:id="@+id/imageView4zz"
                             android:layout_width="120dp"
                             android:layout_height="120dp"
                             android:layout_marginEnd="16dp"
@@ -316,17 +313,17 @@
                             app:srcCompat="@drawable/ic_funding" />
 
                         <TextView
-                            android:id="@+id/textView18"
+                            android:id="@+id/textView18zz"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="16dp"
                             android:text="View group recent transactions"
-                            app:layout_constraintEnd_toStartOf="@+id/imageView4"
+                            app:layout_constraintEnd_toStartOf="@+id/imageView4zz"
                             app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textView17" />
+                            app:layout_constraintTop_toBottomOf="@+id/textView17zz" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -338,7 +335,7 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/imageView4">
+                            app:layout_constraintTop_toBottomOf="@+id/imageView4zz">
 
                             <ImageButton
                                 android:layout_width="24dp"
@@ -360,7 +357,6 @@
                         </LinearLayout>
                     </android.support.constraint.ConstraintLayout>
 
-
                 </android.support.design.card.MaterialCardView>
 
                 <android.support.design.card.MaterialCardView
@@ -370,7 +366,7 @@
                     android:layout_marginEnd="@dimen/spacing_normal"
                     android:layout_marginBottom="@dimen/padding_normal"
                     android:padding="@dimen/spacing_normal"
-                    android:visibility="gone"
+                    
                     >
 
                     <android.support.v7.widget.LinearLayoutCompat
@@ -412,9 +408,11 @@
                 <android.support.design.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/spacing_micro"
-                    android:visibility="gone"
-                    >
+                    android:layout_marginTop="@dimen/padding_normal"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:layout_marginBottom="@dimen/padding_normal"
+                    android:padding="@dimen/spacing_normal"                    >
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -426,17 +424,213 @@
                 <android.support.design.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/padding_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:padding="@dimen/spacing_normal"
+                    app:cardElevation="2dp">
+
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/textView17"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:text="NEXT PAYOUT"
+                            android:textColor="@android:color/black"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/imageView4"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginTop="16dp"
+                            android:tint="@color/colorPrimaryDark"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/ic_calender" />
+
+                        <TextView
+                            android:id="@+id/textView18"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:text="Next payout cycle is to"
+                            app:layout_constraintEnd_toStartOf="@+id/imageView4"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView17" />
+
+                        <LinearLayout
+                            android:id="@+id/linearLayout2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="52dp"
+                            android:background="@color/details_list_color"
+                            android:orientation="horizontal"
+                            android:paddingBottom="@dimen/padding_normal"
+                            android:paddingTop="@dimen/padding_normal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/imageView4"
+                            app:layout_constraintVertical_bias="1.0">
+
+                            <ImageButton
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="@dimen/padding_normal"
+                                android:background="@android:color/transparent"
+                                android:src="@drawable/ic_arrow_right"
+                                android:tint="#919191" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:paddingStart="@dimen/padding_normal"
+                                android:text="more"
+                                android:textAlignment="center"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/textView16"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:text="User name"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toStartOf="@+id/imageView4"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView18" />
+
+                        <TextView
+                            android:id="@+id/textView19"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:text="Amount"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView16" />
+
+                        <TextView
+                            android:id="@+id/textView20"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:text="Date"
+                            app:layout_constraintEnd_toStartOf="@+id/imageView4"
+                            app:layout_constraintHorizontal_bias="0.65"
+                            app:layout_constraintStart_toEndOf="@+id/textView19"
+                            app:layout_constraintTop_toBottomOf="@+id/textView16" />
+
+                        <TextView
+                            android:id="@+id/textView21"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:text="Ksh 3000"
+                            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView19" />
+
+                        <TextView
+                            android:id="@+id/textView22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Sat 01-12-2018"
+                            app:layout_constraintStart_toStartOf="@+id/textView20"
+                            app:layout_constraintTop_toBottomOf="@+id/textView20" />
+
+                        <TextView
+                            android:id="@+id/textView23"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="16dp"
+                            android:text="8/9"
+                            app:layout_constraintEnd_toStartOf="@+id/imageView4"
+                            app:layout_constraintHorizontal_bias="0.087"
+                            app:layout_constraintStart_toEndOf="@+id/textView17"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+                </android.support.design.card.MaterialCardView>
+
+                <android.support.design.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_normal"
                     android:layout_marginEnd="@dimen/spacing_normal"
                     android:layout_marginBottom="@dimen/padding_normal"
                     android:padding="@dimen/spacing_normal"
                     >
-                    <android.support.v7.widget.AppCompatTextView
+
+                    <android.support.v7.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="next payment date and member to be paid extra = cycle number"
-                        android:padding="@dimen/padding_normal"
-                        />
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="normal"
+                            android:textColor="@android:color/black"
+                            android:text="EDIT GROUP"
+                            android:padding="@dimen/padding_normal"
+                            />
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Edit group contribution and interval period"
+                            android:paddingStart="@dimen/padding_normal"
+                            android:paddingEnd="@dimen/padding_normal"
+                            android:paddingBottom="@dimen/padding_normal"
+                            />
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Note: This change will only take effect from the next payout"
+                            android:paddingStart="@dimen/padding_normal"
+                            android:paddingEnd="@dimen/padding_normal"
+                            android:paddingBottom="@dimen/padding_normal"
+                            />
+
+                        <android.support.design.button.MaterialButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Edit Group"
+                            android:textAllCaps="false"
+                            android:textSize="16sp"
+                            app:icon="@drawable/ic_edit_profile"
+                            app:cornerRadius="2dp"
+                            app:additionalPaddingLeftForIcon="4dp"
+                            android:layout_marginBottom="@dimen/padding_normal"
+                            />
+                    </android.support.v7.widget.LinearLayoutCompat>
                 </android.support.design.card.MaterialCardView>
 
                 <android.support.design.card.MaterialCardView
