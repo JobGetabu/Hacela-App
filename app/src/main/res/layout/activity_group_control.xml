@@ -25,7 +25,7 @@
                 android:fitsSystemWindows="true"
                 android:clipChildren="false"
                 app:contentScrim="?attr/colorPrimary"
-                app:scrimVisibleHeightTrigger="240dp"
+                app:scrimVisibleHeightTrigger="200dp"
                 app:titleEnabled="false"
                 app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
 
@@ -39,6 +39,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp160"
                         android:layout_marginTop="@dimen/dp190"
+                        android:fitsSystemWindows="true"
                         android:src="@drawable/group_placeholder"/>
 
                     <ImageView
@@ -46,6 +47,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp190"
                         android:src="@drawable/group_placeholder"
+                        android:fitsSystemWindows="true"
                         android:transitionName="@string/transition_background"
                         android:contentDescription="@string/image_default_content_description"
                         android:scaleType="centerCrop"/>
@@ -81,7 +83,6 @@
                             android:id="@+id/imageView3"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-
                             android:src="@drawable/group_placeholder"
                             app:civ_border_color="@color/colorAccent"
                             app:civ_border_width="3dp"
@@ -100,7 +101,7 @@
 
                         <TextView
                             android:id="@+id/tv_name"
-                            android:text="Group Display Name"
+                            android:text="Group Full Name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
@@ -113,14 +114,14 @@
 
                         <TextView
                             android:id="@+id/tv_info"
-                            android:text="Group Full Name"
+                            android:text="Group Display Name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="17sp"
+                            android:textSize="16sp"
                             android:textColor="@color/details_info_color"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="4dp"
                             android:layout_gravity="center_horizontal"
                             android:gravity="center"
                             />
@@ -130,10 +131,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:textSize="18.4sp"
+                            android:textSize="14.4sp"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:text="Group Description information"
+                            android:text="Created by UserName, 12/12/2017"
                             android:textColor="@color/colorAccent"
                             android:layout_gravity="center_horizontal"
                             android:gravity="center"
@@ -178,6 +179,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding_normal"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:layout_marginBottom="@dimen/padding_normal"
+                    android:padding="@dimen/spacing_normal"
+                    >
+                    <android.support.v7.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Group description"
+                        android:padding="@dimen/padding_normal"
+                        />
+                </android.support.design.card.MaterialCardView>
+
+                <android.support.design.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_normal"
                     android:layout_marginEnd="@dimen/spacing_normal"
                     android:layout_marginBottom="@dimen/padding_normal"
@@ -269,7 +286,6 @@
                         android:layout_height="wrap_content"
                         android:text="insert a styled recycler view of group members in their order"
                         android:padding="@dimen/padding_normal"
-                        android:visibility="gone"
                         />
                 </android.support.design.card.MaterialCardView>
 
@@ -641,41 +657,81 @@
                     android:layout_marginBottom="@dimen/padding_normal"
                     android:padding="@dimen/spacing_normal"
                     >
-                    <android.support.v7.widget.AppCompatTextView
+
+                    <android.support.v7.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Edit group information => take to edit screen \n edits allowed = change group type, contribution interval / amount / savings => process,"
-                        android:padding="@dimen/padding_normal"
-                        />
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="normal"
+                            android:textColor="@android:color/black"
+                            android:text="EXIT GROUP"
+                            android:padding="@dimen/padding_normal"
+                            />
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Note: You are only allowed to exit group, if you have cleared pending contributions"
+                            android:paddingStart="@dimen/padding_normal"
+                            android:paddingEnd="@dimen/padding_normal"
+                            android:paddingBottom="@dimen/padding_normal"
+                            />
+
+                        <android.support.design.button.MaterialButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Exit Group"
+                            android:textAllCaps="false"
+                            android:textSize="16sp"
+                            app:icon="@drawable/ic_leave"
+                            app:cornerRadius="2dp"
+                            app:backgroundTint="@color/googleRed"
+                            app:additionalPaddingLeftForIcon="4dp"
+                            android:layout_marginBottom="@dimen/padding_normal"
+                            />
+                    </android.support.v7.widget.LinearLayoutCompat>
                 </android.support.design.card.MaterialCardView>
 
                 <android.support.design.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/spacing_micro"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:layout_marginBottom="@dimen/padding_normal"
+                    android:padding="@dimen/spacing_normal"
                     >
-                    <android.support.v7.widget.AppCompatTextView
+
+                    <android.support.v7.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="remove a member from the group"
-                        android:padding="@dimen/padding_normal"
-                        />
-                </android.support.design.card.MaterialCardView>
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="normal"
+                            android:textColor="@android:color/black"
+                            android:text="DELETE GROUP"
+                            android:padding="@dimen/padding_normal"
+                            />
 
-
-                <android.support.design.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/spacing_micro"
-                    >
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="delete  group"
-                        android:textColor="@color/red_btn_bg_color"
-                        android:textAllCaps="true"
-                        android:padding="@dimen/padding_normal"
-                        />
+                        <android.support.design.button.MaterialButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Delete Group"
+                            android:textAllCaps="false"
+                            android:textSize="16sp"
+                            app:icon="@drawable/ic_trash"
+                            app:cornerRadius="2dp"
+                            app:additionalPaddingLeftForIcon="4dp"
+                            app:backgroundTint="@color/googleRed"
+                            android:layout_marginBottom="@dimen/padding_normal"
+                            />
+                    </android.support.v7.widget.LinearLayoutCompat>
                 </android.support.design.card.MaterialCardView>
 
             </android.support.v7.widget.LinearLayoutCompat>
