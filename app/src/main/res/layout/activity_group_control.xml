@@ -43,7 +43,7 @@
                         android:src="@drawable/group_placeholder"/>
 
                     <ImageView
-                        android:id="@+id/header_image"
+                        android:id="@+id/groupcontrol_header_image"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp190"
                         android:src="@drawable/group_placeholder"
@@ -55,14 +55,14 @@
                 </FrameLayout>
 
                 <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
+                    android:id="@+id/groupcontrol_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp160"
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
                 <FrameLayout
-                    android:id="@+id/header_info"
+                    android:id="@+id/groupcontrol_header_info"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp190"
                     android:background="@android:color/white"
@@ -80,7 +80,7 @@
                         android:background="@drawable/avatar_border_details">
 
                         <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/imageView3"
+                            android:id="@+id/groupcontrol_circular_header"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:src="@drawable/group_placeholder"
@@ -100,7 +100,7 @@
                         android:layout_marginEnd="@dimen/profile_texts_h_offset">
 
                         <TextView
-                            android:id="@+id/tv_name"
+                            android:id="@+id/groupcontrol_group_name"
                             android:text="Group Full Name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
                             />
 
                         <TextView
-                            android:id="@+id/tv_info"
+                            android:id="@+id/groupcontrol_group_disname"
                             android:text="Group Display Name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -127,7 +127,7 @@
                             />
 
                         <TextView
-                            android:id="@+id/tv_status"
+                            android:id="@+id/groupcontrol_group_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -149,14 +149,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="?attr/actionBarSize"
                     android:layout_gravity="center_horizontal|top"
-                    android:layout_marginStart="50dp"
                     android:layout_marginEnd="50dp"
-                    android:maxLines="1"
+                    android:layout_marginStart="50dp"
                     android:ellipsize="end"
                     android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="@android:color/white"
                     android:textSize="25sp"
                     app:layout_collapseMode="pin"
-                    android:textColor="@android:color/white"/>
+                    tools:text="Group Name" />
 
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
@@ -185,6 +186,7 @@
                     android:padding="@dimen/spacing_normal"
                     >
                     <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/groupcontrol_group_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Group description"
@@ -216,6 +218,7 @@
                             />
 
                         <android.support.design.button.MaterialButton
+                            android:id="@+id/groupcontrol_startfirstcycle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Start First Cycle"
@@ -260,6 +263,7 @@
                             />
 
                         <android.support.design.button.MaterialButton
+                            android:id="@+id/groupcontrol_invite"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Invite friends"
@@ -348,6 +352,7 @@
                             android:orientation="horizontal"
                             android:paddingBottom="@dimen/padding_normal"
                             android:paddingTop="@dimen/padding_normal"
+                            android:id="@+id/groupcontrol_moretrans"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -359,6 +364,7 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginStart="@dimen/padding_normal"
                                 android:background="@android:color/transparent"
+                                android:contentDescription="@string/image_default_content_description"
                                 android:src="@drawable/ic_arrow_right"
                                 android:tint="#919191" />
 
@@ -408,6 +414,7 @@
                             />
 
                         <android.support.design.button.MaterialButton
+                            android:id="@+id/groupcontrol_togroup_info"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Edit Group"
@@ -419,22 +426,6 @@
                             android:layout_marginBottom="@dimen/padding_normal"
                             />
                     </android.support.v7.widget.LinearLayoutCompat>
-                </android.support.design.card.MaterialCardView>
-
-                <android.support.design.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding_normal"
-                    android:layout_marginStart="@dimen/spacing_normal"
-                    android:layout_marginEnd="@dimen/spacing_normal"
-                    android:layout_marginBottom="@dimen/padding_normal"
-                    android:padding="@dimen/spacing_normal"                    >
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="section buttons only visible to admins"
-                        android:padding="@dimen/padding_normal"
-                        />
                 </android.support.design.card.MaterialCardView>
 
                 <android.support.design.card.MaterialCardView
@@ -486,7 +477,7 @@
                             app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
                         <LinearLayout
-                            android:id="@+id/linearLayout2"
+                            android:id="@+id/groupcontrol_topayout_more"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="52dp"
@@ -507,6 +498,7 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginStart="@dimen/padding_normal"
                                 android:background="@android:color/transparent"
+                                android:contentDescription="@string/image_default_content_description"
                                 android:src="@drawable/ic_arrow_right"
                                 android:tint="#919191" />
 
@@ -559,19 +551,19 @@
                             app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
                         <TextView
-                            android:id="@+id/textView21"
+                            android:id="@+id/groupcontrol_pay_amount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="16dp"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
                             android:text="Ksh 3000"
-                            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+                            app:layout_constraintBottom_toTopOf="@+id/groupcontrol_topayout_more"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView19" />
 
                         <TextView
-                            android:id="@+id/textView22"
+                            android:id="@+id/groupcontrol_pay_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -580,7 +572,7 @@
                             app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
                         <TextView
-                            android:id="@+id/textView23"
+                            android:id="@+id/groupcontrol_pay_cycle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
@@ -636,6 +628,7 @@
                             />
 
                         <android.support.design.button.MaterialButton
+                            android:id="@+id/groupcontrol_admin_infoedit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Edit Group"
@@ -682,6 +675,7 @@
                             />
 
                         <android.support.design.button.MaterialButton
+                            android:id="@+id/groupcontrol_exit_group"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Exit Group"
@@ -720,6 +714,7 @@
                             />
 
                         <android.support.design.button.MaterialButton
+                            android:id="@+id/groupcontrol_admin_deletegroup"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Delete Group"

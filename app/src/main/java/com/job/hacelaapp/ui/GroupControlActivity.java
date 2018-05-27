@@ -27,7 +27,7 @@ public class GroupControlActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_group_control);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.groupcontrol_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -36,8 +36,8 @@ public class GroupControlActivity extends AppCompatActivity {
         final AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
 
-            final View headerImage = findViewById(R.id.header_image);
-            final View headerInfo = findViewById(R.id.header_info);
+            final View headerImage = findViewById(R.id.groupcontrol_header_image);
+            final View headerInfo = findViewById(R.id.groupcontrol_header_info);
             final View avatar = findViewById(R.id.avatar_border);
             final LinearLayout texts = (LinearLayout) findViewById(R.id.texts);
 
@@ -113,7 +113,7 @@ public class GroupControlActivity extends AppCompatActivity {
                     if (isStarting) {
                         isStarting = false;
 
-                        ViewCompat.setTransitionName(findViewById(R.id.header_image), null);
+                        ViewCompat.setTransitionName(findViewById(R.id.groupcontrol_header_image), null);
                         ViewCompat.setTransitionName(findViewById(R.id.groupcontrol_nest), null);
                     }
                 }
