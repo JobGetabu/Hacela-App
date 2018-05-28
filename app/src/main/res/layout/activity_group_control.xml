@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             android:theme="@style/AppTheme.AppBarOverlay"
+            android:stateListAnimator="@null"
             >
 
             <android.support.design.widget.CollapsingToolbarLayout
@@ -300,6 +301,8 @@
                     android:layout_marginEnd="@dimen/spacing_normal"
                     android:layout_marginStart="@dimen/spacing_normal"
                     android:padding="@dimen/spacing_normal"
+                    android:clickable="true"
+                    android:focusable="true"
                     app:cardElevation="2dp"
                     >
 
@@ -353,6 +356,8 @@
                             android:paddingBottom="@dimen/padding_normal"
                             android:paddingTop="@dimen/padding_normal"
                             android:id="@+id/groupcontrol_moretrans"
+                            android:clickable="true"
+                            android:focusable="true"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -435,6 +440,8 @@
                     android:layout_marginEnd="@dimen/spacing_normal"
                     android:layout_marginStart="@dimen/spacing_normal"
                     android:padding="@dimen/spacing_normal"
+                    android:clickable="true"
+                    android:focusable="true"
                     app:cardElevation="2dp">
 
                     <android.support.constraint.ConstraintLayout
@@ -478,6 +485,8 @@
 
                         <LinearLayout
                             android:id="@+id/groupcontrol_topayout_more"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="52dp"

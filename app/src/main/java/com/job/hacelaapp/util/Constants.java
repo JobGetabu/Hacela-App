@@ -20,4 +20,6 @@ public class Constants {
 
     public static final String PHONEAUTH_DETAILS = PACKAGE_NAME +
             ".PHONEAUTH_DETAILS";
+
+    public static final String GROUP_UID ="GROUP_UID";
 }

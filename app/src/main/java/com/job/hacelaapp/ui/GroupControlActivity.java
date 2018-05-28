@@ -1,5 +1,6 @@
 package com.job.hacelaapp.ui;
 
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
@@ -12,10 +13,16 @@ import android.transition.Transition;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.job.hacelaapp.R;
 
 import java.util.ArrayList;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static com.job.hacelaapp.util.Constants.GROUP_UID;
 
 public class GroupControlActivity extends AppCompatActivity {
 
@@ -26,6 +33,9 @@ public class GroupControlActivity extends AppCompatActivity {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
         setContentView(R.layout.activity_group_control);
+
+        //set up butterknife
+        ButterKnife.bind(this);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.groupcontrol_toolbar);
         setSupportActionBar(toolbar);
@@ -139,5 +149,64 @@ public class GroupControlActivity extends AppCompatActivity {
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    //start first cycle click
+    @OnClick(R.id.groupcontrol_startfirstcycle)
+    public void startCycleClick(){
+
+        Toast.makeText(this, "TODO: starting cycle", Toast.LENGTH_SHORT).show();
+    }
+
+    //start friends invite actions
+    @OnClick(R.id.groupcontrol_invite)
+    public void startInviteClick(){
+
+        Toast.makeText(this, "TODO: friend invite", Toast.LENGTH_SHORT).show();
+    }
+
+
+    //start togroup info edit
+    @OnClick(R.id.groupcontrol_togroup_info)
+    public void startToGroupEditClick(){
+
+        groupInfoIntent();
+    }
+
+    //start togroup admin info edit
+    @OnClick(R.id.groupcontrol_admin_infoedit)
+    public void startToAdminGroupEditClick(){
+
+        groupAdminInfoIntent();
+    }
+
+    //start group exit actions
+    @OnClick(R.id.groupcontrol_exit_group)
+    public void exitGroupClick(){
+
+        Toast.makeText(this, "TODO: start exiting process", Toast.LENGTH_SHORT).show();
+    }
+
+    //start group delete actions
+    @OnClick(R.id.groupcontrol_admin_deletegroup)
+    public void deleteGroupClick(){
+
+        Toast.makeText(this, "TODO: start deleting process", Toast.LENGTH_SHORT).show();
+    }
+
+    private void groupAdminInfoIntent(){
+        Intent groupintent = new Intent(this,GroupContributionEditActivity.class);
+
+        //TODO: Pass in the group UID
+        groupintent.putExtra(GROUP_UID,"");
+        startActivity(groupintent);
+    }
+
+    private void groupInfoIntent(){
+        Intent groupintent = new Intent(this,GroupInfoEditActivity.class);
+
+        //TODO: Pass in the group UID
+        groupintent.putExtra(GROUP_UID,"");
+        startActivity(groupintent);
     }
 }
