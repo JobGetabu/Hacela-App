@@ -34,13 +34,13 @@ public class ImageProcessor {
     //set images to CircleImageView
     public void setMyImage(final CircleImageView circleImageView, final String url) {
         if (url.isEmpty()) {
-            circleImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_profile_placeholder));
+            circleImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.avatar_placeholder));
         } else {
 
             HacelaApplication.picassoWithCache
                     .load(url)
-                    .placeholder(R.drawable.ic_profile_placeholder)
-                    .error(R.drawable.ic_profile_placeholder)
+                    .placeholder(R.drawable.avatar_placeholder)
+                    .error(R.drawable.avatar_placeholder)
                     .into(circleImageView);
         }
     }
@@ -50,8 +50,8 @@ public class ImageProcessor {
         Picasso
                 .get()
                 .load(url)
-                .placeholder(R.drawable.ic_profile_placeholder)
-                .error(R.drawable.ic_profile_placeholder)
+                .placeholder(R.drawable.avatar_placeholder)
+                .error(R.drawable.avatar_placeholder)
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -64,8 +64,8 @@ public class ImageProcessor {
                         Picasso
                                 .get()
                                 .load(url)
-                                .placeholder(R.drawable.ic_profile_placeholder)
-                                .error(R.drawable.ic_profile_placeholder)
+                                .placeholder(R.drawable.avatar_placeholder)
+                                .error(R.drawable.avatar_placeholder)
                                 .into(imageView);
                     }
                 });
