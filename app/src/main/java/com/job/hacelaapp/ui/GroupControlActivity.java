@@ -194,6 +194,20 @@ public class GroupControlActivity extends AppCompatActivity {
         Toast.makeText(this, "TODO: start deleting process", Toast.LENGTH_SHORT).show();
     }
 
+    //start view more payout info
+    @OnClick(R.id.groupcontrol_topayout_more)
+    public void morePayoutInfoClick(){
+
+        Toast.makeText(this, "TODO: to payout info", Toast.LENGTH_SHORT).show();
+    }
+
+    //start view more payout info
+    @OnClick(R.id.groupcontrol_moretrans)
+    public void moreTransInfoClick(){
+
+        Toast.makeText(this, "TODO: to trans info", Toast.LENGTH_SHORT).show();
+    }
+
     private void groupAdminInfoIntent(){
         Intent groupintent = new Intent(this,GroupContributionEditActivity.class);
 

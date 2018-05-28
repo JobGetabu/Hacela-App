@@ -331,6 +331,7 @@
                             android:layout_marginEnd="16dp"
                             android:layout_marginTop="16dp"
                             android:tint="@color/colorPrimaryDark"
+                            android:contentDescription="@string/image_default_content_description"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:srcCompat="@drawable/ic_funding" />
@@ -466,6 +467,7 @@
                             android:layout_marginEnd="16dp"
                             android:layout_marginTop="16dp"
                             android:tint="@color/colorPrimaryDark"
+                            android:contentDescription="@string/image_default_content_description"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:srcCompat="@drawable/ic_calender" />
