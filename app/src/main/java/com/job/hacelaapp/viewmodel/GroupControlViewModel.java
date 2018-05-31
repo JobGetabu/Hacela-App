@@ -18,7 +18,7 @@ public class GroupControlViewModel extends AndroidViewModel {
     private FirebaseFirestore mFirestore;
     private String currentUserId;
 
-    public static final String TAG = "DetailsEditVM";
+    public static final String TAG = "GroupVM";
 
     public GroupControlViewModel(@NonNull Application application,FirebaseAuth mAuth, FirebaseFirestore mFirestore) {
 
