@@ -1,7 +1,6 @@
 package com.job.hacelaapp.dataSource;
 
 import java.util.Date;
-import java.util.UUID;
 
 import io.reactivex.annotations.Nullable;
 
@@ -10,25 +9,25 @@ import io.reactivex.annotations.Nullable;
  */
 public class UsersGroups {
 
-    private UUID groupId;
+    private String groupId;
     private boolean isMember;
     private Date startDate;
     @Nullable
     private Date endDate;
 
 
-    public UsersGroups(UUID groupId, boolean isMember, Date startDate, @Nullable Date endDate) {
+    public UsersGroups(String groupId, boolean isMember, Date startDate, @Nullable Date endDate) {
         this.groupId = groupId;
         this.isMember = isMember;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public UUID getGroupId() {
+    public String getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(UUID groupId) {
+    public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
 
