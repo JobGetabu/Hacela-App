@@ -86,6 +86,7 @@ public class ImageProcessor {
         return compressedImage;
     }
 
+    //TODO: only do thump images
     public Bitmap compressImageToThump(File imagefile, Context context) {
         Bitmap compressedImage = null;
         try {

@@ -1,36 +1,66 @@
 package com.job.hacelaapp.ui;
 
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.dataSource.Groups;
+import com.job.hacelaapp.dataSource.UsersGroups;
+import com.job.hacelaapp.dataSource.UsersProfile;
 import com.job.hacelaapp.util.ImageProcessor;
 import com.job.hacelaapp.viewmodel.GroupControlViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.job.hacelaapp.util.Constants.GROUP_UID;
 
 public class GroupControlActivity extends AppCompatActivity {
 
+    @BindView(R.id.groupcontrol_group_name)
+    TextView mGroupFulName;
+    @BindView(R.id.groupcontrol_group_disname)
+    TextView mGroupDisName;
+    @BindView(R.id.groupcontrol_group_date)
+    TextView mGroupDateInfo;
+    @BindView(R.id.groupcontrol_header_image)
+    ImageView headerImage;
+    @BindView(R.id.groupcontrol_circular_header)
+    CircleImageView circleImage;
+
+    //firebase
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
     private FirebaseUser mCurrentUser;
@@ -158,7 +188,42 @@ public class GroupControlActivity extends AppCompatActivity {
 
         imageProcessor = new ImageProcessor(this);
 
-        //init viewmodel
+        //init view-model
+        DocumentReference USERSPROFILE = mFirestore.collection("UsersProfile")
+                .document(mCurrentUser.getUid());
+
+        USERSPROFILE
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        UsersProfile usersProfile = documentSnapshot.toObject(UsersProfile.class);
+                        //we need the group id
+                        if (usersProfile != null) {
+                            List<UsersGroups> groups = usersProfile.getGroups();
+                            String gId = groups.get(0).getGroupId();
+
+                            //read db data
+                            GroupControlViewModel.Factory factory = new GroupControlViewModel.Factory(
+                                    getApplication(), mAuth, mFirestore,gId);
+
+                            model = ViewModelProviders.of(GroupControlActivity.this, factory)
+                                    .get(GroupControlViewModel.class);
+
+                            //UI observers
+                            setUpGroupBasic(model);
+
+                        }
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, "Error getting documents: ", e.getCause());
+            }
+        });
+
+
       /*  GroupControlViewModel.Factory factory = new GroupControlViewModel.Factory(
                 this.getApplication(), mAuth, mFirestore);
 
@@ -167,6 +232,19 @@ public class GroupControlActivity extends AppCompatActivity {
 
         //UI observers
 
+    }
+
+    private void setUpGroupBasic(GroupControlViewModel model) {
+        MediatorLiveData<Groups> data = model.getGroupsMediatorLiveData();
+
+        data.observe(this, new Observer<Groups>() {
+            @Override
+            public void onChanged(@Nullable Groups groups) {
+                if(groups!= null){
+
+                }
+            }
+        });
     }
 
     @Override

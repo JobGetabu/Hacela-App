@@ -1,5 +1,7 @@
 package com.job.hacelaapp.dataSource;
 
+import java.util.List;
+
 import io.reactivex.annotations.Nullable;
 
 /**
@@ -15,7 +17,7 @@ public class UsersProfile {
     private String income;
     private int profileCompletion;
     private String fullname;
-    private UsersGroups groups;
+    private List<UsersGroups> groups;
 
     public void setGender(String gender) {
         this.gender = gender;
@@ -49,7 +51,7 @@ public class UsersProfile {
     }
 
     public UsersProfile(String profession, @Nullable String typeOfBusiness, String income,
-                        int profileCompletion, String fullname, UsersGroups groups) {
+                        int profileCompletion, String fullname, List<UsersGroups> groups) {
         this.profession = profession;
         this.typeOfBusiness = typeOfBusiness;
         this.income = income;
@@ -98,11 +100,11 @@ public class UsersProfile {
         this.fullname = fullname;
     }
 
-    public UsersGroups getGroups() {
+    public List<UsersGroups> getGroups() {
         return groups;
     }
 
-    public void setGroups(UsersGroups groups) {
+    public void setGroups(List<UsersGroups> groups) {
         this.groups = groups;
     }
 
@@ -115,6 +117,9 @@ public class UsersProfile {
                 ", profileCompletion=" + profileCompletion +
                 ", fullname='" + fullname + '\'' +
                 ", groups=" + groups +
+                ", gender='" + gender + '\'' +
+                ", idnumber='" + idnumber + '\'' +
+                ", location=" + location +
                 '}';
     }
 }
