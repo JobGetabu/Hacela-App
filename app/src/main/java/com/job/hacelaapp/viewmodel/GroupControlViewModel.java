@@ -37,7 +37,6 @@ public class GroupControlViewModel extends AndroidViewModel {
         this.groupId = groupId;
 
         //init db refs
-        //GROUPREF =
 
         // Set up the MediatorLiveData to convert DataSnapshot objects into POJO objects
 
