@@ -1,5 +1,6 @@
 package com.job.hacelaapp.ui;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -15,7 +16,12 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.util.ImageProcessor;
+import com.job.hacelaapp.viewmodel.GroupControlViewModel;
 
 import java.util.ArrayList;
 
@@ -25,6 +31,15 @@ import butterknife.OnClick;
 import static com.job.hacelaapp.util.Constants.GROUP_UID;
 
 public class GroupControlActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore mFirestore;
+    private FirebaseUser mCurrentUser;
+
+    private GroupControlViewModel model;
+    private ImageProcessor imageProcessor;
+
+    public static final String TAG = "GroupControl";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +149,25 @@ public class GroupControlActivity extends AppCompatActivity {
                 @Override public void onTransitionResume(Transition transition) {}
             });
         }
+
+        //End of layout animating
+
+        //init firebase
+        mAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
+        mCurrentUser = mAuth.getCurrentUser();
+
+        imageProcessor = new ImageProcessor(this);
+
+        //init viewmodel
+        GroupControlViewModel.Factory factory = new GroupControlViewModel.Factory(
+                this.getApplication(), mAuth, mFirestore);
+
+        model = ViewModelProviders.of(this, factory)
+                .get(GroupControlViewModel.class);
+
+        //UI observers
+
     }
 
     @Override
