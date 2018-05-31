@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.job.hacelaapp.adapter.BottomBarAdapter;
 import com.job.hacelaapp.adapter.NoSwipePager;
 import com.job.hacelaapp.hacelaCore.AccountFragment;
-import com.job.hacelaapp.hacelaCore.ChatFragment;
 import com.job.hacelaapp.hacelaCore.HomeFragment;
 import com.job.hacelaapp.hacelaCore.ProfileFragment;
 import com.job.hacelaapp.manageUsers.LoginActivity;
@@ -56,18 +55,18 @@ public class MainActivity extends AppCompatActivity {
         authListner();
 
         //bottom nav items
-        AHBottomNavigationItem item1 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_0),
-                fetchDrawable(R.drawable.ic_profile_trans));
-        AHBottomNavigationItem item2 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_1),
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_1),
                 fetchDrawable(R.drawable.ic_home_trans));
-        AHBottomNavigationItem item3 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_2),
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_2),
                 fetchDrawable(R.drawable.ic_account));
-        AHBottomNavigationItem item4 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_3),
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_3),
                 fetchDrawable(R.drawable.ic_chat_trans));
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_0),
+                fetchDrawable(R.drawable.ic_profile_trans));
 
         mBottomNavigation.addItem(item1);
         mBottomNavigation.addItem(item2);
-        mBottomNavigation.addItem(item3);
+        //mBottomNavigation.addItem(item3);
         mBottomNavigation.addItem(item4);
 
         mBottomNavigation.setOnTabSelectedListener(onTabSelectedListener);
@@ -93,20 +92,20 @@ public class MainActivity extends AppCompatActivity {
         mNoSwipePager.setPagingEnabled(false);
 
         //caches data in fragments
-        mNoSwipePager.setOffscreenPageLimit(4);
+        mNoSwipePager.setOffscreenPageLimit(3);
 
         pagerAdapter = new BottomBarAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragments(new ProfileFragment());
         pagerAdapter.addFragments(new HomeFragment());
         pagerAdapter.addFragments(new AccountFragment());
-        pagerAdapter.addFragments(new ChatFragment());
+        //pagerAdapter.addFragments(new ChatFragment());
+        pagerAdapter.addFragments(new ProfileFragment());
 
         mNoSwipePager.setAdapter(pagerAdapter);
 
-        mBottomNavigation.setCurrentItem(1);
-        mNoSwipePager.setCurrentItem(1);
+        mBottomNavigation.setCurrentItem(0);
+        mNoSwipePager.setCurrentItem(0);
 
-        createFakeNotification();
+        //createFakeNotification();
     }
 
     private Drawable fetchDrawable(@DrawableRes int mdrawable) {
