@@ -19,7 +19,7 @@ import com.job.hacelaapp.appExecutor.PriorityRunnable;
 import com.job.hacelaapp.dataSource.UserAuthInfo;
 import com.job.hacelaapp.dataSource.UserBasicInfo;
 import com.job.hacelaapp.dataSource.UsersProfile;
-import com.job.hacelaapp.repository.FirebaseQueryLiveData;
+import com.job.hacelaapp.repository.FirebaseDocumentLiveData;
 
 /**
  * Created by Job on Sunday : 4/22/2018.
@@ -66,7 +66,7 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
     }
 
     private void workOnUsersLiveData(){
-        FirebaseQueryLiveData mData = new FirebaseQueryLiveData(USERSREF);
+        FirebaseDocumentLiveData mData = new FirebaseDocumentLiveData(USERSREF);
         usersLiveData.addSource(mData, new Observer<DocumentSnapshot>() {
             @Override
             public void onChanged(@Nullable final DocumentSnapshot documentSnapshot) {
@@ -88,7 +88,7 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
     }
 
     private void workOnUserAuthInfoMediatorLiveData(){
-        FirebaseQueryLiveData mData = new FirebaseQueryLiveData(USERSAUTHREF);
+        FirebaseDocumentLiveData mData = new FirebaseDocumentLiveData(USERSAUTHREF);
         userAuthInfoMediatorLiveData.addSource(mData, new Observer<DocumentSnapshot>() {
             @Override
             public void onChanged(@Nullable final DocumentSnapshot documentSnapshot) {
@@ -111,7 +111,7 @@ public class DetailsEditActivityViewModel extends AndroidViewModel {
     }
 
     private void workOnUsersProfileMediatorLiveData(){
-        FirebaseQueryLiveData mData = new FirebaseQueryLiveData(USERSPROFILE);
+        FirebaseDocumentLiveData mData = new FirebaseDocumentLiveData(USERSPROFILE);
         usersProfileMediatorLiveData.addSource(mData, new Observer<DocumentSnapshot>() {
             @Override
             public void onChanged(@Nullable final DocumentSnapshot documentSnapshot) {

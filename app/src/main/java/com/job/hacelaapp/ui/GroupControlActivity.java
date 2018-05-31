@@ -1,6 +1,5 @@
 package com.job.hacelaapp.ui;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -160,11 +159,11 @@ public class GroupControlActivity extends AppCompatActivity {
         imageProcessor = new ImageProcessor(this);
 
         //init viewmodel
-        GroupControlViewModel.Factory factory = new GroupControlViewModel.Factory(
+      /*  GroupControlViewModel.Factory factory = new GroupControlViewModel.Factory(
                 this.getApplication(), mAuth, mFirestore);
 
         model = ViewModelProviders.of(this, factory)
-                .get(GroupControlViewModel.class);
+                .get(GroupControlViewModel.class);*/
 
         //UI observers
 

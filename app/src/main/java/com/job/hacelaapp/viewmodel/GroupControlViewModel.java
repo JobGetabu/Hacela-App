@@ -28,12 +28,13 @@ public class GroupControlViewModel extends AndroidViewModel {
     private DocumentReference GROUPADMINREF;
 
 
-    public GroupControlViewModel(@NonNull Application application,FirebaseAuth mAuth, FirebaseFirestore mFirestore) {
+    public GroupControlViewModel(@NonNull Application application,FirebaseAuth mAuth, FirebaseFirestore mFirestore,String groupId) {
 
         super(application);
         this.mAuth = mAuth;
         this.mFirestore = mFirestore;
         this.currentUserId = mAuth.getCurrentUser().getUid();
+        this.groupId = groupId;
 
         //init db refs
         //GROUPREF =
@@ -51,11 +52,13 @@ public class GroupControlViewModel extends AndroidViewModel {
         private final Application mApplication;
         private FirebaseAuth mAuth;
         private FirebaseFirestore mFirestore;
+        private String groupId;
 
-        public Factory(@NonNull Application mApplication, FirebaseAuth mAuth, FirebaseFirestore mFirestore) {
+        public Factory(@NonNull Application mApplication, FirebaseAuth mAuth, FirebaseFirestore mFirestore, String groupId) {
             this.mApplication = mApplication;
             this.mAuth = mAuth;
             this.mFirestore = mFirestore;
+            this.groupId = groupId;
         }
 
         @Override
