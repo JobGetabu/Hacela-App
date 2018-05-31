@@ -18,6 +18,7 @@ public class GroupInfoViewModel extends AndroidViewModel {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
     private String currentUserId;
+    private String groupId;
 
     public static final String TAG = "GroupVM";
 

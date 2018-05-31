@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
@@ -17,8 +18,15 @@ public class GroupControlViewModel extends AndroidViewModel {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
     private String currentUserId;
+    private String groupId;
 
     public static final String TAG = "GroupVM";
+
+    private DocumentReference GROUPREF;
+    private DocumentReference GROUPMEMBERREF;
+    private DocumentReference GROUPCONTRIBUTIONDEFAULTREF;
+    private DocumentReference GROUPADMINREF;
+
 
     public GroupControlViewModel(@NonNull Application application,FirebaseAuth mAuth, FirebaseFirestore mFirestore) {
 
@@ -28,6 +36,7 @@ public class GroupControlViewModel extends AndroidViewModel {
         this.currentUserId = mAuth.getCurrentUser().getUid();
 
         //init db refs
+        //GROUPREF =
 
         // Set up the MediatorLiveData to convert DataSnapshot objects into POJO objects
 
