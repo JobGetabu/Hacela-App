@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.GroupDescription;
 import com.job.hacelaapp.viewmodel.CreateGroupViewModel;
@@ -28,6 +29,7 @@ public class StepThreeFragment extends Fragment {
     RadioGroup radioGroupType;
 
     private View mRootView;
+    private FirebaseAuth mAuth;
     private CreateGroupViewModel createGroupViewModel;
 
     public StepThreeFragment() {
@@ -48,6 +50,8 @@ public class StepThreeFragment extends Fragment {
         mRootView = inflater.inflate(R.layout.fragment_step_three, container, false);
         ButterKnife.bind(this,mRootView);
 
+        //init firebase
+        mAuth = FirebaseAuth.getInstance();
         return mRootView;
     }
 
@@ -74,10 +78,12 @@ public class StepThreeFragment extends Fragment {
         switch (selectedId) {
             case R.id.stepthree_merryonly:
                 groupDescription.setTypeofgroup("Merry-go-Round");
+                groupDescription.setCreatedby(mAuth.getCurrentUser().getDisplayName());
                 createGroupViewModel.setGroupDescriptionMutableLiveData(groupDescription);
                break;
             case R.id.stepthree_merryandsave:
                 groupDescription.setTypeofgroup("Merry-go-Round and Savings");
+                groupDescription.setCreatedby(mAuth.getCurrentUser().getDisplayName());
                 createGroupViewModel.setGroupDescriptionMutableLiveData(groupDescription);
                 break;
             default:

@@ -37,8 +37,11 @@ import com.job.hacelaapp.dataSource.UsersProfile;
 import com.job.hacelaapp.util.ImageProcessor;
 import com.job.hacelaapp.viewmodel.GroupControlViewModel;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -222,16 +225,6 @@ public class GroupControlActivity extends AppCompatActivity {
                 Log.e(TAG, "Error getting documents: ", e.getCause());
             }
         });
-
-
-      /*  GroupControlViewModel.Factory factory = new GroupControlViewModel.Factory(
-                this.getApplication(), mAuth, mFirestore);
-
-        model = ViewModelProviders.of(this, factory)
-                .get(GroupControlViewModel.class);*/
-
-        //UI observers
-
     }
 
     private void setUpGroupBasic(GroupControlViewModel model) {
@@ -241,7 +234,19 @@ public class GroupControlActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable Groups groups) {
                 if(groups!= null){
+                    mGroupFulName.setText(groups.getGroupname());
+                    mGroupDisName.setText(groups.getDisplayname());
 
+                    // Create date formats
+                    DateFormat dateFormatLong = new SimpleDateFormat("EEE MMM dd, yyyy", Locale.ENGLISH);  // Sun Dec 31, 2017
+                    //dateFormatShort = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);  // 31-12-2017
+                    SimpleDateFormat dFmatShrt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);  // 31/12/2017
+                    String textDate = dFmatShrt.format(groups.getDescription().getCreatedate());
+
+                    mGroupDateInfo.setText("Created by "+groups.getDescription().getCreatedby()+", "+textDate);
+
+                    imageProcessor.setMyImage(circleImage, groups.getPhotourl(),true);
+                    imageProcessor.setMyImage(headerImage, groups.getPhotourl(),true);
                 }
             }
         });

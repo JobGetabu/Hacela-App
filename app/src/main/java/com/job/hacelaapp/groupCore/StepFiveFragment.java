@@ -29,6 +29,7 @@ import com.google.firebase.firestore.WriteBatch;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.GroupAccount;
+import com.job.hacelaapp.dataSource.GroupConstitution;
 import com.job.hacelaapp.dataSource.GroupContributionDefault;
 import com.job.hacelaapp.dataSource.GroupDescription;
 import com.job.hacelaapp.dataSource.GroupMembers;
@@ -176,11 +177,26 @@ public class StepFiveFragment extends Fragment {
             return;
         }
 
+        //group object
         Groups groups = new Groups();
         groups.setDisplayname(groupdisplayname);
         groups.setGroupname(groupfullname);
         groups.setDescription(groupDesp);
 
+        Map<String,Object> groupDespMap = new HashMap<>();
+        groupDespMap.put("typeofgroup",groupDesp.getTypeofgroup());
+        groupDespMap.put("description",groupDesp.getDescription());
+        groupDespMap.put("createdate", FieldValue.serverTimestamp());
+        groupDespMap.put("createdby",groupDesp.getCreatedby());
+
+        Map<String,Object> groupsMap  = new HashMap<>();
+        groupsMap.put("groupname",groupdisplayname);
+        groupsMap.put("displayname",groupfullname);
+        groupsMap.put("photourl","");
+        groupsMap.put("description",groupDespMap);
+        groupsMap.put("constitution",new GroupConstitution("",""));
+
+        //group contribution object
         GroupContributionDefault groupContributionDefault = new GroupContributionDefault();
         groupContributionDefault.setCycleamount(step4data.getAmount());
         groupContributionDefault.setCycleinterval(step4data.getIntervalPeriod());
@@ -242,7 +258,7 @@ public class StepFiveFragment extends Fragment {
         // Get a new write batch
         WriteBatch batch = mFirestore.batch();
         //upload the group
-        batch.set(GROUPREF, groups);
+        batch.set(GROUPREF, groupsMap);
         //upload group default
         batch.set(GROUPDEFREF, groupContributionDefault);
         //upload group admins
@@ -303,7 +319,7 @@ public class StepFiveFragment extends Fragment {
         return valid;
     }
 
-    //Todo extra email setup
+    //Todo extra email template setup
     //Manage and control all your chama activities from your phone  groupdisplayname
 
     private void sendToInviteScreen() {

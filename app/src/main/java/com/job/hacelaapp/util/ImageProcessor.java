@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
-import com.job.hacelaapp.HacelaApplication;
 import com.job.hacelaapp.R;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -37,21 +36,79 @@ public class ImageProcessor {
             circleImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.avatar_placeholder));
         } else {
 
-            HacelaApplication.picassoWithCache
+            Picasso
+                    .get()
                     .load(url)
-                    .placeholder(R.drawable.avatar_placeholder)
-                    .error(R.drawable.avatar_placeholder)
-                    .into(circleImageView);
+                    .placeholder(R.drawable.group_placeholder)
+                    .error(R.drawable.group_placeholder)
+                    .into(circleImageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            //no cache download new image
+                            Picasso
+                                    .get()
+                                    .load(url)
+                                    .placeholder(R.drawable.avatar_placeholder)
+                                    .error(R.drawable.avatar_placeholder)
+                                    .into(circleImageView);
+                        }
+                    });
+        }
+    }
+
+    //set images to CircleImageView
+    public void setMyImage(final CircleImageView circleImageView, final String url, boolean isGroup) {
+        if (url.isEmpty()) {
+            circleImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.avatar_placeholder));
+        } else {
+
+            Picasso
+                    .get()
+                    .load(url)
+                    .placeholder(R.drawable.group_placeholder)
+                    .error(R.drawable.group_placeholder)
+                    .into(circleImageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            //no cache download new image
+                            Picasso
+                                    .get()
+                                    .load(url)
+                                    .placeholder(R.drawable.avatar_placeholder)
+                                    .error(R.drawable.avatar_placeholder)
+                                    .into(circleImageView);
+                        }
+                    });
+
+           /* HacelaApplication.picassoWithCache
+                    .load(url)
+                    .placeholder(R.drawable.group_placeholder)
+                    .error(R.drawable.group_placeholder)
+                    .into(circleImageView);*/
         }
     }
 
     //set images to ImageView
-    private void setMyImage(final ImageView imageView, final String url) {
+    public void setMyImage(final ImageView imageView, final String url,boolean isGroup) {
+
+        if (url.isEmpty()){
+            imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.avatar_placeholder));
+        }else {
         Picasso
                 .get()
                 .load(url)
-                .placeholder(R.drawable.avatar_placeholder)
-                .error(R.drawable.avatar_placeholder)
+                .placeholder(R.drawable.group_placeholder)
+                .error(R.drawable.group_placeholder)
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -69,6 +126,37 @@ public class ImageProcessor {
                                 .into(imageView);
                     }
                 });
+        }
+    }
+
+    //set images to ImageView
+    public void setMyImage(final ImageView imageView, final String url) {
+        if (url.isEmpty()){
+            imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.avatar_placeholder));
+        }else {
+            Picasso
+                    .get()
+                    .load(url)
+                    .placeholder(R.drawable.group_placeholder)
+                    .error(R.drawable.group_placeholder)
+                    .into(imageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            //no cache download new image
+                            Picasso
+                                    .get()
+                                    .load(url)
+                                    .placeholder(R.drawable.avatar_placeholder)
+                                    .error(R.drawable.avatar_placeholder)
+                                    .into(imageView);
+                        }
+                    });
+        }
     }
 
     public Bitmap compressImageBySixty(File imagefile, Context context) {
