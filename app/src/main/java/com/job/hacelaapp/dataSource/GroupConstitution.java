@@ -8,6 +8,8 @@ public class GroupConstitution {
     private String constitutionurl;
     private String constitutiondescr;
 
+    public GroupConstitution() { }
+
     public GroupConstitution(String constitutionurl, String constitutiondescr) {
         this.constitutionurl = constitutionurl;
         this.constitutiondescr = constitutiondescr;

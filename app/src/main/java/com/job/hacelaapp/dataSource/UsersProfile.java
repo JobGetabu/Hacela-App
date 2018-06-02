@@ -1,6 +1,7 @@
 package com.job.hacelaapp.dataSource;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.annotations.Nullable;
 
@@ -17,7 +18,10 @@ public class UsersProfile {
     private String income;
     private int profileCompletion;
     private String fullname;
-    private List<UsersGroups> groups;
+    private Map<String, Boolean> groups = new HashMap<>();
+    private String gender;
+    private String idnumber;
+    private Location location;
 
     public void setGender(String gender) {
         this.gender = gender;
@@ -30,10 +34,6 @@ public class UsersProfile {
     public void setLocation(Location location) {
         this.location = location;
     }
-
-    private String gender;
-    private String idnumber;
-    private Location location;
 
     public String getGender() {
         return gender;
@@ -51,7 +51,7 @@ public class UsersProfile {
     }
 
     public UsersProfile(String profession, @Nullable String typeOfBusiness, String income,
-                        int profileCompletion, String fullname, List<UsersGroups> groups) {
+                        int profileCompletion, String fullname, Map<String, Boolean> groups) {
         this.profession = profession;
         this.typeOfBusiness = typeOfBusiness;
         this.income = income;
@@ -100,11 +100,11 @@ public class UsersProfile {
         this.fullname = fullname;
     }
 
-    public List<UsersGroups> getGroups() {
+    public Map<String, Boolean> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<UsersGroups> groups) {
+    public void setGroups(Map<String, Boolean> groups) {
         this.groups = groups;
     }
 

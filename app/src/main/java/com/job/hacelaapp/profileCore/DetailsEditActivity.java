@@ -123,7 +123,6 @@ public class DetailsEditActivity extends AppCompatActivity {
     private DocumentReference USERSAUTHREF;
     private DocumentReference USERSPROFILE;
 
-
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
     private FirebaseStorage  storageReference;
@@ -579,6 +578,7 @@ public class DetailsEditActivity extends AppCompatActivity {
         USERSREF = mFirestore.collection("Users").document(currentUserId);
         USERSAUTHREF = mFirestore.collection("UsersAuth").document(currentUserId);
         USERSPROFILE = mFirestore.collection("UsersProfile").document(currentUserId);
+
 
         //set up our pojos
         final UserAuthInfo userAuthInfo = new UserAuthInfo();

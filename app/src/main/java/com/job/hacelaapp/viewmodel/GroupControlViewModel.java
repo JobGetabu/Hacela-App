@@ -113,7 +113,7 @@ public class GroupControlViewModel extends AndroidViewModel {
         @Override
         public <T extends ViewModel> T create(Class<T> modelClass) {
             //noinspection unchecked
-            return (T) new DetailsEditActivityViewModel(mApplication, mAuth, mFirestore);
+            return (T) new GroupControlViewModel(mApplication, mAuth, mFirestore,groupId);
         }
     }
 }

@@ -32,7 +32,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.Groups;
-import com.job.hacelaapp.dataSource.UsersGroups;
 import com.job.hacelaapp.dataSource.UsersProfile;
 import com.job.hacelaapp.util.ImageProcessor;
 import com.job.hacelaapp.viewmodel.GroupControlViewModel;
@@ -40,8 +39,9 @@ import com.job.hacelaapp.viewmodel.GroupControlViewModel;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -110,7 +110,7 @@ public class GroupControlActivity extends AppCompatActivity {
 
             {
                 final TypedArray styledAttributes = getTheme().obtainStyledAttributes(
-                        new int[] { android.R.attr.actionBarSize });
+                        new int[]{android.R.attr.actionBarSize});
                 toolBarHeight = (int) styledAttributes.getDimension(0, 0) + getStatusBarHeight();
                 styledAttributes.recycle();
 
@@ -133,7 +133,7 @@ public class GroupControlActivity extends AppCompatActivity {
                 headerImage.setLayoutParams(lp);
 
                 final int totalScrollRange = appBarLayout.getTotalScrollRange();
-                final float ratio = ((float)totalScrollRange + verticalOffset) / totalScrollRange;
+                final float ratio = ((float) totalScrollRange + verticalOffset) / totalScrollRange;
 
                 final int avatarHalf = avatar.getMeasuredHeight() / 2;
                 final int avatarRightest = appBarLayout.getMeasuredWidth() / 2 - avatarHalf - avatarHOffset;
@@ -175,10 +175,21 @@ public class GroupControlActivity extends AppCompatActivity {
                     }
                 }
 
-                @Override public void onTransitionEnd(Transition transition) {}
-                @Override public void onTransitionCancel(Transition transition) {}
-                @Override public void onTransitionPause(Transition transition) {}
-                @Override public void onTransitionResume(Transition transition) {}
+                @Override
+                public void onTransitionEnd(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionCancel(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionPause(Transition transition) {
+                }
+
+                @Override
+                public void onTransitionResume(Transition transition) {
+                }
             });
         }
 
@@ -202,22 +213,33 @@ public class GroupControlActivity extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         UsersProfile usersProfile = documentSnapshot.toObject(UsersProfile.class);
                         //we need the group id
-                        if (usersProfile != null) {
-                            List<UsersGroups> groups = usersProfile.getGroups();
-                            String gId = groups.get(0).getGroupId();
+                        if (usersProfile != null && usersProfile.getGroups() != null) {
+                            Map<String, Boolean> groups = usersProfile.getGroups();
 
-                            //read db data
-                            GroupControlViewModel.Factory factory = new GroupControlViewModel.Factory(
-                                    getApplication(), mAuth, mFirestore,gId);
 
-                            model = ViewModelProviders.of(GroupControlActivity.this, factory)
-                                    .get(GroupControlViewModel.class);
+                            Set s1 = groups.entrySet();//to get whole entrys
+                            for (Object aS1 : s1) {
+                                Map.Entry m = (Map.Entry) aS1;//to get next entry (and casting required because values are object type)
+                                //Entry is inner interface of Map interface
 
-                            //UI observers
-                            setUpGroupBasic(model);
+                                System.out.println(m.getKey() + "..." + m.getValue());
+                                if (m.getValue().equals(true)) {
+                                    String gId = (String) m.getKey();
 
+                                    //read db data
+                                    GroupControlViewModel.Factory factory = new GroupControlViewModel.Factory(
+                                            getApplication(), mAuth, mFirestore, gId);
+
+                                    model = ViewModelProviders.of(GroupControlActivity.this, factory)
+                                            .get(GroupControlViewModel.class);
+
+                                    //UI observers
+                                    setUpGroupBasic(model);
+
+                                    break;
+                                }
+                            }
                         }
-
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -233,7 +255,7 @@ public class GroupControlActivity extends AppCompatActivity {
         data.observe(this, new Observer<Groups>() {
             @Override
             public void onChanged(@Nullable Groups groups) {
-                if(groups!= null){
+                if (groups != null) {
                     mGroupFulName.setText(groups.getGroupname());
                     mGroupDisName.setText(groups.getDisplayname());
 
@@ -243,10 +265,10 @@ public class GroupControlActivity extends AppCompatActivity {
                     SimpleDateFormat dFmatShrt = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);  // 31/12/2017
                     String textDate = dFmatShrt.format(groups.getDescription().getCreatedate());
 
-                    mGroupDateInfo.setText("Created by "+groups.getDescription().getCreatedby()+", "+textDate);
+                    mGroupDateInfo.setText("Created by " + groups.getDescription().getCreatedby() + ", " + textDate);
 
-                    imageProcessor.setMyImage(circleImage, groups.getPhotourl(),true);
-                    imageProcessor.setMyImage(headerImage, groups.getPhotourl(),true);
+                    imageProcessor.setMyImage(circleImage, groups.getPhotourl(), true);
+                    imageProcessor.setMyImage(headerImage, groups.getPhotourl(), true);
                 }
             }
         });
@@ -269,14 +291,14 @@ public class GroupControlActivity extends AppCompatActivity {
 
     //start first cycle click
     @OnClick(R.id.groupcontrol_startfirstcycle)
-    public void startCycleClick(){
+    public void startCycleClick() {
 
         Toast.makeText(this, "TODO: starting cycle", Toast.LENGTH_SHORT).show();
     }
 
     //start friends invite actions
     @OnClick(R.id.groupcontrol_invite)
-    public void startInviteClick(){
+    public void startInviteClick() {
 
         Toast.makeText(this, "TODO: friend invite", Toast.LENGTH_SHORT).show();
     }
@@ -284,59 +306,59 @@ public class GroupControlActivity extends AppCompatActivity {
 
     //start togroup info edit
     @OnClick(R.id.groupcontrol_togroup_info)
-    public void startToGroupEditClick(){
+    public void startToGroupEditClick() {
 
         groupInfoIntent();
     }
 
     //start togroup admin info edit
     @OnClick(R.id.groupcontrol_admin_infoedit)
-    public void startToAdminGroupEditClick(){
+    public void startToAdminGroupEditClick() {
 
         groupAdminInfoIntent();
     }
 
     //start group exit actions
     @OnClick(R.id.groupcontrol_exit_group)
-    public void exitGroupClick(){
+    public void exitGroupClick() {
 
         Toast.makeText(this, "TODO: start exiting process", Toast.LENGTH_SHORT).show();
     }
 
     //start group delete actions
     @OnClick(R.id.groupcontrol_admin_deletegroup)
-    public void deleteGroupClick(){
+    public void deleteGroupClick() {
 
         Toast.makeText(this, "TODO: start deleting process", Toast.LENGTH_SHORT).show();
     }
 
     //start view more payout info
     @OnClick(R.id.groupcontrol_topayout_more)
-    public void morePayoutInfoClick(){
+    public void morePayoutInfoClick() {
 
         Toast.makeText(this, "TODO: to payout info", Toast.LENGTH_SHORT).show();
     }
 
     //start view more payout info
     @OnClick(R.id.groupcontrol_moretrans)
-    public void moreTransInfoClick(){
+    public void moreTransInfoClick() {
 
         Toast.makeText(this, "TODO: to trans info", Toast.LENGTH_SHORT).show();
     }
 
-    private void groupAdminInfoIntent(){
-        Intent groupintent = new Intent(this,GroupContributionEditActivity.class);
+    private void groupAdminInfoIntent() {
+        Intent groupintent = new Intent(this, GroupContributionEditActivity.class);
 
         //TODO: Pass in the group UID
-        groupintent.putExtra(GROUP_UID,"");
+        groupintent.putExtra(GROUP_UID, "");
         startActivity(groupintent);
     }
 
-    private void groupInfoIntent(){
-        Intent groupintent = new Intent(this,GroupInfoEditActivity.class);
+    private void groupInfoIntent() {
+        Intent groupintent = new Intent(this, GroupInfoEditActivity.class);
 
         //TODO: Pass in the group UID
-        groupintent.putExtra(GROUP_UID,"");
+        groupintent.putExtra(GROUP_UID, "");
         startActivity(groupintent);
     }
 }

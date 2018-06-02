@@ -25,15 +25,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.WriteBatch;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.GroupAccount;
-import com.job.hacelaapp.dataSource.GroupConstitution;
 import com.job.hacelaapp.dataSource.GroupContributionDefault;
 import com.job.hacelaapp.dataSource.GroupDescription;
 import com.job.hacelaapp.dataSource.GroupMembers;
-import com.job.hacelaapp.dataSource.Groups;
 import com.job.hacelaapp.dataSource.Penalty;
 import com.job.hacelaapp.dataSource.Savings;
 import com.job.hacelaapp.dataSource.Step4OM;
@@ -68,6 +67,7 @@ public class StepFiveFragment extends Fragment {
 
     private CreateGroupViewModel createGroupViewModel;
     private NoInternetDialog noInternetDialog;
+    private SweetAlertDialog pDialog;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
@@ -106,6 +106,8 @@ public class StepFiveFragment extends Fragment {
 
         //build no net dialogue
         setUpNoNetDialogue();
+        //avoid leaking progress dialogue
+        pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
 
     }
 
@@ -178,10 +180,18 @@ public class StepFiveFragment extends Fragment {
         }
 
         //group object
+        /*
         Groups groups = new Groups();
         groups.setDisplayname(groupdisplayname);
         groups.setGroupname(groupfullname);
         groups.setDescription(groupDesp);
+        */
+
+        Map<String,Object> groupsConstionMap = new HashMap<>();
+        groupsConstionMap.put("constitutionurl","");
+        groupsConstionMap.put("constitutiondescr","");
+
+
 
         Map<String,Object> groupDespMap = new HashMap<>();
         groupDespMap.put("typeofgroup",groupDesp.getTypeofgroup());
@@ -194,7 +204,7 @@ public class StepFiveFragment extends Fragment {
         groupsMap.put("displayname",groupfullname);
         groupsMap.put("photourl","");
         groupsMap.put("description",groupDespMap);
-        groupsMap.put("constitution",new GroupConstitution("",""));
+        groupsMap.put("constitution",groupsConstionMap);
 
         //group contribution object
         GroupContributionDefault groupContributionDefault = new GroupContributionDefault();
@@ -243,16 +253,31 @@ public class StepFiveFragment extends Fragment {
         DocumentReference GROUPACCREF = mFirestore.collection("GroupsAccount").document(groupId);
         DocumentReference GROUPADMINREF = mFirestore.collection("GroupsAdmin").document(groupId).collection("Admins").document(currentUserId);
         DocumentReference GROUPMEMBERREF = mFirestore.collection("GroupMembers").document(groupId).collection("Members").document(currentUserId);
+        DocumentReference USERSPROFILE = mFirestore.collection("UsersProfile").document(currentUserId);
+        DocumentReference USERSPROFILEGROUP = mFirestore.collection("UsersProfile").document(currentUserId).collection("Groups").document(groupId);
 
 
         //check connection
         noInternetDialog.showDialog();
 
-        final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.changeAlertType(SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#f9ab60"));
         pDialog.setTitleText("Creating Group...");
         pDialog.setCancelable(false);
         pDialog.show();
+
+        //update the user profile
+        Map<String,Object> groupsUsersMap = new HashMap<>();
+        groupsUsersMap.put("groupId",groupId);
+        groupsUsersMap.put("isMember",true);
+        groupsUsersMap.put("startDate",FieldValue.serverTimestamp());
+        groupsUsersMap.put("endDate","");
+
+        Map<String,Boolean> groupsidsMap = new HashMap<>();
+        groupsidsMap.put(groupId, true);
+
+
+        //TODO:data integrity check point here
 
 
         // Get a new write batch
@@ -267,6 +292,10 @@ public class StepFiveFragment extends Fragment {
         batch.set(GROUPACCREF, groupAccount);
         //upload group members
         batch.set(GROUPMEMBERREF, members );
+        //upload update userprofile groups
+        batch.update(USERSPROFILE,"groups",groupsidsMap);
+        //upload update userprofile-subcollection groups
+        batch.set(USERSPROFILEGROUP, groupsUsersMap, SetOptions.merge());
 
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -323,8 +352,7 @@ public class StepFiveFragment extends Fragment {
     //Manage and control all your chama activities from your phone  groupdisplayname
 
     private void sendToInviteScreen() {
-
-        final SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.changeAlertType(SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#f9ab60"));
         pDialog.setTitleText("Just a moment...");
         pDialog.setCancelable(false);
@@ -361,7 +389,7 @@ public class StepFiveFragment extends Fragment {
                 // Sending failed or it was canceled, show failure message to the user
                 //close this process to avoid recreation of group.
 
-                SweetAlertDialog pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE);
+                pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
                 pDialog.getProgressHelper().setBarColor(Color.parseColor("#f9ab60"));
                 pDialog.setTitleText("No members invited");
                 pDialog.setContentText("Don't worry You can still invite them in the group");
