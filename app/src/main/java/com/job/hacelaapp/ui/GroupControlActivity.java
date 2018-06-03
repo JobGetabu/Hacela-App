@@ -13,16 +13,22 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +36,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.common.GroupMembersViewHolder;
+import com.job.hacelaapp.dataSource.GroupMembers;
 import com.job.hacelaapp.dataSource.Groups;
 import com.job.hacelaapp.dataSource.UsersProfile;
 import com.job.hacelaapp.util.ImageProcessor;
@@ -62,6 +71,8 @@ public class GroupControlActivity extends AppCompatActivity {
     ImageView headerImage;
     @BindView(R.id.groupcontrol_circular_header)
     CircleImageView circleImage;
+    @BindView(R.id.groupcontrol_memberlist)
+    RecyclerView mMemberList;
 
     //firebase
     private FirebaseAuth mAuth;
@@ -202,6 +213,10 @@ public class GroupControlActivity extends AppCompatActivity {
 
         imageProcessor = new ImageProcessor(this);
 
+        //set smooth scroll list
+        ViewCompat.setNestedScrollingEnabled(mMemberList, false);
+        mMemberList.setLayoutManager(new LinearLayoutManager(this));
+
         //init view-model
         DocumentReference USERSPROFILE = mFirestore.collection("UsersProfile")
                 .document(mCurrentUser.getUid());
@@ -235,6 +250,7 @@ public class GroupControlActivity extends AppCompatActivity {
 
                                     //UI observers
                                     setUpGroupBasic(model);
+                                    setUpMemberList(gId);
 
                                     break;
                                 }
@@ -272,6 +288,45 @@ public class GroupControlActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setUpMemberList(String gId){
+
+
+        Query query = FirebaseFirestore.getInstance()
+                .collection("GroupMembers")
+                .orderBy("timestamp");
+
+
+        // Configure recycler adapter options:
+        //  * query is the Query object defined above.
+        //  * GroupMembers.class instructs the adapter to convert each DocumentSnapshot to a Chat object
+        FirestoreRecyclerOptions<GroupMembers> options = new FirestoreRecyclerOptions.Builder<GroupMembers>()
+                .setQuery(query, GroupMembers.class)
+                .build();
+
+        FirestoreRecyclerAdapter adapter = new FirestoreRecyclerAdapter<GroupMembers, GroupMembersViewHolder>(options) {
+            @Override
+            public void onBindViewHolder(GroupMembersViewHolder holder, int position, GroupMembers model) {
+                // Bind the Chat object to the ChatHolder
+                // ...
+                holder.setDisName(model.getUsername());
+                holder.setUserrole(model.getUserrole());
+
+            }
+
+            @Override
+            public GroupMembersViewHolder onCreateViewHolder(ViewGroup group, int i) {
+                // Create a new instance of the ViewHolder, in this case we are using a custom
+                // layout called R.layout.message for each item
+                View view = LayoutInflater.from(group.getContext())
+                        .inflate(R.layout.single_group_member_item, group, false);
+
+                return new GroupMembersViewHolder(view);
+            }
+        };
+
+        mMemberList.setAdapter(adapter);
     }
 
     @Override

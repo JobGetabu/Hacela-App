@@ -285,12 +285,11 @@
                     android:layout_marginBottom="@dimen/padding_normal"
                     android:padding="@dimen/spacing_normal"
                     >
-                    <android.support.v7.widget.AppCompatTextView
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/groupcontrol_memberlist"
+                        android:padding="@dimen/spacing_micro"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="insert a styled recycler view of group members in their order"
-                        android:padding="@dimen/padding_normal"
-                        />
+                        android:layout_height="wrap_content" />
                 </android.support.design.card.MaterialCardView>
 
                 <android.support.design.card.MaterialCardView
