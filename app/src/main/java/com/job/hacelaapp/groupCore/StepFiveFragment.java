@@ -20,12 +20,17 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
@@ -187,24 +192,23 @@ public class StepFiveFragment extends Fragment {
         groups.setDescription(groupDesp);
         */
 
-        Map<String,Object> groupsConstionMap = new HashMap<>();
-        groupsConstionMap.put("constitutionurl","");
-        groupsConstionMap.put("constitutiondescr","");
+        Map<String, Object> groupsConstionMap = new HashMap<>();
+        groupsConstionMap.put("constitutionurl", "");
+        groupsConstionMap.put("constitutiondescr", "");
 
 
-
-        Map<String,Object> groupDespMap = new HashMap<>();
-        groupDespMap.put("typeofgroup",groupDesp.getTypeofgroup());
-        groupDespMap.put("description",groupDesp.getDescription());
+        Map<String, Object> groupDespMap = new HashMap<>();
+        groupDespMap.put("typeofgroup", groupDesp.getTypeofgroup());
+        groupDespMap.put("description", groupDesp.getDescription());
         groupDespMap.put("createdate", FieldValue.serverTimestamp());
-        groupDespMap.put("createdby",groupDesp.getCreatedby());
+        groupDespMap.put("createdby", groupDesp.getCreatedby());
 
-        Map<String,Object> groupsMap  = new HashMap<>();
-        groupsMap.put("groupname",groupdisplayname);
-        groupsMap.put("displayname",groupfullname);
-        groupsMap.put("photourl","");
-        groupsMap.put("description",groupDespMap);
-        groupsMap.put("constitution",groupsConstionMap);
+        Map<String, Object> groupsMap = new HashMap<>();
+        groupsMap.put("groupname", groupfullname);
+        groupsMap.put("displayname", groupdisplayname);
+        groupsMap.put("photourl", "");
+        groupsMap.put("description", groupDespMap);
+        groupsMap.put("constitution", groupsConstionMap);
 
         //group contribution object
         GroupContributionDefault groupContributionDefault = new GroupContributionDefault();
@@ -243,7 +247,7 @@ public class StepFiveFragment extends Fragment {
         groupAdminsMap.put("fromdate", FieldValue.serverTimestamp());
         groupAdminsMap.put("status", "Active");
 
-        GroupMembers members = new GroupMembers(currentUserId, "Chairperson",currentUserName);
+        GroupMembers members = new GroupMembers(currentUserId, "Chairperson", currentUserName);
 
         //uploading to server
 
@@ -253,7 +257,7 @@ public class StepFiveFragment extends Fragment {
         DocumentReference GROUPACCREF = mFirestore.collection("GroupsAccount").document(groupId);
         DocumentReference GROUPADMINREF = mFirestore.collection("GroupsAdmin").document(groupId).collection("Admins").document(currentUserId);
         DocumentReference GROUPMEMBERREF = mFirestore.collection("GroupMembers").document(groupId).collection("Members").document(currentUserId);
-        DocumentReference USERSPROFILE = mFirestore.collection("UsersProfile").document(currentUserId);
+        final DocumentReference USERSPROFILE = mFirestore.collection("UsersProfile").document(currentUserId);
         DocumentReference USERSPROFILEGROUP = mFirestore.collection("UsersProfile").document(currentUserId).collection("Groups").document(groupId);
 
 
@@ -267,13 +271,13 @@ public class StepFiveFragment extends Fragment {
         pDialog.show();
 
         //update the user profile
-        Map<String,Object> groupsUsersMap = new HashMap<>();
-        groupsUsersMap.put("groupId",groupId);
-        groupsUsersMap.put("isMember",true);
-        groupsUsersMap.put("startDate",FieldValue.serverTimestamp());
-        groupsUsersMap.put("endDate","");
+        Map<String, Object> groupsUsersMap = new HashMap<>();
+        groupsUsersMap.put("groupId", groupId);
+        groupsUsersMap.put("isMember", true);
+        groupsUsersMap.put("startDate", FieldValue.serverTimestamp());
+        groupsUsersMap.put("endDate", "");
 
-        Map<String,Boolean> groupsidsMap = new HashMap<>();
+        final Map<String, Boolean> groupsidsMap = new HashMap<>();
         groupsidsMap.put(groupId, true);
 
 
@@ -291,9 +295,7 @@ public class StepFiveFragment extends Fragment {
         //upload group accounts
         batch.set(GROUPACCREF, groupAccount);
         //upload group members
-        batch.set(GROUPMEMBERREF, members );
-        //upload update userprofile groups
-        batch.update(USERSPROFILE,"groups",groupsidsMap);
+        batch.set(GROUPMEMBERREF, members);
         //upload update userprofile-subcollection groups
         batch.set(USERSPROFILEGROUP, groupsUsersMap, SetOptions.merge());
 
@@ -301,16 +303,46 @@ public class StepFiveFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                    pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            sDialog.dismissWithAnimation();
-                            sendToInviteScreen();
 
+                    //run transaction to update users group
+                    mFirestore.runTransaction(new Transaction.Function<Void>() {
+                        @Nullable
+                        @Override
+                        public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                            DocumentSnapshot snapshot = transaction.get(USERSPROFILE);
+                            Map<String,Boolean> stringBooleanMap = (Map<String, Boolean>) snapshot.get("groups");
+                            if (stringBooleanMap != null){
+                                stringBooleanMap.put(groupId, true);
+                            }else {
+                                stringBooleanMap = new HashMap<>();
+                                stringBooleanMap.put(groupId, true);
+                            }
+
+                            transaction.update(USERSPROFILE, "groups", stringBooleanMap);
+                            return null;
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+
+                            pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                            pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sDialog) {
+                                    sDialog.dismissWithAnimation();
+                                    sendToInviteScreen();
+
+                                }
+                            });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            pDialog.dismiss();
+                            Log.e(TAG, "onComplete: error", e);
+                            errorPrompt();
                         }
                     });
-
                 } else {
                     pDialog.dismiss();
                     Log.d(TAG, "onComplete: error" + task.getException().toString());
@@ -318,7 +350,6 @@ public class StepFiveFragment extends Fragment {
                 }
             }
         });
-
     }
 
     private void errorPrompt() {
@@ -389,13 +420,13 @@ public class StepFiveFragment extends Fragment {
                 // Sending failed or it was canceled, show failure message to the user
                 //close this process to avoid recreation of group.
 
-                pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                pDialog.getProgressHelper().setBarColor(Color.parseColor("#f9ab60"));
-                pDialog.setTitleText("No members invited");
-                pDialog.setContentText("Don't worry You can still invite them in the group");
-                pDialog.setCancelable(false);
-                pDialog.show();
-                pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                SweetAlertDialog pmDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE);
+                pmDialog.getProgressHelper().setBarColor(Color.parseColor("#f9ab60"));
+                pmDialog.setTitleText("No members invited");
+                pmDialog.setContentText("Don't worry You can still invite them in the group");
+                pmDialog.setCancelable(false);
+                pmDialog.show();
+                pmDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
@@ -412,6 +443,11 @@ public class StepFiveFragment extends Fragment {
 
         if (noInternetDialog != null)
             noInternetDialog.onDestroy();
+
+        if (pDialog != null) {
+            pDialog.dismiss();
+            pDialog = null;
+        }
 
         super.onDestroy();
     }

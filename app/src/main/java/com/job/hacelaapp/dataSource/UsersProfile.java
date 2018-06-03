@@ -1,6 +1,5 @@
 package com.job.hacelaapp.dataSource;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import io.reactivex.annotations.Nullable;
@@ -18,7 +17,7 @@ public class UsersProfile {
     private String income;
     private int profileCompletion;
     private String fullname;
-    private Map<String, Boolean> groups = new HashMap<>();
+    private Map<String, Boolean> groups;
     private String gender;
     private String idnumber;
     private Location location;

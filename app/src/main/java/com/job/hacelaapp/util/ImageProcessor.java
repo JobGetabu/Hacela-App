@@ -39,8 +39,8 @@ public class ImageProcessor {
             Picasso
                     .get()
                     .load(url)
-                    .placeholder(R.drawable.group_placeholder)
-                    .error(R.drawable.group_placeholder)
+                    .placeholder(R.drawable.avatar_placeholder)
+                    .error(R.drawable.avatar_placeholder)
                     .into(circleImageView, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -64,7 +64,7 @@ public class ImageProcessor {
     //set images to CircleImageView
     public void setMyImage(final CircleImageView circleImageView, final String url, boolean isGroup) {
         if (url.isEmpty()) {
-            circleImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.avatar_placeholder));
+            circleImageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.group_placeholder));
         } else {
 
             Picasso
@@ -84,8 +84,8 @@ public class ImageProcessor {
                             Picasso
                                     .get()
                                     .load(url)
-                                    .placeholder(R.drawable.avatar_placeholder)
-                                    .error(R.drawable.avatar_placeholder)
+                                    .placeholder(R.drawable.group_placeholder)
+                                    .error(R.drawable.group_placeholder)
                                     .into(circleImageView);
                         }
                     });
@@ -102,7 +102,7 @@ public class ImageProcessor {
     public void setMyImage(final ImageView imageView, final String url,boolean isGroup) {
 
         if (url.isEmpty()){
-            imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.avatar_placeholder));
+            imageView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.group_placeholder));
         }else {
         Picasso
                 .get()
@@ -121,8 +121,8 @@ public class ImageProcessor {
                         Picasso
                                 .get()
                                 .load(url)
-                                .placeholder(R.drawable.avatar_placeholder)
-                                .error(R.drawable.avatar_placeholder)
+                                .placeholder(R.drawable.group_placeholder)
+                                .error(R.drawable.group_placeholder)
                                 .into(imageView);
                     }
                 });
@@ -137,8 +137,8 @@ public class ImageProcessor {
             Picasso
                     .get()
                     .load(url)
-                    .placeholder(R.drawable.group_placeholder)
-                    .error(R.drawable.group_placeholder)
+                    .placeholder(R.drawable.avatar_placeholder)
+                    .error(R.drawable.avatar_placeholder)
                     .into(imageView, new Callback() {
                         @Override
                         public void onSuccess() {
