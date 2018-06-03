@@ -180,4 +180,5 @@
     <string name="transition_card" translatable="false">card</string>
     <string name="transition_background" translatable="false">background</string>
     <string name="transition_list" translatable="false">list</string>
+    <string name="group_description">Group Description</string>
 </resources>
