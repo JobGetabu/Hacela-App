@@ -37,7 +37,6 @@ import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.GroupAccount;
 import com.job.hacelaapp.dataSource.GroupContributionDefault;
 import com.job.hacelaapp.dataSource.GroupDescription;
-import com.job.hacelaapp.dataSource.GroupMembers;
 import com.job.hacelaapp.dataSource.Penalty;
 import com.job.hacelaapp.dataSource.Savings;
 import com.job.hacelaapp.dataSource.Step4OM;
@@ -247,7 +246,12 @@ public class StepFiveFragment extends Fragment {
         groupAdminsMap.put("fromdate", FieldValue.serverTimestamp());
         groupAdminsMap.put("status", "Active");
 
-        GroupMembers members = new GroupMembers(currentUserId, "Chairperson", currentUserName);
+        //final GroupMembers members = new GroupMembers( "Admin", currentUserName);
+        Map<String,Object> membersMappingMap = new HashMap<>();
+        membersMappingMap.put("userrole","Admin");
+        membersMappingMap.put("username",currentUserName);
+        Map<String,Object> membersMap = new HashMap<>();
+        membersMap.put(currentUserId,membersMappingMap);
 
         //uploading to server
 
@@ -256,7 +260,7 @@ public class StepFiveFragment extends Fragment {
         DocumentReference GROUPDEFREF = mFirestore.collection("GroupsContributionDefault").document(groupId);
         DocumentReference GROUPACCREF = mFirestore.collection("GroupsAccount").document(groupId);
         DocumentReference GROUPADMINREF = mFirestore.collection("GroupsAdmin").document(groupId).collection("Admins").document(currentUserId);
-        DocumentReference GROUPMEMBERREF = mFirestore.collection("GroupMembers").document(groupId).collection("Members").document(currentUserId);
+        final DocumentReference GROUPMEMBERREF = mFirestore.collection("GroupMembers").document(groupId);
         final DocumentReference USERSPROFILE = mFirestore.collection("UsersProfile").document(currentUserId);
         DocumentReference USERSPROFILEGROUP = mFirestore.collection("UsersProfile").document(currentUserId).collection("Groups").document(groupId);
 
@@ -295,7 +299,7 @@ public class StepFiveFragment extends Fragment {
         //upload group accounts
         batch.set(GROUPACCREF, groupAccount);
         //upload group members
-        batch.set(GROUPMEMBERREF, members);
+        batch.set(GROUPMEMBERREF, membersMap);
         //upload update userprofile-subcollection groups
         batch.set(USERSPROFILEGROUP, groupsUsersMap, SetOptions.merge());
 
@@ -317,8 +321,8 @@ public class StepFiveFragment extends Fragment {
                                 stringBooleanMap = new HashMap<>();
                                 stringBooleanMap.put(groupId, true);
                             }
-
                             transaction.update(USERSPROFILE, "groups", stringBooleanMap);
+
                             return null;
                         }
                     }).addOnSuccessListener(new OnSuccessListener<Void>() {

@@ -310,6 +310,7 @@ public class GroupControlActivity extends AppCompatActivity {
             public void onBindViewHolder(GroupMembersViewHolder holder, int position, GroupMembers model) {
                 // Bind the Chat object to the ChatHolder
                 // ...
+                Log.d(TAG, "onBindViewHolder: "+model.toString());
                 holder.setDisName(model.getUsername());
                 holder.setUserrole(model.getUserrole());
 

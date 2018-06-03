@@ -4,25 +4,15 @@ package com.job.hacelaapp.dataSource;
  * Created by Job on Thursday : 5/24/2018.
  */
 public class GroupMembers {
-    private String userid;
     private String userrole;
     private String username;
 
     public GroupMembers() {
     }
 
-    public GroupMembers(String userid, String userrole, String username) {
-        this.userid = userid;
+    public GroupMembers(String userrole, String username) {
         this.userrole = userrole;
         this.username = username;
-    }
-
-    public String getUserid() {
-        return userid;
-    }
-
-    public void setUserid(String userid) {
-        this.userid = userid;
     }
 
     public String getUserrole() {
@@ -44,7 +34,6 @@ public class GroupMembers {
     @Override
     public String toString() {
         return "GroupMembers{" +
-                "userid='" + userid + '\'' +
                 ", userrole='" + userrole + '\'' +
                 ", username='" + username + '\'' +
                 '}';
