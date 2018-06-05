@@ -1,8 +1,11 @@
 package com.job.hacelaapp.ui;
 
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.dataSource.Groups;
 import com.job.hacelaapp.util.ImageProcessor;
 import com.job.hacelaapp.viewmodel.GroupInfoViewModel;
 
@@ -112,6 +116,24 @@ public class GroupInfoEditActivity extends AppCompatActivity {
                 .setBgGradientStart(getResources().getColor(R.color.app_gradient_start))
                 .setBgGradientEnd(getResources().getColor(R.color.app_gradient_end))
                 .build();
+    }
+
+    private void setUpGroupUi(){
+        MediatorLiveData<Groups> data = model.getGroupsMediatorLiveData();
+
+        data.observe(this, new Observer<Groups>() {
+            @Override
+            public void onChanged(@Nullable Groups groups) {
+
+                if (groups != null){
+                    //update ui
+                    groupinfoeditGroupfullname.getEditText().setText(groups.getGroupname());
+                    groupinfoeditGroupdisname.getEditText().setText(groups.getDisplayname());
+                    groupinfoeditDescrip.getEditText().setText(groups.getDescription().getDescription());
+                    imageProcessor.setMyImage(groupinfoeditProfileImage,groups.getPhotourl(), true);
+                }
+            }
+        });
     }
 
     @OnClick({R.id.groupinfoedit_btn_cancel, R.id.groupinfoedit_btn_save})
