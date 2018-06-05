@@ -89,6 +89,7 @@ public class GroupControlActivity extends AppCompatActivity {
     private GroupControlViewModel model;
     private ImageProcessor imageProcessor;
     private FirestoreRecyclerAdapter adapter;
+    private String mGroupUid = "";
 
     public static final String TAG = "GroupControl";
 
@@ -111,6 +112,7 @@ public class GroupControlActivity extends AppCompatActivity {
 
         final AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+
 
             final View headerImage = findViewById(R.id.groupcontrol_header_image);
             final View headerInfo = findViewById(R.id.groupcontrol_header_info);
@@ -190,6 +192,7 @@ public class GroupControlActivity extends AppCompatActivity {
             }
         });
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener() {
 
@@ -225,6 +228,7 @@ public class GroupControlActivity extends AppCompatActivity {
 
         //End of layout animating
 
+
         //init firebase
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
@@ -255,6 +259,7 @@ public class GroupControlActivity extends AppCompatActivity {
                                 System.out.println(m.getKey() + "..." + m.getValue());
                                 if (m.getValue().equals(true)) {
                                     String gId = (String) m.getKey();
+                                    mGroupUid = gId;
 
                                     //read db data
                                     GroupControlViewModel.Factory factory = new GroupControlViewModel.Factory(
@@ -279,6 +284,7 @@ public class GroupControlActivity extends AppCompatActivity {
                 Log.e(TAG, "Error getting documents: ", e.getCause());
             }
         });
+
     }
 
     private void testQuery(String gId) {
@@ -286,7 +292,7 @@ public class GroupControlActivity extends AppCompatActivity {
         final CollectionReference memberRef = mFirestore.collection("GroupMembers");
         final Query query = memberRef
                 .whereEqualTo("groupid", gId)
-                .whereEqualTo("ismember",true);
+                .whereEqualTo("ismember", true);
 
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -330,7 +336,7 @@ public class GroupControlActivity extends AppCompatActivity {
     private void setUpMemberList(String gId) {
 
         //set smooth scroll list
-        ViewCompat.setNestedScrollingEnabled(mMemberList, false);
+        //ViewCompat.setNestedScrollingEnabled(mMemberList, false);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         mMemberList.setLayoutManager(linearLayoutManager);
 
@@ -338,7 +344,7 @@ public class GroupControlActivity extends AppCompatActivity {
         final CollectionReference memberRef = mFirestore.collection("GroupMembers");
         final Query query = memberRef
                 .whereEqualTo("groupid", gId)
-                .whereEqualTo("ismember",true);
+                .whereEqualTo("ismember", true);
 
         // Configure recycler adapter options:
         //  * query is the Query object defined above.
@@ -359,12 +365,12 @@ public class GroupControlActivity extends AppCompatActivity {
                         /*Snackbar.make(GroupControlActivity.this.findViewById(android.R.id.content),model.getGroupid(), Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();*/
 
-                        showSnackbar(model.getGroupid(),R.string.dialog_ok, null);
+                        showSnackbar(model.getGroupid(), R.string.dialog_ok, null);
                     }
                 });
 
                 // load the userinfo
-                holder.loadListIamges(GroupControlActivity.this,mFirestore, model.getUserid());
+                holder.loadListIamges(GroupControlActivity.this, mFirestore, model.getUserid());
             }
 
             @Override
@@ -402,7 +408,7 @@ public class GroupControlActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         if (adapter != null)
-          adapter.stopListening();
+            adapter.stopListening();
     }
 
     @Override
@@ -479,26 +485,22 @@ public class GroupControlActivity extends AppCompatActivity {
 
     private void groupAdminInfoIntent() {
         Intent groupintent = new Intent(this, GroupContributionEditActivity.class);
-
-        //TODO: Pass in the group UID
-        groupintent.putExtra(GROUP_UID, "");
+        groupintent.putExtra(GROUP_UID, mGroupUid);
         startActivity(groupintent);
     }
 
     private void groupInfoIntent() {
         Intent groupintent = new Intent(this, GroupInfoEditActivity.class);
-
-        //TODO: Pass in the group UID
-        groupintent.putExtra(GROUP_UID, "");
+        groupintent.putExtra(GROUP_UID, mGroupUid);
         startActivity(groupintent);
     }
 
     /**
      * Shows a {@link Snackbar}.
      *
-     * @param message The id for the string resource for the Snackbar text.
-     * @param actionStringId   The text of the action item.
-     * @param listener         The listener associated with the Snackbar action.
+     * @param message        The id for the string resource for the Snackbar text.
+     * @param actionStringId The text of the action item.
+     * @param listener       The listener associated with the Snackbar action.
      */
     public void showSnackbar(final String message, final int actionStringId,
                              View.OnClickListener listener) {
