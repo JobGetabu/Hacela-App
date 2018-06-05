@@ -651,10 +651,16 @@ public class DetailsEditActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> dbtask) {
                                 if (dbtask.isSuccessful()) {
                                     pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                                    pDialog.dismissWithAnimation();
+                                    pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sDialog) {
+                                            sDialog.dismissWithAnimation();
 
-                                    //better we switch activity to home
-                                    sendToMain();
+                                            //better we switch activity to home
+                                            sendToMain();
+                                        }
+                                    });
+
 
                                 } else {
                                     pDialog.dismiss();

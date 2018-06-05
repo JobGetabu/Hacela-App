@@ -14,6 +14,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -80,6 +81,8 @@ public class GroupControlActivity extends AppCompatActivity {
     CircleImageView circleImage;
     @BindView(R.id.groupcontrol_memberlist)
     RecyclerView mMemberList;
+    @BindView(R.id.groupcontrol_group_description)
+    AppCompatTextView groupcontrolGroupDescription;
 
     //firebase
     private FirebaseAuth mAuth;
@@ -317,6 +320,7 @@ public class GroupControlActivity extends AppCompatActivity {
                 if (groups != null) {
                     mGroupFulName.setText(groups.getGroupname());
                     mGroupDisName.setText(groups.getDisplayname());
+                    groupcontrolGroupDescription.setText(groups.getDescription().getDescription());
 
                     // Create date formats
                     DateFormat dateFormatLong = new SimpleDateFormat("EEE MMM dd, yyyy", Locale.ENGLISH);  // Sun Dec 31, 2017

@@ -314,9 +314,14 @@ public class GroupInfoEditActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Void> dbtask) {
                                         if (dbtask.isSuccessful()){
                                             pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                                            pDialog.dismissWithAnimation();
+                                            pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                @Override
+                                                public void onClick(SweetAlertDialog sDialog) {
+                                                    sDialog.dismissWithAnimation();
+                                                    sendToGroupControl();
+                                                }
+                                            });
 
-                                            finish();
                                         }else {
                                             pDialog.dismiss();
                                             Log.d(TAG, "onComplete: error" + dbtask.getException().toString());
@@ -341,7 +346,13 @@ public class GroupInfoEditActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> dbtask) {
                             if (dbtask.isSuccessful()){
                                 pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                                pDialog.dismissWithAnimation();
+                                pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        sDialog.dismissWithAnimation();
+                                        sendToGroupControl();
+                                    }
+                                });
 
                                 finish();
                             }else {
@@ -352,6 +363,15 @@ public class GroupInfoEditActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private void sendToGroupControl() {
+        //clears backstack
+        Intent groupIntent = new Intent(this, GroupControlActivity.class);
+        groupIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        groupIntent.putExtra(GROUP_UID,mGroupUID);
+        startActivity(groupIntent);
+        finish();
     }
 
     private void errorPrompt() {
