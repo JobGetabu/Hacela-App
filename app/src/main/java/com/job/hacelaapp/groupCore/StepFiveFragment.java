@@ -53,6 +53,12 @@ import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.app.Activity.RESULT_OK;
+import static com.job.hacelaapp.util.Constants.GROUPACCOUNTCOL;
+import static com.job.hacelaapp.util.Constants.GROUPADMINCOL;
+import static com.job.hacelaapp.util.Constants.GROUPCOL;
+import static com.job.hacelaapp.util.Constants.GROUPCONTRIBUTIONCOL;
+import static com.job.hacelaapp.util.Constants.GROUPMEMBERCOL;
+import static com.job.hacelaapp.util.Constants.USERSPROFILECOL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -252,13 +258,13 @@ public class StepFiveFragment extends Fragment {
         //uploading to server
 
         //init
-        DocumentReference GROUPREF = mFirestore.collection("Groups").document(groupId);
-        DocumentReference GROUPDEFREF = mFirestore.collection("GroupsContributionDefault").document(groupId);
-        DocumentReference GROUPACCREF = mFirestore.collection("GroupsAccount").document(groupId);
-        DocumentReference GROUPADMINREF = mFirestore.collection("GroupsAdmin").document(groupId).collection("Admins").document(currentUserId);
-        final DocumentReference GROUPMEMBERREF = mFirestore.collection("GroupsMembers").document(currentUserId);
-        final DocumentReference USERSPROFILE = mFirestore.collection("UsersProfile").document(currentUserId);
-        DocumentReference USERSPROFILEGROUP = mFirestore.collection("UsersProfile").document(currentUserId).collection("Groups").document(groupId);
+        DocumentReference GROUPREF = mFirestore.collection(GROUPCOL).document(groupId);
+        DocumentReference GROUPDEFREF = mFirestore.collection(GROUPCONTRIBUTIONCOL).document(groupId);
+        DocumentReference GROUPACCREF = mFirestore.collection(GROUPACCOUNTCOL).document(groupId);
+        DocumentReference GROUPADMINREF = mFirestore.collection(GROUPADMINCOL).document(groupId).collection("Admins").document(currentUserId);
+        final DocumentReference GROUPMEMBERREF = mFirestore.collection(GROUPMEMBERCOL).document(currentUserId);
+        final DocumentReference USERSPROFILE = mFirestore.collection(USERSPROFILECOL).document(currentUserId);
+        DocumentReference USERSPROFILEGROUP = mFirestore.collection(USERSPROFILECOL).document(currentUserId).collection("Groups").document(groupId);
 
 
         //check connection

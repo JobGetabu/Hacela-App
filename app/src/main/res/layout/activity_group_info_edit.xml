@@ -162,7 +162,8 @@
                         android:hint="@string/group_description"
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
-                        android:singleLine="true" />
+                        android:singleLine="false"
+                        />
                 </android.support.design.widget.TextInputLayout>
 
                 <LinearLayout

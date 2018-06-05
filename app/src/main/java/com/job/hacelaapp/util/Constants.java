@@ -29,6 +29,6 @@ public class Constants {
     public static final String GROUPACCOUNTCOL = "GroupsAccount";
     public static final String GROUPADMINCOL = "GroupsAdmin";
     public static final String GROUPMEMBERCOL = "GroupsMembers";
-    public static final String USERSPROFILE = "UsersProfile";
+    public static final String USERSPROFILECOL = "UsersProfile";
 
 }

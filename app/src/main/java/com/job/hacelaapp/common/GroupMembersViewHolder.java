@@ -97,5 +97,7 @@ public class GroupMembersViewHolder extends RecyclerView.ViewHolder {
                 }
             }
         });
+
+        //TODO: get cycle information about the groups
     }
 }
