@@ -636,8 +636,8 @@ public class DetailsEditActivity extends AppCompatActivity {
                         userBasicInfo.setPhotourl(downloadUri.toString());
 
                         //upload thump image now
-                        byte[] mydata = mBaosThump.toByteArray();
-                        storageReference.getReference("images/profile/"+currentUserId+"/thumbnail.jpg").putBytes(mydata);
+                        //byte[] mydata = mBaosThump.toByteArray();
+                        //storageReference.getReference("images/profile/"+currentUserId+"/thumbnail.jpg").putBytes(mydata);
 
                         // Get a new write batch
                         WriteBatch batch = mFirestore.batch();

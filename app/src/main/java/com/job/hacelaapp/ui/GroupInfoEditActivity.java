@@ -304,8 +304,8 @@ public class GroupInfoEditActivity extends AppCompatActivity {
                         String photourl = downloadUri.toString();
 
                         //upload thump image now
-                        byte[] mydata = mBaosThump.toByteArray();
-                        storageReference.getReference("images/group/"+mGroupUID+"/thumbnail.jpg").putBytes(mydata);
+                        //byte[] mydata = mBaosThump.toByteArray();
+                        //storageReference.getReference("images/group/"+mGroupUID+"/thumbnail.jpg").putBytes(mydata);
 
                         GROUPREF.update("groupname",groupFulName,
                                 "displayname",groupDisName,"photourl",photourl,"description.description",groupDes)
