@@ -22,4 +22,13 @@ public class Constants {
             ".PHONEAUTH_DETAILS";
 
     public static final String GROUP_UID ="GROUP_UID";
+
+    // This are hacelas collection names
+    public static final String GROUPCOL = "Groups";
+    public static final String GROUPCONTRIBUTIONCOL = "GroupsContributionDefault";
+    public static final String GROUPACCOUNTCOL = "GroupsAccount";
+    public static final String GROUPADMINCOL = "GroupsAdmin";
+    public static final String GROUPMEMBERCOL = "GroupsMembers";
+    public static final String USERSPROFILE = "UsersProfile";
+
 }

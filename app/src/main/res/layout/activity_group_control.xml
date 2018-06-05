@@ -157,6 +157,7 @@
                     android:maxLines="1"
                     android:textColor="@android:color/white"
                     android:textSize="25sp"
+                    android:visibility="gone"
                     app:layout_collapseMode="pin" />
 
             </android.support.design.widget.CollapsingToolbarLayout>
@@ -283,7 +284,9 @@
                     android:layout_marginStart="@dimen/spacing_normal"
                     android:layout_marginEnd="@dimen/spacing_normal"
                     android:layout_marginBottom="@dimen/padding_normal"
-                    android:padding="@dimen/spacing_normal"
+                    android:paddingTop="8dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
                     >
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/groupcontrol_memberlist"

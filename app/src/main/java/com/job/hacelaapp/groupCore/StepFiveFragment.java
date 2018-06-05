@@ -37,6 +37,7 @@ import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.GroupAccount;
 import com.job.hacelaapp.dataSource.GroupContributionDefault;
 import com.job.hacelaapp.dataSource.GroupDescription;
+import com.job.hacelaapp.dataSource.GroupMembers;
 import com.job.hacelaapp.dataSource.Penalty;
 import com.job.hacelaapp.dataSource.Savings;
 import com.job.hacelaapp.dataSource.Step4OM;
@@ -246,12 +247,7 @@ public class StepFiveFragment extends Fragment {
         groupAdminsMap.put("fromdate", FieldValue.serverTimestamp());
         groupAdminsMap.put("status", "Active");
 
-        //final GroupMembers members = new GroupMembers( "Admin", currentUserName);
-        Map<String,Object> membersMappingMap = new HashMap<>();
-        membersMappingMap.put("userrole","Admin");
-        membersMappingMap.put("username",currentUserName);
-        Map<String,Object> membersMap = new HashMap<>();
-        membersMap.put(currentUserId,membersMappingMap);
+        GroupMembers groupMember = new GroupMembers(groupId, currentUserId, "Admin",currentUserName, true);
 
         //uploading to server
 
@@ -260,7 +256,7 @@ public class StepFiveFragment extends Fragment {
         DocumentReference GROUPDEFREF = mFirestore.collection("GroupsContributionDefault").document(groupId);
         DocumentReference GROUPACCREF = mFirestore.collection("GroupsAccount").document(groupId);
         DocumentReference GROUPADMINREF = mFirestore.collection("GroupsAdmin").document(groupId).collection("Admins").document(currentUserId);
-        final DocumentReference GROUPMEMBERREF = mFirestore.collection("GroupMembers").document(groupId);
+        final DocumentReference GROUPMEMBERREF = mFirestore.collection("GroupsMembers").document(currentUserId);
         final DocumentReference USERSPROFILE = mFirestore.collection("UsersProfile").document(currentUserId);
         DocumentReference USERSPROFILEGROUP = mFirestore.collection("UsersProfile").document(currentUserId).collection("Groups").document(groupId);
 
@@ -299,7 +295,7 @@ public class StepFiveFragment extends Fragment {
         //upload group accounts
         batch.set(GROUPACCREF, groupAccount);
         //upload group members
-        batch.set(GROUPMEMBERREF, membersMap);
+        batch.set(GROUPMEMBERREF, groupMember);
         //upload update userprofile-subcollection groups
         batch.set(USERSPROFILEGROUP, groupsUsersMap, SetOptions.merge());
 

@@ -31,7 +31,6 @@ public class GroupControlViewModel extends AndroidViewModel {
 
     //few db refs
     private DocumentReference GROUPREF;
-    private DocumentReference GROUPMEMBERREF;
     private DocumentReference GROUPADMINREF;
     private DocumentReference GROUPCONTRIBUTIONDEFAULTREF;
 
@@ -49,7 +48,6 @@ public class GroupControlViewModel extends AndroidViewModel {
 
         //init db refs
        GROUPREF = mFirestore.collection("Groups").document(groupId);
-       GROUPMEMBERREF = mFirestore.collection("GroupMembers").document(groupId);
        GROUPADMINREF = mFirestore.collection("GroupsAdmin").document(groupId);
        GROUPCONTRIBUTIONDEFAULTREF = mFirestore.collection("GroupsContributionDefault").document(groupId);
 

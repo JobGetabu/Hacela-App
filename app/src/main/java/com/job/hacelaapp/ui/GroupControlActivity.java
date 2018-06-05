@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,14 +30,20 @@ import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.common.GroupMembersViewHolder;
 import com.job.hacelaapp.dataSource.GroupMembers;
@@ -81,6 +88,7 @@ public class GroupControlActivity extends AppCompatActivity {
 
     private GroupControlViewModel model;
     private ImageProcessor imageProcessor;
+    private FirestoreRecyclerAdapter adapter;
 
     public static final String TAG = "GroupControl";
 
@@ -134,40 +142,51 @@ public class GroupControlActivity extends AppCompatActivity {
             final ArrayList<Float> textStart = new ArrayList<>();
 
             @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+            public void onOffsetChanged(final AppBarLayout appBarLayout, final int verticalOffset) {
                 final int diff = toolBarHeight + verticalOffset;
                 final int y = diff < 0 ? header160 - diff : header160;
                 headerInfo.setTop(y);
 
-                final FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) headerImage.getLayoutParams();
-                lp.height = y;
-                headerImage.setLayoutParams(lp);
 
-                final int totalScrollRange = appBarLayout.getTotalScrollRange();
-                final float ratio = ((float) totalScrollRange + verticalOffset) / totalScrollRange;
+                //solve the warnings
+                GroupControlActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
 
-                final int avatarHalf = avatar.getMeasuredHeight() / 2;
-                final int avatarRightest = appBarLayout.getMeasuredWidth() / 2 - avatarHalf - avatarHOffset;
-                final int avatarTopest = avatarHalf + avatarVOffset;
+                        final FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) headerImage.getLayoutParams();
+                        lp.height = y;
+                        headerImage.setLayoutParams(lp);
 
-                avatar.setX(avatarHOffset + avatarRightest * ratio);
-                avatar.setY(avatarVOffset - avatarTopest * ratio);
-                avatar.setScaleX(0.5f + 0.5f * ratio);
-                avatar.setScaleY(0.5f + 0.5f * ratio);
 
-                if (textStart.isEmpty() && verticalOffset == 0) {
-                    for (int i = 0; i < texts.getChildCount(); i++) {
-                        textStart.add(texts.getChildAt(i).getX());
+                        final int totalScrollRange = appBarLayout.getTotalScrollRange();
+                        final float ratio = ((float) totalScrollRange + verticalOffset) / totalScrollRange;
+
+                        final int avatarHalf = avatar.getMeasuredHeight() / 2;
+                        final int avatarRightest = appBarLayout.getMeasuredWidth() / 2 - avatarHalf - avatarHOffset;
+                        final int avatarTopest = avatarHalf + avatarVOffset;
+
+                        avatar.setX(avatarHOffset + avatarRightest * ratio);
+                        avatar.setY(avatarVOffset - avatarTopest * ratio);
+                        avatar.setScaleX(0.5f + 0.5f * ratio);
+                        avatar.setScaleY(0.5f + 0.5f * ratio);
+
+                        if (textStart.isEmpty() && verticalOffset == 0) {
+                            for (int i = 0; i < texts.getChildCount(); i++) {
+                                textStart.add(texts.getChildAt(i).getX());
+                            }
+                        }
+
+                        texts.setX(textHOffset + (avatarSize * 0.5f - avatarVOffset) * (1f - ratio));
+                        texts.setY(textVMinOffset + textVDiff * ratio);
+                        texts.setScaleX(0.8f + 0.2f * ratio);
+                        texts.setScaleY(0.8f + 0.2f * ratio);
+                        for (int i = 0; i < textStart.size(); i++) {
+                            texts.getChildAt(i).setX(textStart.get(i) * ratio);
+                        }
                     }
-                }
+                });
 
-                texts.setX(textHOffset + (avatarSize * 0.5f - avatarVOffset) * (1f - ratio));
-                texts.setY(textVMinOffset + textVDiff * ratio);
-                texts.setScaleX(0.8f + 0.2f * ratio);
-                texts.setScaleY(0.8f + 0.2f * ratio);
-                for (int i = 0; i < textStart.size(); i++) {
-                    texts.getChildAt(i).setX(textStart.get(i) * ratio);
-                }
+
             }
         });
 
@@ -213,10 +232,6 @@ public class GroupControlActivity extends AppCompatActivity {
 
         imageProcessor = new ImageProcessor(this);
 
-        //set smooth scroll list
-        ViewCompat.setNestedScrollingEnabled(mMemberList, false);
-        mMemberList.setLayoutManager(new LinearLayoutManager(this));
-
         //init view-model
         DocumentReference USERSPROFILE = mFirestore.collection("UsersProfile")
                 .document(mCurrentUser.getUid());
@@ -251,6 +266,7 @@ public class GroupControlActivity extends AppCompatActivity {
                                     //UI observers
                                     setUpGroupBasic(model);
                                     setUpMemberList(gId);
+                                    testQuery(gId);
 
                                     break;
                                 }
@@ -261,6 +277,27 @@ public class GroupControlActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.e(TAG, "Error getting documents: ", e.getCause());
+            }
+        });
+    }
+
+    private void testQuery(String gId) {
+        // Create a reference to the cities collection
+        final CollectionReference memberRef = mFirestore.collection("GroupMembers");
+        final Query query = memberRef
+                .whereEqualTo("groupid", gId)
+                .whereEqualTo("ismember",true);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d("MYQUERY", document.getId() + " => " + document.getData());
+                    }
+                } else {
+                    Log.d("MYQUERY", "Error getting documents: ", task.getException());
+                }
             }
         });
     }
@@ -290,13 +327,18 @@ public class GroupControlActivity extends AppCompatActivity {
         });
     }
 
-    private void setUpMemberList(String gId){
+    private void setUpMemberList(String gId) {
 
+        //set smooth scroll list
+        ViewCompat.setNestedScrollingEnabled(mMemberList, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        mMemberList.setLayoutManager(linearLayoutManager);
 
-        Query query = FirebaseFirestore.getInstance()
-                .collection("GroupMembers")
-                .orderBy("timestamp");
-
+        // Create a reference to the cities collection
+        final CollectionReference memberRef = mFirestore.collection("GroupMembers");
+        final Query query = memberRef
+                .whereEqualTo("groupid", gId)
+                .whereEqualTo("ismember",true);
 
         // Configure recycler adapter options:
         //  * query is the Query object defined above.
@@ -305,15 +347,24 @@ public class GroupControlActivity extends AppCompatActivity {
                 .setQuery(query, GroupMembers.class)
                 .build();
 
-        FirestoreRecyclerAdapter adapter = new FirestoreRecyclerAdapter<GroupMembers, GroupMembersViewHolder>(options) {
+        adapter = new FirestoreRecyclerAdapter<GroupMembers, GroupMembersViewHolder>(options) {
             @Override
-            public void onBindViewHolder(GroupMembersViewHolder holder, int position, GroupMembers model) {
-                // Bind the Chat object to the ChatHolder
-                // ...
-                Log.d(TAG, "onBindViewHolder: "+model.toString());
-                holder.setDisName(model.getUsername());
-                holder.setUserrole(model.getUserrole());
+            public void onBindViewHolder(@NonNull GroupMembersViewHolder holder, int position, @NonNull final GroupMembers model) {
 
+                holder.setUserrole(model.getUserrole());
+                holder.setDisName(model.getUsername());
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        /*Snackbar.make(GroupControlActivity.this.findViewById(android.R.id.content),model.getGroupid(), Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();*/
+
+                        showSnackbar(model.getGroupid(),R.string.dialog_ok, null);
+                    }
+                });
+
+                // load the userinfo
+                holder.loadListIamges(GroupControlActivity.this,mFirestore, model.getUserid());
             }
 
             @Override
@@ -325,9 +376,33 @@ public class GroupControlActivity extends AppCompatActivity {
 
                 return new GroupMembersViewHolder(view);
             }
+
+            @Override
+            public void onError(@NonNull FirebaseFirestoreException e) {
+                super.onError(e);
+                Log.e(TAG, "onError: ", e);
+            }
+
         };
 
+        adapter.startListening();
+        adapter.notifyDataSetChanged();
         mMemberList.setAdapter(adapter);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (adapter != null)
+            adapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (adapter != null)
+          adapter.stopListening();
     }
 
     @Override
@@ -416,5 +491,21 @@ public class GroupControlActivity extends AppCompatActivity {
         //TODO: Pass in the group UID
         groupintent.putExtra(GROUP_UID, "");
         startActivity(groupintent);
+    }
+
+    /**
+     * Shows a {@link Snackbar}.
+     *
+     * @param message The id for the string resource for the Snackbar text.
+     * @param actionStringId   The text of the action item.
+     * @param listener         The listener associated with the Snackbar action.
+     */
+    public void showSnackbar(final String message, final int actionStringId,
+                             View.OnClickListener listener) {
+        Snackbar.make(
+                this.findViewById(android.R.id.content),
+                message,
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(this.getString(actionStringId), listener).show();
     }
 }
