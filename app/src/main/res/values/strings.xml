@@ -181,4 +181,9 @@
     <string name="transition_background" translatable="false">background</string>
     <string name="transition_list" translatable="false">list</string>
     <string name="group_description">Group Description</string>
+    <string name="edit_amount_to_be_contributed_by_each_member">Edit Amount to be contributed by each member</string>
+    <string name="select_contribution_intervals">Select contribution intervals</string>
+    <string name="edit_savings_in_a_single_cycle">Edit Savings in a single cycle</string>
+    <string name="savings_ksh">Savings (Ksh)</string>
+    <string name="edit_payout_in_a_single_cycle">Edit Payout in a single cycle</string>
 </resources>

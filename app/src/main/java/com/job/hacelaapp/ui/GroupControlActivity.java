@@ -3,9 +3,11 @@ package com.job.hacelaapp.ui;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,6 +33,7 @@ import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,6 +66,7 @@ import java.util.Set;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.job.hacelaapp.util.Constants.GROUP_UID;
@@ -94,7 +98,11 @@ public class GroupControlActivity extends AppCompatActivity {
     private FirestoreRecyclerAdapter adapter;
     private String mGroupUid = "";
 
+    //starter progress
+    private SweetAlertDialog pDialog;
+
     public static final String TAG = "GroupControl";
+    private static final int REQUEST_INVITE = 34125;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,6 +237,8 @@ public class GroupControlActivity extends AppCompatActivity {
             });
         }
 
+
+
         //End of layout animating
 
 
@@ -238,6 +248,9 @@ public class GroupControlActivity extends AppCompatActivity {
         mCurrentUser = mAuth.getCurrentUser();
 
         imageProcessor = new ImageProcessor(this);
+
+        //show progress
+        showWaitDialogue();
 
         //init view-model
         DocumentReference USERSPROFILE = mFirestore.collection("UsersProfile")
@@ -271,6 +284,9 @@ public class GroupControlActivity extends AppCompatActivity {
                                     model = ViewModelProviders.of(GroupControlActivity.this, factory)
                                             .get(GroupControlViewModel.class);
 
+                                    if (pDialog != null)
+                                         pDialog.dismissWithAnimation();
+
                                     //UI observers
                                     setUpGroupBasic(model);
                                     setUpMemberList(gId);
@@ -285,9 +301,29 @@ public class GroupControlActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.e(TAG, "Error getting documents: ", e.getCause());
+                if (pDialog != null)
+                    pDialog.dismiss();
+                finish();
             }
         });
 
+    }
+
+    private void showWaitDialogue(){
+
+        pDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#f9ab60"));
+        pDialog.setTitleText("Loading ...");
+        pDialog.setCancelable(true);
+        pDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                if(mGroupUid.isEmpty()){
+                    finish();
+                }
+            }
+        });
+        pDialog.show();
     }
 
     private void testQuery(String gId) {
@@ -441,7 +477,8 @@ public class GroupControlActivity extends AppCompatActivity {
     @OnClick(R.id.groupcontrol_invite)
     public void startInviteClick() {
 
-        Toast.makeText(this, "TODO: friend invite", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "TODO: friend invite", Toast.LENGTH_SHORT).show();
+        showMemberInviteUI();
     }
 
 
@@ -513,5 +550,64 @@ public class GroupControlActivity extends AppCompatActivity {
                 message,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(this.getString(actionStringId), listener).show();
+    }
+    private void showMemberInviteUI(){
+        pDialog.changeAlertType(SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#f9ab60"));
+        pDialog.setTitleText("Just a moment...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        String link = "https://f8mhr.app.goo.gl/?invitedto=" + mGroupUid;
+
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage("Manage and control all your " + "chama" + " activities from your phone")
+                .setDeepLink(Uri.parse(link))
+                .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+                .setCallToActionText(getString(R.string.invitation_cta))
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                for (String id : ids) {
+                    Log.d(TAG, "onActivityResult: sent invitation " + id);
+
+                    if (pDialog != null)
+                        pDialog.dismiss();
+                }
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                Snackbar.make(
+                        this.findViewById(android.R.id.content),
+                        "Invitation was canceled",
+                        Snackbar.LENGTH_LONG)
+                        .show();
+                if (pDialog != null)
+                    pDialog.dismiss();
+
+            }
+        }
+    }
+
+
+
+    @Override
+    protected void onDestroy() {
+
+        if (pDialog != null) {
+            pDialog.dismiss();
+            pDialog = null;
+        }
+
+        super.onDestroy();
     }
 }
