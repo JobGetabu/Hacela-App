@@ -32,9 +32,11 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.dataSource.UsersAccount;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +46,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static com.job.hacelaapp.util.Constants.USERSACCOUNTCOL;
+import static com.job.hacelaapp.util.Constants.USERSAUTHCOL;
+import static com.job.hacelaapp.util.Constants.USERSCOL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -120,7 +126,7 @@ public class GoogleLogInFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        //Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
@@ -176,15 +182,15 @@ public class GoogleLogInFragment extends Fragment {
                                                     Log.d(TAG, "No such document");
 
                                                     //logging in with no pre account
+                                                    //region create fresh account
+
                                                     pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                                                     pDialog.setTitleText("Account doesn't exists! \n Creating one...");
 
-                                                    writingToUsersAuth(mCurrentUserid);
                                                     //write to db
                                                     writingToUsers(pDialog, device_token, user, mCurrentUserid);
 
-                                                    //TODO: since is first time send to profile completion screen or phone auth
-
+                                                    //endregion
                                                 }
                                             } else {
                                                 Log.d(TAG, "get failed with ", task.getException());
@@ -246,14 +252,34 @@ public class GoogleLogInFragment extends Fragment {
         errorPrompt("Oops... \n", error);
     }
 
+    //possibly first time log in
     private void writingToUsers(final SweetAlertDialog pDialog, String device_token, FirebaseUser user, String mCurrentUserid){
-        Map<String, Object> userMap = new HashMap<>();
 
+        Map<String, Object> userMap = new HashMap<>();
         userMap.put("devicetoken",device_token);
         userMap.put("username",user.getDisplayName());
         userMap.put("photourl",user.getPhotoUrl().toString());
 
-        mFirestore.collection("Users").document(mCurrentUserid).set(userMap)
+        Map<String, Object> userAuthMap = new HashMap<>();
+        userAuthMap.put("phonenumber", "");
+        userAuthMap.put("fbconnected", false);
+        userAuthMap.put("googleconnected", true);
+
+        //create user account
+        UsersAccount usersAccount = new UsersAccount(0D,"Active");
+
+        DocumentReference usersAuthRef = mFirestore.collection(USERSAUTHCOL).document(mCurrentUserid);
+        DocumentReference usersRef = mFirestore.collection(USERSCOL).document(mCurrentUserid);
+        DocumentReference usersAccountRef = mFirestore.collection(USERSACCOUNTCOL).document(mCurrentUserid);
+
+        // Get a new write batch
+        WriteBatch batch = mFirestore.batch();
+
+        batch.set(usersRef,userMap);
+        batch.set(usersAuthRef,userAuthMap);
+        batch.set(usersAccountRef, usersAccount);
+
+        batch.commit()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> dbtask) {
@@ -290,28 +316,6 @@ public class GoogleLogInFragment extends Fragment {
                 });
     }
 
-    //possibly first time log in
-    private void writingToUsersAuth(String mCurrentUserid){
-        Map<String, Object> userAuthMap = new HashMap<>();
-        userAuthMap.put("phonenumber", "");
-        userAuthMap.put("fbconnected", false);
-        userAuthMap.put("googleconnected", true);
-
-        // Set the value of 'UsersAuth'
-        DocumentReference usersAuthRef = mFirestore.collection("UsersAuth").document(mCurrentUserid);
-
-        usersAuthRef.set(userAuthMap)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Log.d(TAG, "onComplete: successful");
-                        }else {
-                            Log.d(TAG, "onComplete: userAuth database error"+task.getException());
-                        }
-                    }
-                });
-    }
 
     @Override
     public void onDestroy() {

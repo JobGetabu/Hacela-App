@@ -32,9 +32,11 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.dataSource.UsersAccount;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,6 +46,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static com.job.hacelaapp.util.Constants.USERSACCOUNTCOL;
+import static com.job.hacelaapp.util.Constants.USERSAUTHCOL;
+import static com.job.hacelaapp.util.Constants.USERSCOL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -183,11 +189,16 @@ public class GoogleSignUpFragment extends Fragment {
                                                 } else {
                                                     Log.d(TAG, "No such document");
 
-                                                    writingToUsersAuth(mCurrentUserid);
+                                                    //logging in with no pre account
+                                                    //region create fresh account
+
+                                                    pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                                    pDialog.setTitleText("Account doesn't exists! \n Creating one...");
+
                                                     //write to db
                                                     writingToUsers(pDialog, device_token, user, mCurrentUserid);
 
-                                                    //TODO: since is first time send to profile completion screen or phone auth
+                                                    //endregion
 
                                                 }
                                             } else {
@@ -248,18 +259,37 @@ public class GoogleSignUpFragment extends Fragment {
             error = "Unknown Error Occured";
             e.printStackTrace();
         }
-        //Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
         errorPrompt("Oops...", error);
     }
 
+    //possibly first time log in
     private void writingToUsers(final SweetAlertDialog pDialog, String device_token, FirebaseUser user, String mCurrentUserid){
-        Map<String, Object> userMap = new HashMap<>();
 
+        Map<String, Object> userMap = new HashMap<>();
         userMap.put("devicetoken",device_token);
         userMap.put("username",user.getDisplayName());
         userMap.put("photourl",user.getPhotoUrl().toString());
 
-        mFirestore.collection("Users").document(mCurrentUserid).set(userMap)
+        Map<String, Object> userAuthMap = new HashMap<>();
+        userAuthMap.put("phonenumber", "");
+        userAuthMap.put("fbconnected", false);
+        userAuthMap.put("googleconnected", true);
+
+        //create user account
+        UsersAccount usersAccount = new UsersAccount(0D,"Active");
+
+        DocumentReference usersAuthRef = mFirestore.collection(USERSAUTHCOL).document(mCurrentUserid);
+        DocumentReference usersRef = mFirestore.collection(USERSCOL).document(mCurrentUserid);
+        DocumentReference usersAccountRef = mFirestore.collection(USERSACCOUNTCOL).document(mCurrentUserid);
+
+        // Get a new write batch
+        WriteBatch batch = mFirestore.batch();
+
+        batch.set(usersRef,userMap);
+        batch.set(usersAuthRef,userAuthMap);
+        batch.set(usersAccountRef, usersAccount);
+
+        batch.commit()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> dbtask) {

@@ -31,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.dataSource.UsersAccount;
 import com.ybs.passwordstrengthmeter.PasswordStrength;
 
 import java.util.HashMap;
@@ -44,6 +45,10 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.michaelrocks.libphonenumber.android.NumberParseException;
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil;
 import io.michaelrocks.libphonenumber.android.Phonenumber;
+
+import static com.job.hacelaapp.util.Constants.USERSACCOUNTCOL;
+import static com.job.hacelaapp.util.Constants.USERSAUTHCOL;
+import static com.job.hacelaapp.util.Constants.USERSCOL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -236,17 +241,23 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
                                 userAuthMap.put("fbConnected", false);
                                 userAuthMap.put("googleConnected", false);
 
+                                //create user account
+                                UsersAccount usersAccount = new UsersAccount(0D,"Active");
 
                                 // Get a new write batch
                                 WriteBatch batch = mFirestore.batch();
 
                                 // Set the value of 'Users'
-                                DocumentReference usersRef = mFirestore.collection("Users").document(mCurrentUserid);
+                                DocumentReference usersRef = mFirestore.collection(USERSCOL).document(mCurrentUserid);
                                 batch.set(usersRef, userMap);
 
                                 // Set the value of 'UsersAuth'
-                                DocumentReference usersAuthRef = mFirestore.collection("UsersAuth").document(mCurrentUserid);
+                                DocumentReference usersAuthRef = mFirestore.collection(USERSAUTHCOL).document(mCurrentUserid);
                                 batch.set(usersAuthRef, userAuthMap);
+
+                                //set the value of 'UsersAccount'
+                                DocumentReference usersAccountRef = mFirestore.collection(USERSACCOUNTCOL).document(mCurrentUserid);
+                                batch.set(usersAccountRef, usersAccount);
 
                                 // Commit the batch
                                 batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -273,10 +284,7 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
                     });
 
 
-        } else {
-            //TODO: Error prompting logic input validation
         }
-
     }
 
     private void errorPrompt() {
@@ -313,7 +321,6 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
             error = "Unknown Error Occured";
             e.printStackTrace();
         }
-        //Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
         errorPrompt("Oops...", error);
     }
 
