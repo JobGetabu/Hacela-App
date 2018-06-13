@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.support.annotation.MenuRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.chip.Chip;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +43,8 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,10 +52,20 @@ import butterknife.ButterKnife;
 public class HomeFragment extends Fragment {
 
     @BindView(R.id.home_page_toolbar)
-    android.support.v7.widget.Toolbar mToolbar;
+    Toolbar mToolbar;
 
     private static String TAG = "homeFrg";
-    private  View mRootView;
+    @BindView(R.id.homebar_image)
+    CircleImageView homebarImage;
+    @BindView(R.id.homebar_groupname)
+    Chip homebarGroupname;
+    @BindView(R.id.homebar_groupbalance)
+    Chip homebarGroupbalance;
+    @BindView(R.id.homebar_userbalance)
+    Chip homebarUserbalance;
+    @BindView(R.id.homebar_grouplist)
+    RecyclerView homebarGrouplist;
+    private View mRootView;
 
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
@@ -66,16 +80,15 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         mRootView = inflater.inflate(R.layout.fragment_home, container, false);
         setHasOptionsMenu(true);
-        ButterKnife.bind(this,mRootView);
+        ButterKnife.bind(this, mRootView);
 
-        createMenus(mToolbar,R.menu.main_home_menu );
+        createMenus(mToolbar, R.menu.main_home_menu);
         return mRootView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
 
 
         // Configure Google Sign In
@@ -119,7 +132,8 @@ public class HomeFragment extends Fragment {
             case R.id.main_home_menu_controlgroup:
                 sendToControlGroup();
                 break;
-
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -160,13 +174,13 @@ public class HomeFragment extends Fragment {
         startActivity(loginIntent);
     }
 
-    private void createMenus(Toolbar actionBarToolBar, @MenuRes int menu){
+    private void createMenus(Toolbar actionBarToolBar, @MenuRes int menu) {
         ((MainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(actionBarToolBar);
         actionBarToolBar.setTitle("");
         actionBarToolBar.inflateMenu(menu);
     }
 
-    private void handleAppInvite(){
+    private void handleAppInvite() {
 
         FirebaseDynamicLinks.getInstance()
                 .getDynamicLink(getActivity().getIntent())
@@ -177,7 +191,7 @@ public class HomeFragment extends Fragment {
                         Uri deepLink = null;
                         if (pendingDynamicLinkData != null) {
                             deepLink = pendingDynamicLinkData.getLink();
-                            Log.d(TAG, "onSuccess: "+deepLink);
+                            Log.d(TAG, "onSuccess: " + deepLink);
                         }
                         //
                         // If the user isn't signed in and the pending Dynamic Link is
@@ -196,27 +210,39 @@ public class HomeFragment extends Fragment {
                         }*/
 
                         //display a snack with group id
-                        if (deepLink != null){
+                        if (deepLink != null) {
                             String referredGroupUid = deepLink.getQueryParameter("invitedto");
                             String query = deepLink.getQuery();
 
-                            Log.d(TAG, "onSuccess: "+query);
-                            Log.d(TAG, "onSuccess: "+deepLink.getQueryParameters("invitedto"));
+                            Log.d(TAG, "onSuccess: " + query);
+                            Log.d(TAG, "onSuccess: " + deepLink.getQueryParameters("invitedto"));
 
                             if (referredGroupUid != null)
-                            Snackbar.make(
-                                    getActivity().findViewById(android.R.id.content),
-                                    referredGroupUid,
-                                    Snackbar.LENGTH_INDEFINITE).show();
+                                Snackbar.make(
+                                        getActivity().findViewById(android.R.id.content),
+                                        referredGroupUid,
+                                        Snackbar.LENGTH_INDEFINITE).show();
                             Toast.makeText(getContext()
-                                    , ""+referredGroupUid, Toast.LENGTH_LONG).show();
+                                    , "" + referredGroupUid, Toast.LENGTH_LONG).show();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "onFailure: "+e.getMessage());
+                Log.d(TAG, "onFailure: " + e.getMessage());
             }
         });
+    }
+
+    @OnClick({R.id.homebar_groupname, R.id.homebar_groupbalance, R.id.homebar_userbalance})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.homebar_groupname:
+                break;
+            case R.id.homebar_groupbalance:
+                break;
+            case R.id.homebar_userbalance:
+                break;
+        }
     }
 }
