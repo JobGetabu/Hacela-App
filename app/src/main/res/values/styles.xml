@@ -23,7 +23,7 @@
 
     <!--Text input style-->
     <style name="TextLabel" parent="">
-       <!-- parent="TextAppearance.AppCompat"-->
+        <!-- parent="TextAppearance.AppCompat"-->
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">@color/lightGrey</item>
         <item name="android:textSize">20sp</item>
@@ -33,6 +33,10 @@
         <item name="colorControlActivated">@color/colorAppBarGrey</item>
     </style>
 
+    <!--  Text appearance for the chips-->
+    <style name="ChipsBaseText" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
     <!--BottomNavigation-->
     <style name="AppTheme.TranslucentNavigation" parent="AppTheme">
         <item name="android:windowTranslucentNavigation">true</item>

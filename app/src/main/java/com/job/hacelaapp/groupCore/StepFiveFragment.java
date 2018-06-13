@@ -254,6 +254,7 @@ public class StepFiveFragment extends Fragment {
         groupAdminsMap.put("status", "Active");
 
         GroupMembers groupMember = new GroupMembers(groupId, currentUserId, "Admin",currentUserName, true);
+        String groupMemberAutoId = mFirestore.collection(GROUPMEMBERCOL).document().getId();
 
         //uploading to server
 
@@ -262,7 +263,7 @@ public class StepFiveFragment extends Fragment {
         DocumentReference GROUPDEFREF = mFirestore.collection(GROUPCONTRIBUTIONCOL).document(groupId);
         DocumentReference GROUPACCREF = mFirestore.collection(GROUPACCOUNTCOL).document(groupId);
         DocumentReference GROUPADMINREF = mFirestore.collection(GROUPADMINCOL).document(groupId).collection("Admins").document(currentUserId);
-        final DocumentReference GROUPMEMBERREF = mFirestore.collection(GROUPMEMBERCOL).document(currentUserId);
+        final DocumentReference GROUPMEMBERREF = mFirestore.collection(GROUPMEMBERCOL).document(groupMemberAutoId);
         final DocumentReference USERSPROFILE = mFirestore.collection(USERSPROFILECOL).document(currentUserId);
         DocumentReference USERSPROFILEGROUP = mFirestore.collection(USERSPROFILECOL).document(currentUserId).collection("Groups").document(groupId);
 
@@ -376,7 +377,7 @@ public class StepFiveFragment extends Fragment {
 
         String amount = mPenalty.getEditText().getText().toString();
 
-        if (amount.isEmpty() | !TextUtils.isDigitsOnly(amount)) {
+        if (amount.isEmpty() || !TextUtils.isDigitsOnly(amount)) {
             mPenalty.setError("enter a valid amount");
             valid = false;
         } else {

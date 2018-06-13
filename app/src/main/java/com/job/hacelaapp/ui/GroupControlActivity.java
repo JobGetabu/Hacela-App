@@ -120,7 +120,79 @@ public class GroupControlActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        initActivityAnim();
 
+        //End of layout animating
+
+
+        //init firebase
+        mAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
+        mCurrentUser = mAuth.getCurrentUser();
+
+        imageProcessor = new ImageProcessor(this);
+
+        //show progress
+        showWaitDialogue();
+
+        //init view-model
+        DocumentReference USERSPROFILE = mFirestore.collection("UsersProfile")
+                .document(mCurrentUser.getUid());
+
+        USERSPROFILE
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        UsersProfile usersProfile = documentSnapshot.toObject(UsersProfile.class);
+                        //we need the group id
+                        if (usersProfile != null && usersProfile.getGroups() != null) {
+                            Map<String, Boolean> groups = usersProfile.getGroups();
+
+
+                            Set s1 = groups.entrySet();//to get whole entrys
+                            for (Object aS1 : s1) {
+                                Map.Entry m = (Map.Entry) aS1;//to get next entry (and casting required because values are object type)
+                                //Entry is inner interface of Map interface
+
+                                System.out.println(m.getKey() + "..." + m.getValue());
+                                if (m.getValue().equals(true)) {
+                                    String gId = (String) m.getKey();
+                                    mGroupUid = gId;
+
+                                    //read db data
+                                    GroupControlViewModel.Factory factory = new GroupControlViewModel.Factory(
+                                            getApplication(), mAuth, mFirestore, gId);
+
+                                    model = ViewModelProviders.of(GroupControlActivity.this, factory)
+                                            .get(GroupControlViewModel.class);
+
+                                    if (pDialog != null)
+                                         pDialog.dismissWithAnimation();
+
+                                    //UI observers
+                                    setUpGroupBasic(model);
+                                    setUpMemberList(gId);
+                                    testQuery(gId);
+
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, "Error getting documents: ", e.getCause());
+                if (pDialog != null)
+                    pDialog.dismiss();
+                finish();
+            }
+        });
+
+    }
+
+    private void initActivityAnim() {
         final AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
 
@@ -236,77 +308,6 @@ public class GroupControlActivity extends AppCompatActivity {
                 }
             });
         }
-
-
-
-        //End of layout animating
-
-
-        //init firebase
-        mAuth = FirebaseAuth.getInstance();
-        mFirestore = FirebaseFirestore.getInstance();
-        mCurrentUser = mAuth.getCurrentUser();
-
-        imageProcessor = new ImageProcessor(this);
-
-        //show progress
-        showWaitDialogue();
-
-        //init view-model
-        DocumentReference USERSPROFILE = mFirestore.collection("UsersProfile")
-                .document(mCurrentUser.getUid());
-
-        USERSPROFILE
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        UsersProfile usersProfile = documentSnapshot.toObject(UsersProfile.class);
-                        //we need the group id
-                        if (usersProfile != null && usersProfile.getGroups() != null) {
-                            Map<String, Boolean> groups = usersProfile.getGroups();
-
-
-                            Set s1 = groups.entrySet();//to get whole entrys
-                            for (Object aS1 : s1) {
-                                Map.Entry m = (Map.Entry) aS1;//to get next entry (and casting required because values are object type)
-                                //Entry is inner interface of Map interface
-
-                                System.out.println(m.getKey() + "..." + m.getValue());
-                                if (m.getValue().equals(true)) {
-                                    String gId = (String) m.getKey();
-                                    mGroupUid = gId;
-
-                                    //read db data
-                                    GroupControlViewModel.Factory factory = new GroupControlViewModel.Factory(
-                                            getApplication(), mAuth, mFirestore, gId);
-
-                                    model = ViewModelProviders.of(GroupControlActivity.this, factory)
-                                            .get(GroupControlViewModel.class);
-
-                                    if (pDialog != null)
-                                         pDialog.dismissWithAnimation();
-
-                                    //UI observers
-                                    setUpGroupBasic(model);
-                                    setUpMemberList(gId);
-                                    testQuery(gId);
-
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "Error getting documents: ", e.getCause());
-                if (pDialog != null)
-                    pDialog.dismiss();
-                finish();
-            }
-        });
-
     }
 
     private void showWaitDialogue(){
@@ -376,7 +377,7 @@ public class GroupControlActivity extends AppCompatActivity {
     private void setUpMemberList(String gId) {
 
         //set smooth scroll list
-        //ViewCompat.setNestedScrollingEnabled(mMemberList, false);
+        ViewCompat.setNestedScrollingEnabled(mMemberList, false);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         mMemberList.setLayoutManager(linearLayoutManager);
 
@@ -402,8 +403,6 @@ public class GroupControlActivity extends AppCompatActivity {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        /*Snackbar.make(GroupControlActivity.this.findViewById(android.R.id.content),model.getGroupid(), Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();*/
 
                         showSnackbar(model.getGroupid(), R.string.dialog_ok, null);
                     }

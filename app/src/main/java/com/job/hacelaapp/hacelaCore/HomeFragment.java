@@ -68,8 +68,6 @@ public class HomeFragment extends Fragment {
         setHasOptionsMenu(true);
         ButterKnife.bind(this,mRootView);
 
-        /*((MainActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("");*/
         createMenus(mToolbar,R.menu.main_home_menu );
         return mRootView;
     }
