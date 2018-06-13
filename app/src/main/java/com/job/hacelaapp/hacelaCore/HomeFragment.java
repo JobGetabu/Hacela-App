@@ -1,6 +1,9 @@
 package com.job.hacelaapp.hacelaCore;
 
 
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,13 +35,22 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.dataSource.GroupAccount;
+import com.job.hacelaapp.dataSource.GroupMembers;
+import com.job.hacelaapp.dataSource.Groups;
+import com.job.hacelaapp.dataSource.UserBasicInfo;
+import com.job.hacelaapp.dataSource.UsersAccount;
 import com.job.hacelaapp.manageUsers.LoginActivity;
 import com.job.hacelaapp.ui.CreateGroupActivity;
 import com.job.hacelaapp.ui.GroupControlActivity;
 import com.job.hacelaapp.ui.GroupInviteActivity;
+import com.job.hacelaapp.util.ImageProcessor;
+import com.job.hacelaapp.viewmodel.HomeViewModel;
 
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -67,8 +79,13 @@ public class HomeFragment extends Fragment {
     RecyclerView homebarGrouplist;
     private View mRootView;
 
-    GoogleSignInClient mGoogleSignInClient;
+    private GoogleSignInClient mGoogleSignInClient;
+
     private FirebaseAuth mAuth;
+    private FirebaseFirestore mFirestore;
+
+    private HomeViewModel model;
+    private ImageProcessor imageProcessor;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -101,8 +118,22 @@ public class HomeFragment extends Fragment {
 
         //firebase
         mAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
+
+        //read db data
+        HomeViewModel.Factory factory = new HomeViewModel.Factory(
+                getActivity().getApplication(), mAuth, mFirestore);
+
+        model = ViewModelProviders.of(this, factory)
+                .get(HomeViewModel.class);
 
         handleAppInvite();
+        imageProcessor = new ImageProcessor(getContext());
+
+        //UI observers
+        setUpCashUi();
+        setUpGroupCashUi();
+        setUpBasicInfo();
     }
 
     @Override
@@ -244,5 +275,94 @@ public class HomeFragment extends Fragment {
             case R.id.homebar_userbalance:
                 break;
         }
+    }
+
+    private void setUpCashUi() {
+        MediatorLiveData<UsersAccount> data = model.getUsersAccountMediatorLiveData();
+
+        data.observe(this, new Observer<UsersAccount>() {
+            @Override
+            public void onChanged(@Nullable UsersAccount usersAccount) {
+                if (usersAccount != null) {
+
+                    String balance = "My Balance : " + model.formatMyMoney(usersAccount.getBalance());
+                    homebarUserbalance.setChipText(balance);
+                }
+            }
+        });
+    }
+
+    private void setUpGroupCashUi() {
+        MediatorLiveData<List<GroupMembers>> data = model.getMembersListMediatorLiveData();
+
+        data.observe(this, new Observer<List<GroupMembers>>() {
+            @Override
+            public void onChanged(@Nullable List<GroupMembers> groupMembers) {
+                if (groupMembers == null || groupMembers.isEmpty()) {
+                    //String id =mFirestore.collection("Unknown").document().getId();
+                    setUpGroupCashUi("00100");
+                    return;
+                }
+
+                //TODO: set timer to iterate through multiple groups
+                GroupMembers members = groupMembers.get(0);
+                if (members != null) {
+
+                    setUpGroupCashUi(members.getGroupid());
+                }
+            }
+        });
+    }
+
+    private void setUpGroupCashUi(String groupId) {
+        //start fetching to group data
+        model.workOnGroupLiveData(groupId);
+        model.workOnGroupBalanceLiveData(groupId);
+
+        MediatorLiveData<Groups> data = model.getGroupsMediatorLiveData();
+        MediatorLiveData<GroupAccount> balanceData = model.getGroupAccountMediatorLiveData();
+
+        data.observe(this, new Observer<Groups>() {
+            @Override
+            public void onChanged(@Nullable Groups groups) {
+
+                if (groups != null) {
+                    //update ui
+                    homebarGroupname.setChipText(groups.getDisplayname());
+                }else {
+                    homebarGroupname.setChipText("Join a Group");
+                }
+            }
+        });
+
+        balanceData.observe(this, new Observer<GroupAccount>() {
+            @Override
+            public void onChanged(@Nullable GroupAccount groupAccount) {
+
+                if (groupAccount != null) {
+                    //update ui
+                    String balance = "Balance : " + model.formatMyMoney(groupAccount.getBalance());
+                    homebarGroupbalance.setChipText(balance);
+                }else {
+                    homebarGroupbalance.setChipText("Achieve Financial freedom");
+                }
+            }
+        });
+    }
+
+    //set ui with Users data
+    private void setUpBasicInfo() {
+        MediatorLiveData<UserBasicInfo> data = model.getUsersLiveData();
+
+        data.observe(this, new Observer<UserBasicInfo>() {
+            @Override
+            public void onChanged(@Nullable UserBasicInfo userBasicInfo) {
+
+                if (userBasicInfo != null) {
+
+                    imageProcessor.setMyImage(homebarImage, userBasicInfo.getPhotourl());
+                }
+            }
+        });
     }
 }

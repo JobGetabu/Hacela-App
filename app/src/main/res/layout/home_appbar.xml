@@ -51,12 +51,13 @@
             android:layout_marginTop="0dp"
             android:textAppearance="@style/ChipsBaseText"
 
+            app:chipIcon="@drawable/ic_groups"
             app:chipBackgroundColor="@android:color/transparent"
             app:chipCornerRadius="5dp"
             app:chipSpacingVertical="@dimen/spacing_micro"
             app:chipStrokeColor="@android:color/white"
             app:chipStrokeWidth="1dp"
-            app:chipText="Mavuno Group" />
+            app:chipText="Hacela Group" />
 
         <android.support.design.chip.Chip
             android:id="@+id/homebar_groupbalance"
@@ -74,7 +75,7 @@
             app:chipSpacingVertical="@dimen/spacing_micro"
             app:chipStrokeColor="@android:color/white"
             app:chipStrokeWidth="1dp"
-            app:chipText="Balance : Ksh 250,000" />
+            app:chipText="Balance : .00" />
 
         <android.support.design.chip.ChipGroup
             android:layout_width="wrap_content"
