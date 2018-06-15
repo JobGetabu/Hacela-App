@@ -66,7 +66,7 @@ public class GroupMembersViewHolder extends RecyclerView.ViewHolder {
             this.payimageicon.setVisibility(View.GONE);
     }
 
-    public void loadListIamges(final Context context, FirebaseFirestore mFirestore, String userid){
+    public void loadListImages(final Context context, FirebaseFirestore mFirestore, String userid){
         DocumentReference GROUPMEMBERREF = mFirestore.collection("GroupsMembers").document(userid);
         DocumentReference USERSREF = mFirestore.collection("Users").document(userid);
 

@@ -410,7 +410,7 @@ public class GroupControlActivity extends AppCompatActivity {
                 });
 
                 // load the userinfo
-                holder.loadListIamges(GroupControlActivity.this, mFirestore, model.getUserid());
+                holder.loadListImages(GroupControlActivity.this, mFirestore, model.getUserid());
             }
 
             @Override

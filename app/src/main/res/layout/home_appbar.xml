@@ -107,11 +107,37 @@
 
     </RelativeLayout>
 
+ <TextView
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:textColor="@color/colorWhite"
+     android:textAlignment="center"
+     android:text="Groups"
+     android:textSize="12sp"
+     />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/homebar_grouplist"
+    <android.support.design.card.MaterialCardView
+        style="@style/Widget.MaterialComponents.CardView"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardElevation="4dp"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/homebar_grouplist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.design.card.MaterialCardView>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Recent Transactions"
+        android:textAlignment="center"
+        android:background="#eaeaea"
+        />
 
 </android.support.design.widget.AppBarLayout>
 

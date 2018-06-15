@@ -27,21 +27,29 @@ public class GroupsViewHolder extends RecyclerView.ViewHolder {
     CircleImageView groupItemImage;
     @BindView(R.id.group_item_name)
     TextView groupItemName;
+    private Context context;
+    private String groupId;
 
-    public GroupsViewHolder(@NonNull View itemView) {
+    public GroupsViewHolder(@NonNull View itemView,Context context) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+
+        this.context = context;
+    }
+
+    public void accessGroupId(String groupId){
+        this.groupId = groupId;
     }
 
     public void setProfImage(Context context, String url) {
-        new ImageProcessor(context).setMyImage(groupItemImage, url);
+        new ImageProcessor(context).setMyImage(groupItemImage, url,true);
     }
     public void setDisName(String disName) {
         this.groupItemName.setText(disName);
     }
 
     @OnClick({R.id.group_item_image, R.id.group_item_name})
-    public void onViewClicked(Context context,String groupId) {
+    public void viewClicked() {
         sendToGroupGuestView(context, groupId);
     }
 

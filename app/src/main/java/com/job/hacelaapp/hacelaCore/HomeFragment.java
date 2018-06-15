@@ -40,6 +40,7 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
@@ -143,6 +144,9 @@ public class HomeFragment extends Fragment {
         setUpCashUi();
         setUpGroupCashUi();
         setUpBasicInfo();
+
+        //set the group list
+        setUpGroupList();
     }
 
     @Override
@@ -389,6 +393,7 @@ public class HomeFragment extends Fragment {
         // Create a reference to the members collection
         final CollectionReference groupRef = mFirestore.collection(GROUPCOL);
         final Query query = groupRef
+                .orderBy("groupname", Query.Direction.ASCENDING)
                 .limit(10);
 
         //TODO: create a refined pojo for recommending groups
@@ -408,7 +413,7 @@ public class HomeFragment extends Fragment {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.single_group_item, parent, false);
 
-                return new GroupsViewHolder(view);
+                return new GroupsViewHolder(view,getContext());
             }
 
             @Override
@@ -416,9 +421,21 @@ public class HomeFragment extends Fragment {
 
                 holder.setDisName(model.getDisplayname());
                 holder.setProfImage(getContext(), model.getPhotourl());
-
+                //required to handle clicks
+                holder.accessGroupId(model.getGroupid());
             }
+
+            @Override
+            public void onError(@NonNull FirebaseFirestoreException e) {
+                super.onError(e);
+                Log.e(TAG, "onError: ", e);
+            }
+
         };
+
+        adapter.startListening();
+        adapter.notifyDataSetChanged();
+        homebarGrouplist.setAdapter(adapter);
 
     }
 

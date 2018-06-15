@@ -3,15 +3,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".hacelaCore.HomeFragment"
-    android:background="#eaeaea">
+    android:background="#eaeaea"
+    tools:context=".hacelaCore.HomeFragment">
 
-    <include layout="@layout/home_appbar"/>
-
-    <!--<android.support.v7.widget.RecyclerView
-        android:id="@+id/home_activities_list"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    </android.support.v7.widget.RecyclerView>-->
+        <include
+            android:id="@+id/include"
+            layout="@layout/home_appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_micro" />
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="@dimen/padding_normal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:text="No Transactions"
+                android:textAlignment="center"
+                android:gravity="center_vertical"
+                />
+            <!--<android.support.v7.widget.RecyclerView
+                android:id="@+id/home_activities_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>-->
+        </LinearLayout>
+    </LinearLayout>
+
+
 </android.support.design.widget.CoordinatorLayout>
