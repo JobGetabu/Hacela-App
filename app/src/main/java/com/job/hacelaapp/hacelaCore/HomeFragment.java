@@ -287,6 +287,8 @@ public class HomeFragment extends Fragment {
 
                     String balance = "My Balance : " + model.formatMyMoney(usersAccount.getBalance());
                     homebarUserbalance.setChipText(balance);
+                }else {
+                    homebarUserbalance.setChipText("My Balance : Ksh 0.00");
                 }
             }
         });
@@ -298,18 +300,20 @@ public class HomeFragment extends Fragment {
         data.observe(this, new Observer<List<GroupMembers>>() {
             @Override
             public void onChanged(@Nullable List<GroupMembers> groupMembers) {
+
                 if (groupMembers == null || groupMembers.isEmpty()) {
                     //String id =mFirestore.collection("Unknown").document().getId();
                     setUpGroupCashUi("00100");
-                    return;
+                }else {
+
+                    //TODO: set timer to iterate through multiple groups
+                    GroupMembers members = groupMembers.get(0);
+                    if (members != null) {
+
+                        setUpGroupCashUi(members.getGroupid());
+                    }
                 }
 
-                //TODO: set timer to iterate through multiple groups
-                GroupMembers members = groupMembers.get(0);
-                if (members != null) {
-
-                    setUpGroupCashUi(members.getGroupid());
-                }
             }
         });
     }
