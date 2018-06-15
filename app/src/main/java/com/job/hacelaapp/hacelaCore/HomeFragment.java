@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -42,6 +43,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.common.GroupsViewHolder;
 import com.job.hacelaapp.dataSource.GroupAccount;
 import com.job.hacelaapp.dataSource.GroupMembers;
 import com.job.hacelaapp.dataSource.Groups;
@@ -92,6 +94,7 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel model;
     private ImageProcessor imageProcessor;
+    private FirestoreRecyclerAdapter adapter;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -394,5 +397,43 @@ public class HomeFragment extends Fragment {
         FirestoreRecyclerOptions<Groups> options = new FirestoreRecyclerOptions.Builder<Groups>()
                 .setQuery(query, Groups.class)
                 .build();
+
+        adapter = new FirestoreRecyclerAdapter<Groups,GroupsViewHolder>(options){
+
+            @NonNull
+            @Override
+            public GroupsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                // Create a new instance of the ViewHolder, in this case we are using a custom
+                // layout called R.layout.message for each item
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.single_group_item, parent, false);
+
+                return new GroupsViewHolder(view);
+            }
+
+            @Override
+            protected void onBindViewHolder(@NonNull GroupsViewHolder holder, int position, @NonNull Groups model) {
+
+                holder.setDisName(model.getDisplayname());
+                holder.setProfImage(getContext(), model.getPhotourl());
+
+            }
+        };
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (adapter != null)
+            adapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (adapter != null)
+            adapter.stopListening();
     }
 }

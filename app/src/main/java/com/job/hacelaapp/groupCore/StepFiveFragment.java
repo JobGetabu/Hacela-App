@@ -213,6 +213,7 @@ public class StepFiveFragment extends Fragment {
         groupsMap.put("groupname", groupfullname);
         groupsMap.put("displayname", groupdisplayname);
         groupsMap.put("photourl", "");
+        groupsMap.put("groupid", groupId);
         groupsMap.put("description", groupDespMap);
         groupsMap.put("constitution", groupsConstionMap);
 

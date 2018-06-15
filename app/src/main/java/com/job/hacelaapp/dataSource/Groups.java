@@ -8,16 +8,18 @@ public class Groups {
     private String groupname;
     private String displayname;
     private String photourl;
+    private String groupid;
     private GroupDescription description;
     private GroupConstitution constitution;
 
     public Groups() {
     }
 
-    public Groups(String groupname, String displayname, String photourl, GroupDescription description, GroupConstitution constitution) {
+    public Groups(String groupname, String displayname, String photourl, String groupid, GroupDescription description, GroupConstitution constitution) {
         this.groupname = groupname;
         this.displayname = displayname;
         this.photourl = photourl;
+        this.groupid = groupid;
         this.description = description;
         this.constitution = constitution;
     }
@@ -60,6 +62,14 @@ public class Groups {
 
     public void setConstitution(GroupConstitution constitution) {
         this.constitution = constitution;
+    }
+
+    public String getGroupid() {
+        return groupid;
+    }
+
+    public void setGroupid(String groupid) {
+        this.groupid = groupid;
     }
 
     @Override
