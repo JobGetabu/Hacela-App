@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.design.chip.Chip;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -35,7 +37,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.GroupAccount;
@@ -57,6 +61,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.job.hacelaapp.util.Constants.GROUPCOL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -368,5 +374,25 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
+    }
+
+    //set up groups list
+    private void setUpGroupList(){
+
+        LinearLayoutManager linearLayoutManager = new
+                LinearLayoutManager(getContext().getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+
+        homebarGrouplist.setLayoutManager(linearLayoutManager);
+        // Create a reference to the members collection
+        final CollectionReference groupRef = mFirestore.collection(GROUPCOL);
+        final Query query = groupRef
+                .limit(10);
+
+        //TODO: create a refined pojo for recommending groups
+        //criteria: Location | Open group | Finance | Business
+
+        FirestoreRecyclerOptions<Groups> options = new FirestoreRecyclerOptions.Builder<Groups>()
+                .setQuery(query, Groups.class)
+                .build();
     }
 }

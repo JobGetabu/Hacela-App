@@ -79,10 +79,13 @@
         <activity android:name=".ui.CreateGroupActivity" />
         <activity android:name=".ui.GroupInviteActivity" />
         <activity android:name=".ui.GroupControlActivity" />
-        <activity android:name=".ui.GroupInfoEditActivity"
-            android:parentActivityName=".ui.GroupControlActivity"/>
-        <activity android:name=".ui.GroupContributionEditActivity"
-            android:parentActivityName=".ui.GroupControlActivity"/>
+        <activity
+            android:name=".ui.GroupInfoEditActivity"
+            android:parentActivityName=".ui.GroupControlActivity" />
+        <activity
+            android:name=".ui.GroupContributionEditActivity"
+            android:parentActivityName=".ui.GroupControlActivity" />
+        <activity android:name=".ui.GroupGuestViewActivity"></activity>
     </application>
 
 </manifest>

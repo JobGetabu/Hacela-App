@@ -69,6 +69,7 @@ import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.job.hacelaapp.util.Constants.GROUPMEMBERCOL;
 import static com.job.hacelaapp.util.Constants.GROUP_UID;
 
 public class GroupControlActivity extends AppCompatActivity {
@@ -381,8 +382,8 @@ public class GroupControlActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         mMemberList.setLayoutManager(linearLayoutManager);
 
-        // Create a reference to the cities collection
-        final CollectionReference memberRef = mFirestore.collection("GroupMembers");
+        // Create a reference to the members collection
+        final CollectionReference memberRef = mFirestore.collection(GROUPMEMBERCOL);
         final Query query = memberRef
                 .whereEqualTo("groupid", gId)
                 .whereEqualTo("ismember", true);
