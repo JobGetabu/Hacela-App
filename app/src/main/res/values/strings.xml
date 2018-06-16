@@ -186,4 +186,5 @@
     <string name="edit_savings_in_a_single_cycle">Edit Savings in a single cycle</string>
     <string name="savings_ksh">Savings (Ksh)</string>
     <string name="edit_payout_in_a_single_cycle">Edit Payout in a single cycle</string>
+    <string name="available_balance">AVAILABLE BALANCE</string>
 </resources>
