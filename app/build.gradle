@@ -102,6 +102,7 @@ dependencies {
 
     //custom fab buttons
     implementation 'com.robertlevonyan.view:CustomFloatingActionButton:2.0.4'
+    implementation 'com.getbase:floatingactionbutton:1.10.1'
 
     //recurrent date picker
     //implementation 'com.maltaisn:recurpicker:1.2.6'
