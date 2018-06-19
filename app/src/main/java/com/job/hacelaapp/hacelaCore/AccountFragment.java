@@ -1,8 +1,12 @@
 package com.job.hacelaapp.hacelaCore;
 
 
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +19,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.dataSource.UsersAccount;
+import com.job.hacelaapp.ui.PayFragment;
+import com.job.hacelaapp.viewmodel.AccountViewModel;
 import com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton;
 import com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout;
 
@@ -54,8 +63,19 @@ public class AccountFragment extends Fragment {
     FloatingActionButton accountFabStats;
     @BindView(R.id.account_floating_layout)
     FloatingLayout accountFloatingLayout;
+    @BindView(R.id.account_bottom_sheet)
+    LinearLayout bottomSheetViewgroup;
     Unbinder unbinder;
+
+
     private View mRootView;
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore mFirestore;
+
+    private PayFragment payFragment;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private AccountViewModel model;
 
     public AccountFragment() {
         // Required empty public constructor
@@ -76,6 +96,26 @@ public class AccountFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        floatLayListener();
+        payFragment = new PayFragment();
+
+        //firebase
+        mAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
+
+        //read db data
+        AccountViewModel.Factory factory = new AccountViewModel.Factory(
+                getActivity().getApplication(), mAuth, mFirestore);
+
+        model = ViewModelProviders.of(this, factory)
+                .get(AccountViewModel.class);
+
+        //setup ui observers
+        setUpCashUi();
+
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetViewgroup);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
     }
 
     @Override
@@ -94,7 +134,8 @@ public class AccountFragment extends Fragment {
 
     @OnClick(R.id.account_fab_deposit)
     public void onAccountFabDepositClicked() {
-        Toast.makeText(getContext(), "deposit ", Toast.LENGTH_SHORT).show();
+        payFragment.show(getActivity().getSupportFragmentManager(), PayFragment.TAG);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     @OnClick(R.id.account_fab_withdraw)
@@ -105,5 +146,37 @@ public class AccountFragment extends Fragment {
     @OnClick(R.id.account_fab_stats)
     public void onAccountFabStatsClicked() {
         Toast.makeText(getContext(), "stats ", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void floatLayListener() {
+        accountFloatingLayout.setOnMenuExpandedListener(new FloatingLayout.OnMenuExpandedListener() {
+            @Override
+            public void onMenuExpanded() {
+                // Do stuff when expanded...
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                // Do stuff when collapsed...
+            }
+        });
+    }
+
+    private void setUpCashUi() {
+        MediatorLiveData<UsersAccount> data = model.getUsersAccountMediatorLiveData();
+
+        data.observe(this, new Observer<UsersAccount>() {
+            @Override
+            public void onChanged(@Nullable UsersAccount usersAccount) {
+                if (usersAccount != null) {
+
+                    String balance = model.formatMyMoney(usersAccount.getBalance());
+                    accountAccountBalance.setText(balance);
+                } else {
+                    accountAccountBalance.setText("Ksh 0.00");
+                }
+            }
+        });
     }
 }

@@ -180,6 +180,7 @@
             android:gravity="bottom"
             app:fabIcon="@drawable/ic_money_action" />
 
+
         <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
             android:id="@+id/account_fab_deposit"
             android:layout_width="wrap_content"
@@ -187,7 +188,7 @@
             app:fabIcon="@drawable/ic_money_deposit"
             app:fabSizes="mini"
             app:fabText="Deposit"
-            app:fabColor="#007929"
+            app:fabColor="@color/payGreen"
             />
 
         <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
@@ -209,5 +210,11 @@
             app:fabColor="#fa8617"
             />
     </com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout>
+
+    <!-- Bottom Sheet -->
+    <include layout="@layout/addfunds_checkout"
+        android:id="@+id/account_bottom_sheet"
+        android:visibility="gone"
+        />
 
 </android.support.design.widget.CoordinatorLayout>

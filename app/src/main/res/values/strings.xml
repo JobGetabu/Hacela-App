@@ -187,4 +187,7 @@
     <string name="savings_ksh">Savings (Ksh)</string>
     <string name="edit_payout_in_a_single_cycle">Edit Payout in a single cycle</string>
     <string name="available_balance">AVAILABLE BALANCE</string>
+    <string name="pay">Pay</string>
+    <string name="try_again">Try again</string>
+    <string name="retry">Retry</string>
 </resources>
