@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.UsersAccount;
 import com.job.hacelaapp.ui.PayFragment;
+import com.job.hacelaapp.ui.WithdrawFragment;
 import com.job.hacelaapp.viewmodel.AccountViewModel;
 import com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton;
 import com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout;
@@ -63,8 +64,11 @@ public class AccountFragment extends Fragment {
     FloatingActionButton accountFabStats;
     @BindView(R.id.account_floating_layout)
     FloatingLayout accountFloatingLayout;
-    @BindView(R.id.account_bottom_sheet)
+    @BindView(R.id.account_pay_sheet)
     LinearLayout bottomSheetViewgroup;
+    @BindView(R.id.account_withdraw_sheet)
+    LinearLayout withdrawSheetViewgroup;
+
     Unbinder unbinder;
 
 
@@ -74,7 +78,9 @@ public class AccountFragment extends Fragment {
     private FirebaseFirestore mFirestore;
 
     private PayFragment payFragment;
-    private BottomSheetBehavior bottomSheetBehavior;
+    private WithdrawFragment withdrawFragment;
+    private BottomSheetBehavior paySheetBehavior;
+    private BottomSheetBehavior withdrawSheetBehavior;
     private AccountViewModel model;
 
     public AccountFragment() {
@@ -97,7 +103,11 @@ public class AccountFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         floatLayListener();
+
         payFragment = new PayFragment();
+        withdrawFragment = new WithdrawFragment();
+
+
 
         //firebase
         mAuth = FirebaseAuth.getInstance();
@@ -113,8 +123,10 @@ public class AccountFragment extends Fragment {
         //setup ui observers
         setUpCashUi();
 
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetViewgroup);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        paySheetBehavior = BottomSheetBehavior.from(bottomSheetViewgroup);
+        paySheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        withdrawSheetBehavior = BottomSheetBehavior.from(withdrawSheetViewgroup);
+        withdrawSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
     }
 
@@ -135,13 +147,13 @@ public class AccountFragment extends Fragment {
     @OnClick(R.id.account_fab_deposit)
     public void onAccountFabDepositClicked() {
         payFragment.show(getActivity().getSupportFragmentManager(), PayFragment.TAG);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        paySheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     @OnClick(R.id.account_fab_withdraw)
     public void onAccountFabWithdrawClicked() {
-        Toast.makeText(getContext(), "withdraw ", Toast.LENGTH_SHORT).show();
-    }
+        withdrawFragment.show(getActivity().getSupportFragmentManager(), PayFragment.TAG);
+        withdrawSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);    }
 
     @OnClick(R.id.account_fab_stats)
     public void onAccountFabStatsClicked() {

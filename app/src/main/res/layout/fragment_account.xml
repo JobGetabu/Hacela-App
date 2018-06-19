@@ -213,7 +213,11 @@
 
     <!-- Bottom Sheet -->
     <include layout="@layout/addfunds_checkout"
-        android:id="@+id/account_bottom_sheet"
+        android:id="@+id/account_pay_sheet"
+        android:visibility="gone"
+        />
+    <include layout="@layout/withdraw_checkout"
+        android:id="@+id/account_withdraw_sheet"
         android:visibility="gone"
         />
 

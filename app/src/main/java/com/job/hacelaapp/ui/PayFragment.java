@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.button.MaterialButton;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
@@ -49,10 +48,6 @@ public class PayFragment extends BottomSheetDialogFragment {
     TextView payTextamount;
     @BindView(R.id.pay_amountinput)
     TextInputLayout payAmountinput;
-    @BindView(R.id.pay_cancel)
-    MaterialButton payCancel;
-    @BindView(R.id.pay_paybtn)
-    MaterialButton payPaybtn;
     @BindView(R.id.pay_editImg)
     ImageButton editImagbtn;
     private View mRootView;
@@ -113,11 +108,6 @@ public class PayFragment extends BottomSheetDialogFragment {
     public void onPayAmountinputClicked() {
     }
 
-    @OnClick(R.id.pay_cancel)
-    public void onPayCancelClicked() {
-        dismiss();
-    }
-
     @OnClick(R.id.pay_paybtn)
     public void onPayPaybtnClicked() {
         noInternetDialog.showDialog();
@@ -173,6 +163,10 @@ public class PayFragment extends BottomSheetDialogFragment {
         if (pDialog != null) {
             pDialog.dismiss();
             pDialog = null;
+        }
+
+        if(noInternetDialog != null){
+            noInternetDialog.onDestroy();
         }
 
         super.onDestroy();
@@ -303,7 +297,7 @@ public class PayFragment extends BottomSheetDialogFragment {
             payAmountinput.setError(null);
         }
 
-        if (Integer.parseInt(am) < 10) {
+        if (Double.parseDouble(am) < 10) {
             payAmountinput.setError("Amount must be greater than 10");
 
             payTextamount.setVisibility(View.GONE);

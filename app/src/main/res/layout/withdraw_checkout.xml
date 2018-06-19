@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="fill_vertical"
     android:orientation="vertical"
-    android:id="@+id/main_sdbjldv"
+    android:id="@+id/withdrawal_djbkbvkj"
     app:behavior_hideable="true"
     app:layout_behavior="@string/bottom_sheet_behavior"
     >
@@ -20,16 +20,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_normal"
-            android:text="Add Funds"
+            android:text="Withdraw Funds"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2"
             android:textAlignment="center"
             android:textAllCaps="true"
-            android:textColor="@color/payGreen"
+            android:textColor="@color/colorAccent"
             android:textSize="16sp" />
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/kjbsavk6pay"
+        android:id="@+id/kjbsavk6paywithdrawal_"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#F4F4F4">
@@ -46,7 +46,7 @@
             android:text="Phone Number:" />
 
         <TextView
-            android:id="@+id/pay_phonenumber"
+            android:id="@+id/withdraw_phonenumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/textView3"
@@ -55,7 +55,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/textView6pay"
+            android:id="@+id/w_textView6pay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -67,12 +67,12 @@
             android:text="Account Name: " />
 
         <TextView
-            android:id="@+id/pay_username"
+            android:id="@+id/withdraw_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/pay_phonenumber"
-            android:layout_alignTop="@+id/textView6pay"
-            android:layout_toEndOf="@+id/textView6pay"
+            android:layout_alignTop="@+id/w_textView6pay"
+            android:layout_toEndOf="@+id/w_textView6pay"
             android:text="Username" />
 
         <LinearLayout
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="false"
             android:layout_alignParentStart="false"
-            android:layout_below="@+id/textView6pay"
+            android:layout_below="@+id/w_textView6pay"
             android:orientation="vertical">
 
 
@@ -91,7 +91,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/pay_textamount"
+                    android:id="@+id/withdraw_textamount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center_vertical"
@@ -99,29 +99,29 @@
                     tools:text="KES 1,000/-"
                     android:text="@string/kes_0"
                     android:textAlignment="center"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/payGreen"
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <ImageButton
-                    android:id="@+id/pay_editImg"
+                    android:id="@+id/withdraw_editImg"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center_vertical|center"
                     android:background="@android:color/transparent"
-                    android:tint="@color/colorAccent"
+                    android:tint="@color/payGreen"
                     app:srcCompat="@drawable/ic_pencil" />
             </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/pay_amountinput"
+                android:id="@+id/withdraw_amountinput"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlineBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="@dimen/padding_normal"
-                android:hint="Amount"
+                android:hint="@string/amount"
                 android:inputType="number"
                 android:visibility="gone">
 
@@ -136,16 +136,16 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/klsdnldvkj"
+        android:id="@+id/klsdnldvkjgdgs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_normal"
-        android:text="Pay Via"
+        android:text="Withdraw Via"
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
     <android.support.design.chip.Chip
-        android:id="@+id/kngdpay"
+        android:id="@+id/gsdgsdgs"
         style="@style/Widget.MaterialComponents.Chip.Choice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -163,15 +163,14 @@
         app:chipText="Mpesa" />
 
         <android.support.design.button.MaterialButton
-            android:id="@+id/pay_paybtn"
+            android:id="@+id/withdraw_btn"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|fill"
-            android:text="@string/pay"
+            android:text="@string/withdraw"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textSize="16sp"
-            android:tint="@color/payGreen"
+            android:tint="@color/colorAccent"
             app:cornerRadius="2dp" />
 </LinearLayout>

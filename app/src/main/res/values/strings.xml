@@ -190,4 +190,7 @@
     <string name="pay">Pay</string>
     <string name="try_again">Try again</string>
     <string name="retry">Retry</string>
+    <string name="withdraw">Withdraw</string>
+    <string name="amount">Amount</string>
+    <string name="kes_0">KES 0/-</string>
 </resources>
