@@ -7,7 +7,9 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.BottomSheetDialogFragment;
@@ -22,11 +24,21 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Source;
+import com.google.firebase.firestore.Transaction;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.UserAuthInfo;
+import com.job.hacelaapp.dataSource.UserBasicInfo;
 import com.job.hacelaapp.viewmodel.AccountViewModel;
 
 import java.text.DecimalFormat;
@@ -38,6 +50,7 @@ import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.job.hacelaapp.util.Constants.PHONEAUTH_DETAILS;
+import static com.job.hacelaapp.util.Constants.USERSACCOUNTCOL;
 
 /**
  * Created by Job on Tuesday : 6/19/2018.
@@ -63,6 +76,7 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
 
     public static final String TAG = "WithDrawFrag";
     private static final int PHONE_NUMBER_REQUEST_CODE = 1544;
+    private String userOnlineName = "";
 
     //firebase
     private FirebaseAuth mAuth;
@@ -114,7 +128,7 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
 
     }
 
-    private void setUpUi(){
+    private void setUpUi() {
         MediatorLiveData<UserAuthInfo> data = model.getUsersAuthMediatorLiveData();
 
         withdrawUsername.setText(mCurrentUser.getDisplayName());
@@ -123,10 +137,10 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
             @Override
             public void onChanged(@Nullable UserAuthInfo userAuthInfo) {
 
-                if(userAuthInfo != null){
-                    if (!userAuthInfo.getPhonenumber().isEmpty() || userAuthInfo.getPhonenumber() != null){
+                if (userAuthInfo != null) {
+                    if (!userAuthInfo.getPhonenumber().isEmpty() || userAuthInfo.getPhonenumber() != null) {
                         withdrawPhonenumber.setText(userAuthInfo.getPhonenumber());
-                    }else {
+                    } else {
                         //set up phone number in profile
                         withdrawPhonenumber.setText("");
                     }
@@ -178,6 +192,100 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
 
         noInternetDialog.showDialog();
 
+        if (!noInternetDialog.isShowing()) {
+            if (validateOnPay()) {
+                if (withdrawPhonenumber.getText().toString().isEmpty()) {
+                    sendToPhoneActivity();
+                }
+
+                showWaitDialogue();
+                simulatingMpesaTransaction();
+
+
+                if (pDialog == null) {
+                    pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE);
+                    pDialog.setCancelable(false);
+                    pDialog.setContentText("Oops Something went wrong");
+                    pDialog.show();
+                    dismiss();
+                }
+
+
+                final String amount = withdrawAmountinput.getEditText().getText().toString();
+                final double am = Double.parseDouble(amount);
+                final DocumentReference userAccountRef = mFirestore.collection(USERSACCOUNTCOL).document(mCurrentUser.getUid());
+
+                //do a check on balance at real time
+                Source source = Source.SERVER;
+
+                userAccountRef.get(source).addOnCompleteListener(getActivity(), new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                            double mybal = task.getResult().getDouble("balance");
+
+                            if (am > mybal) {
+
+                                pDialog.changeAlertType(SweetAlertDialog.WARNING_TYPE);
+                                pDialog.setTitleText("Failed");
+                                pDialog.setContentText("You have insufficient funds");
+                            } else {
+
+                                withdrawTransaction(amount, am, userAccountRef);
+                            }
+
+                        } else {
+                            pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                            pDialog.setContentText("Oops Something went wrong");
+                            dismiss();
+                        }
+                    }
+                });
+
+            }
+        }
+    }
+
+    private void withdrawTransaction(final String amountText, final double am, final DocumentReference userAccountRef) {
+        mFirestore.runTransaction(new Transaction.Function<Void>() {
+            @Override
+            public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+                DocumentSnapshot snapshot = transaction.get(userAccountRef);
+                double newBalance = snapshot.getDouble("balance") - am;
+                transaction.update(userAccountRef, "balance", newBalance);
+
+                // Success
+                return null;
+            }
+        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "Transaction success!");
+
+                pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                pDialog.setCancelable(false);
+                pDialog.setContentText("Succefully added " + amountText + " to your account");
+                pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                        dismiss();
+                    }
+                });
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Transaction failure.", e);
+
+                pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                pDialog.setContentText("Oops Something went wrong");
+                dismiss();
+
+            }
+        });
     }
 
     @OnClick({R.id.withdraw_phonenumber, R.id.withdraw_username,
@@ -190,10 +298,10 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
         String am = withdrawAmountinput.getEditText().getText().toString();
         //payTextamount.setText("KES " + am + "/-");
         double temp = 0;
-        try{
+        try {
             temp = Double.parseDouble(am);
-        }catch (Exception e){
-            Log.e(TAG, "onHideInputField: ",e);
+        } catch (Exception e) {
+            Log.e(TAG, "onHideInputField: ", e);
         }
         withdrawTextamount.setText(formatMyMoney(temp) + "/-");
     }
@@ -265,14 +373,67 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
         return valid;
     }
 
-    public String formatMyMoney(Double money){
+    public String formatMyMoney(Double money) {
         DecimalFormat formatter = new DecimalFormat("#,###");
-        Log.d(TAG, "formatMyMoney: "+formatter.format(money));
+        Log.d(TAG, "formatMyMoney: " + formatter.format(money));
         return String.format("KES %,.0f", money);
     }
 
-    private void sendToPhoneActivity(){
-        final Intent i = new Intent(getContext(),PhoneAuthActivity.class);
+    private void showWaitDialogue() {
+
+        pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#f9ab60"));
+        pDialog.setTitleText("Simulating M-pesa Transaction ...");
+        pDialog.setCancelable(true);
+        pDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                if (userOnlineName.isEmpty()) {
+                    dismiss();
+                }
+            }
+        });
+        pDialog.show();
+    }
+
+    private void simulatingMpesaTransaction() {
+        //init view-model
+        DocumentReference UserRef = mFirestore.collection("Users")
+                .document(mCurrentUser.getUid());
+
+        UserRef
+                .get()
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                            UserBasicInfo userBasicInfo = task.getResult().toObject(UserBasicInfo.class);
+                            //we need the user name
+                            if (userBasicInfo != null) {
+                                userOnlineName = userBasicInfo.getUsername();
+
+                            }
+
+                            if (pDialog != null) {
+
+                                pDialog.changeAlertType(SweetAlertDialog.PROGRESS_TYPE);
+                                pDialog.setCancelable(false);
+                                pDialog.setTitleText("Updating account ...");
+                            }
+                        } else {
+
+                            Log.e(TAG, "Error getting documents: ", task.getException());
+                            if (pDialog != null) {
+                                pDialog.dismiss();
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void sendToPhoneActivity() {
+        final Intent i = new Intent(getContext(), PhoneAuthActivity.class);
 
         new AlertDialog.Builder(getContext())
                 .setTitle(R.string.set_Phone_Number)
@@ -295,7 +456,7 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode){
+        switch (requestCode) {
             case (PHONE_NUMBER_REQUEST_CODE):
                 if (resultCode == Activity.RESULT_OK) {
                     // TODO Update your TextView
