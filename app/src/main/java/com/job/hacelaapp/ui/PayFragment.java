@@ -1,13 +1,20 @@
 package com.job.hacelaapp.ui;
 
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,14 +25,22 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.dataSource.UserAuthInfo;
 import com.job.hacelaapp.dataSource.UserBasicInfo;
+import com.job.hacelaapp.viewmodel.AccountViewModel;
+
+import java.text.DecimalFormat;
 
 import am.appwise.components.ni.NoInternetDialog;
 import butterknife.BindView;
@@ -33,6 +48,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.job.hacelaapp.util.Constants.PHONEAUTH_DETAILS;
 import static com.job.hacelaapp.util.Constants.USERSACCOUNTCOL;
 
 /**
@@ -50,9 +66,14 @@ public class PayFragment extends BottomSheetDialogFragment {
     TextInputLayout payAmountinput;
     @BindView(R.id.pay_editImg)
     ImageButton editImagbtn;
+
+
     private View mRootView;
 
+    private AccountViewModel model;
+
     public static final String TAG = "PayFragment";
+    private static final int PHONE_NUMBER_REQUEST_CODE = 1114;
 
     private String userOnlineName = "";
 
@@ -92,6 +113,37 @@ public class PayFragment extends BottomSheetDialogFragment {
         setUpNoNetDialogue();
         textWatcher();
 
+        //read db data
+        AccountViewModel.Factory factory = new AccountViewModel.Factory(
+                getActivity().getApplication(), mAuth, mFirestore);
+
+        model = ViewModelProviders.of(this, factory)
+                .get(AccountViewModel.class);
+
+        //setup ui observers
+        setUpUi();
+
+    }
+
+    private void setUpUi() {
+        MediatorLiveData<UserAuthInfo> data = model.getUsersAuthMediatorLiveData();
+
+        payUsername.setText(mCurrentUser.getDisplayName());
+
+        data.observe(this, new Observer<UserAuthInfo>() {
+            @Override
+            public void onChanged(@Nullable UserAuthInfo userAuthInfo) {
+
+                if (userAuthInfo != null) {
+                    if (!userAuthInfo.getPhonenumber().isEmpty() || userAuthInfo.getPhonenumber() != null) {
+                        payPhonenumber.setText(userAuthInfo.getPhonenumber());
+                    } else {
+                        //set up phone number in profile
+                        payPhonenumber.setText("");
+                    }
+                }
+            }
+        });
     }
 
     private void setUpNoNetDialogue() {
@@ -114,8 +166,13 @@ public class PayFragment extends BottomSheetDialogFragment {
 
         if (!noInternetDialog.isShowing()) {
             if (validateOnPay()) {
+                if (payPhonenumber.getText().toString().isEmpty()) {
+                    sendToPhoneActivity();
+                }
+
                 showWaitDialogue();
                 simulatingMpesaTransaction();
+
 
                 if (pDialog == null) {
                     pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE);
@@ -127,33 +184,50 @@ public class PayFragment extends BottomSheetDialogFragment {
 
 
                 final String amount = payAmountinput.getEditText().getText().toString();
-                double am = Double.parseDouble(amount);
-                DocumentReference userAccountRef = mFirestore.collection(USERSACCOUNTCOL).document(mCurrentUser.getUid());
-                userAccountRef.update("balance", am)
+                final double am = Double.parseDouble(amount);
+                final DocumentReference userAccountRef = mFirestore.collection(USERSACCOUNTCOL).document(mCurrentUser.getUid());
 
-                        .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                mFirestore.runTransaction(new Transaction.Function<Void>() {
+                    @Override
+                    public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+                        DocumentSnapshot snapshot = transaction.get(userAccountRef);
+                        double newBalance = snapshot.getDouble("balance") + am;
+                        transaction.update(userAccountRef, "balance", newBalance);
+
+                        // Success
+                        return null;
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Transaction success!");
+
+                        pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                        pDialog.setCancelable(false);
+                        pDialog.setContentText("Succefully added " + amount + " to your account");
+                        pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                                    pDialog.setCancelable(false);
-                                    pDialog.setContentText("Succefully added " + amount + " to your account");
-                                    pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sDialog) {
-                                            sDialog.dismissWithAnimation();
-                                            dismiss();
-                                        }
-                                    });
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismissWithAnimation();
+                                dismiss();
+                            }
+                        });
 
-                                } else {
-                                    pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                                    pDialog.setContentText("Oops Something went wrong");
-                                    dismiss();
-                                }
+                    }
+                })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Transaction failure.", e);
+
+                                pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                                pDialog.setContentText("Oops Something went wrong");
+                                dismiss();
+
                             }
                         });
             }
+
         }
     }
 
@@ -165,7 +239,7 @@ public class PayFragment extends BottomSheetDialogFragment {
             pDialog = null;
         }
 
-        if(noInternetDialog != null){
+        if (noInternetDialog != null) {
             noInternetDialog.onDestroy();
         }
 
@@ -187,12 +261,19 @@ public class PayFragment extends BottomSheetDialogFragment {
     @OnClick({R.id.pay_phonenumber, R.id.pay_username, R.id.kngdpay,
             R.id.kjbsavk6pay, R.id.klsdnldvkj, R.id.main_sdbjldv,
             R.id.textView6pay})
-    public void onHideInputField() {
+    public void onHidePayInputField() {
         payAmountinput.setVisibility(View.GONE);
         payTextamount.setVisibility(View.VISIBLE);
         editImagbtn.setVisibility(View.VISIBLE);
         String am = payAmountinput.getEditText().getText().toString();
-        payTextamount.setText("KES " + am + "/-");
+        //payTextamount.setText("KES " + am + "/-");
+        double temp = 0;
+        try {
+            temp = Double.parseDouble(am);
+        } catch (Exception e) {
+            Log.e(TAG, "onHideInputField: ", e);
+        }
+        payTextamount.setText(formatMyMoney(temp) + "/-");
     }
 
     private void textWatcher() {
@@ -217,7 +298,15 @@ public class PayFragment extends BottomSheetDialogFragment {
                     payTextamount.setVisibility(View.VISIBLE);
                     editImagbtn.setVisibility(View.VISIBLE);
                     String am = payAmountinput.getEditText().getText().toString();
-                    payTextamount.setText("KES " + am + "/-");
+
+                    //payTextamount.setText("KES " + am + "/-");
+                    double temp = 0;
+                    try {
+                        temp = Double.parseDouble(am);
+                    } catch (Exception e) {
+                        Log.e(TAG, "onHideInputField: ", e);
+                    }
+                    payTextamount.setText(formatMyMoney(temp) + "/-");
                 }
             }
         });
@@ -250,7 +339,7 @@ public class PayFragment extends BottomSheetDialogFragment {
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
 
                             UserBasicInfo userBasicInfo = task.getResult().toObject(UserBasicInfo.class);
                             //we need the user name
@@ -265,7 +354,7 @@ public class PayFragment extends BottomSheetDialogFragment {
                                 pDialog.setCancelable(false);
                                 pDialog.setTitleText("Updating account ...");
                             }
-                        }else {
+                        } else {
 
                             Log.e(TAG, "Error getting documents: ", task.getException());
                             if (pDialog != null) {
@@ -315,4 +404,43 @@ public class PayFragment extends BottomSheetDialogFragment {
         return valid;
     }
 
+    public String formatMyMoney(Double money) {
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        Log.d(TAG, "formatMyMoney: " + formatter.format(money));
+        return String.format("KES %,.0f", money);
+    }
+
+    private void sendToPhoneActivity() {
+        final Intent i = new Intent(getContext(), PhoneAuthActivity.class);
+
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.set_Phone_Number)
+                .setMessage(R.string.this_will_be_the_number_you)
+                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.change, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        startActivityForResult(i, PHONE_NUMBER_REQUEST_CODE);
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case (PHONE_NUMBER_REQUEST_CODE):
+                if (resultCode == Activity.RESULT_OK) {
+                    // TODO Update your TextView
+                    payPhonenumber.setText(data.getStringExtra(PHONEAUTH_DETAILS));
+                }
+                break;
+        }
+    }
 }

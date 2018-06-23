@@ -2,14 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/withdrawal_djbkbvkj"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="fill_vertical"
     android:orientation="vertical"
-    android:id="@+id/withdrawal_djbkbvkj"
+    android:paddingBottom="0dp"
     app:behavior_hideable="true"
-    app:layout_behavior="@string/bottom_sheet_behavior"
-    >
+    app:layout_behavior="@string/bottom_sheet_behavior">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,10 +19,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_normal"
-            android:text="Withdraw Funds"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+            android:text="@string/withdraw_funds"
             android:textAlignment="center"
             android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display2"
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
     </LinearLayout>
@@ -58,10 +57,10 @@
             android:id="@+id/w_textView6pay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="16dp"
+            android:layout_alignParentTop="true"
             android:layout_below="@+id/textView3"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="52dp"
             android:paddingRight="16dp"
             android:text="Account Name: " />
@@ -96,12 +95,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:padding="@dimen/padding_normal"
-                    tools:text="KES 1,000/-"
                     android:text="@string/kes_0"
                     android:textAlignment="center"
                     android:textColor="@color/payGreen"
                     android:textSize="22sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="KES 1,000/-" />
 
                 <ImageButton
                     android:id="@+id/withdraw_editImg"
@@ -109,6 +108,7 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center_vertical|center"
                     android:background="@android:color/transparent"
+                    android:contentDescription="@string/image_default_content_description"
                     android:tint="@color/payGreen"
                     app:srcCompat="@drawable/ic_pencil" />
             </LinearLayout>
@@ -162,15 +162,17 @@
         app:chipStrokeWidth="2dp"
         app:chipText="Mpesa" />
 
-        <android.support.design.button.MaterialButton
-            android:id="@+id/withdraw_btn"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/withdraw"
-            android:textAllCaps="true"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:tint="@color/colorAccent"
-            app:cornerRadius="2dp" />
+    <android.support.design.button.MaterialButton
+        android:id="@+id/withdraw_btn"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center|center_vertical"
+        android:text="@string/withdraw"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:tint="@color/colorAccent"
+        app:cornerRadius="2dp" />
 </LinearLayout>

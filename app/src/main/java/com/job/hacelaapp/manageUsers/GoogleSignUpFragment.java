@@ -127,6 +127,7 @@ public class GoogleSignUpFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
@@ -245,7 +246,7 @@ public class GoogleSignUpFragment extends Fragment {
                 .show();
     }
 
-    private void UserAuthToastExceptions(@NonNull Task<AuthResult> authtask) {
+    private void userAuthToastExceptions(@NonNull Task<AuthResult> authtask) {
         String error = "";
         try {
             throw authtask.getException();

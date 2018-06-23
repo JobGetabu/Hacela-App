@@ -17,12 +17,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.job.hacelaapp.appExecutor.DefaultExecutorSupplier;
 import com.job.hacelaapp.appExecutor.Priority;
 import com.job.hacelaapp.appExecutor.PriorityRunnable;
+import com.job.hacelaapp.dataSource.UserAuthInfo;
 import com.job.hacelaapp.dataSource.UsersAccount;
 import com.job.hacelaapp.repository.FirebaseDocumentLiveData;
 
 import java.text.DecimalFormat;
 
 import static com.job.hacelaapp.util.Constants.USERSACCOUNTCOL;
+import static com.job.hacelaapp.util.Constants.USERSAUTHCOL;
 
 /**
  * Created by Job on Saturday : 6/16/2018.
@@ -39,8 +41,11 @@ public class AccountViewModel extends AndroidViewModel {
     private DocumentReference userAccountRef;
     private DocumentReference groupRef;
     private DocumentReference groupAccountRef;
+    private DocumentReference userAuthRef;
+
 
     private MediatorLiveData<UsersAccount> usersAccountMediatorLiveData = new MediatorLiveData<>();
+    private MediatorLiveData<UserAuthInfo> usersAuthMediatorLiveData = new MediatorLiveData<>();
 
     public AccountViewModel(@NonNull Application application,FirebaseAuth mAuth, FirebaseFirestore mFirestore) {
         super(application);
@@ -50,9 +55,11 @@ public class AccountViewModel extends AndroidViewModel {
 
         //init db refs
         userAccountRef = mFirestore.collection(USERSACCOUNTCOL).document(currentUserId);
+        userAuthRef = mFirestore.collection(USERSAUTHCOL).document(currentUserId);
 
         // Set up the MediatorLiveData to convert DataSnapshot objects into POJO objects
         workOnUsersAccountLiveData();
+        workOnUsersAuthLiveData();
 
     }
 
@@ -79,6 +86,30 @@ public class AccountViewModel extends AndroidViewModel {
         });
     }
 
+    private void workOnUsersAuthLiveData(){
+        FirebaseDocumentLiveData mData = new FirebaseDocumentLiveData(userAuthRef);
+
+        usersAuthMediatorLiveData.addSource(mData, new Observer<DocumentSnapshot>() {
+            @Override
+            public void onChanged(@Nullable final DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot != null){
+
+                    DefaultExecutorSupplier.getInstance().forBackgroundTasks()
+                            .submit(new PriorityRunnable(Priority.HIGH) {
+                                @Override
+                                public void run() {
+                                    // do some background work here at high priority.
+                                    usersAuthMediatorLiveData.postValue(documentSnapshot.toObject(UserAuthInfo.class));
+                                }
+                            });
+                }else {
+                    usersAuthMediatorLiveData.setValue(null);
+                }
+            }
+        });
+    }
+
+
     public String formatMyMoney(Double money){
         DecimalFormat formatter = new DecimalFormat("#,###.00");
         Log.d(TAG, "formatMyMoney: "+formatter.format(money));
@@ -94,6 +125,13 @@ public class AccountViewModel extends AndroidViewModel {
         this.usersAccountMediatorLiveData.setValue(usersAccountMediatorLiveData);
     }
 
+    public MediatorLiveData<UserAuthInfo> getUsersAuthMediatorLiveData() {
+        return usersAuthMediatorLiveData;
+    }
+
+    public void setUsersAuthMediatorLiveData(UserAuthInfo usersAuthMediatorLiveData) {
+        this.usersAuthMediatorLiveData.setValue(usersAuthMediatorLiveData);
+    }
 
     /**
      * Factory for instantiating the viewmodel

@@ -1,12 +1,21 @@
 package com.job.hacelaapp.ui;
 
+import android.app.Activity;
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +26,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.dataSource.UserAuthInfo;
+import com.job.hacelaapp.viewmodel.AccountViewModel;
+
+import java.text.DecimalFormat;
 
 import am.appwise.components.ni.NoInternetDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static com.job.hacelaapp.util.Constants.PHONEAUTH_DETAILS;
 
 /**
  * Created by Job on Tuesday : 6/19/2018.
@@ -44,8 +59,10 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
 
 
     private View mRootView;
+    private AccountViewModel model;
 
     public static final String TAG = "WithDrawFrag";
+    private static final int PHONE_NUMBER_REQUEST_CODE = 1544;
 
     //firebase
     private FirebaseAuth mAuth;
@@ -85,6 +102,38 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
         textWatcher();
         withdrawBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
 
+        //read db data
+        AccountViewModel.Factory factory = new AccountViewModel.Factory(
+                getActivity().getApplication(), mAuth, mFirestore);
+
+        model = ViewModelProviders.of(this, factory)
+                .get(AccountViewModel.class);
+
+        //setup ui observers
+        setUpUi();
+
+    }
+
+    private void setUpUi(){
+        MediatorLiveData<UserAuthInfo> data = model.getUsersAuthMediatorLiveData();
+
+        withdrawUsername.setText(mCurrentUser.getDisplayName());
+
+        data.observe(this, new Observer<UserAuthInfo>() {
+            @Override
+            public void onChanged(@Nullable UserAuthInfo userAuthInfo) {
+
+                if(userAuthInfo != null){
+                    if (!userAuthInfo.getPhonenumber().isEmpty() || userAuthInfo.getPhonenumber() != null){
+                        withdrawPhonenumber.setText(userAuthInfo.getPhonenumber());
+                    }else {
+                        //set up phone number in profile
+                        withdrawPhonenumber.setText("");
+                    }
+
+                }
+            }
+        });
     }
 
     private void setUpNoNetDialogue() {
@@ -113,10 +162,40 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
 
     @OnClick(R.id.withdraw_editImg)
     public void onWithdrawEditImgClicked() {
+
+        withdrawAmountinput.setVisibility(View.VISIBLE);
+        String am = withdrawTextamount.getText().toString();
+        String newstr = am.replaceAll("KES ", "")
+                .replaceAll("/-", "")
+                .replaceAll(",", "");
+        withdrawAmountinput.getEditText().setText(newstr);
+        withdrawTextamount.setVisibility(View.GONE);
+        withdrawEditImg.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.withdraw_btn)
     public void onWithdrawBtnClicked() {
+
+        noInternetDialog.showDialog();
+
+    }
+
+    @OnClick({R.id.withdraw_phonenumber, R.id.withdraw_username,
+            R.id.withdrawal_djbkbvkj, R.id.kjbsavk6paywithdrawal_, R.id.gsdgsdgs,
+            R.id.w_textView6pay})
+    public void onHideWithdrawInputField() {
+        withdrawAmountinput.setVisibility(View.GONE);
+        withdrawTextamount.setVisibility(View.VISIBLE);
+        withdrawEditImg.setVisibility(View.VISIBLE);
+        String am = withdrawAmountinput.getEditText().getText().toString();
+        //payTextamount.setText("KES " + am + "/-");
+        double temp = 0;
+        try{
+            temp = Double.parseDouble(am);
+        }catch (Exception e){
+            Log.e(TAG, "onHideInputField: ",e);
+        }
+        withdrawTextamount.setText(formatMyMoney(temp) + "/-");
     }
 
     private void textWatcher() {
@@ -145,5 +224,84 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
                 }
             }
         });
+    }
+
+    private boolean validateOnPay() {
+
+        boolean valid = true;
+
+        String am = withdrawAmountinput.getEditText().getText().toString();
+
+        if (am.isEmpty() || am.equals("0")) {
+            withdrawAmountinput.setError("Amount is not valid");
+
+            withdrawTextamount.setVisibility(View.GONE);
+            withdrawEditImg.setVisibility(View.GONE);
+            withdrawAmountinput.setVisibility(View.VISIBLE);
+
+            valid = false;
+        } else {
+            withdrawTextamount.setVisibility(View.VISIBLE);
+            withdrawEditImg.setVisibility(View.VISIBLE);
+            withdrawAmountinput.setVisibility(View.GONE);
+            withdrawAmountinput.setError(null);
+        }
+
+        if (Double.parseDouble(am) < 50) {
+            withdrawAmountinput.setError("Amount must be greater than 50");
+
+            withdrawTextamount.setVisibility(View.GONE);
+            withdrawEditImg.setVisibility(View.GONE);
+            withdrawAmountinput.setVisibility(View.VISIBLE);
+
+            valid = false;
+        } else {
+            withdrawTextamount.setVisibility(View.VISIBLE);
+            withdrawEditImg.setVisibility(View.VISIBLE);
+            withdrawAmountinput.setVisibility(View.GONE);
+            withdrawAmountinput.setError(null);
+        }
+
+        return valid;
+    }
+
+    public String formatMyMoney(Double money){
+        DecimalFormat formatter = new DecimalFormat("#,###");
+        Log.d(TAG, "formatMyMoney: "+formatter.format(money));
+        return String.format("KES %,.0f", money);
+    }
+
+    private void sendToPhoneActivity(){
+        final Intent i = new Intent(getContext(),PhoneAuthActivity.class);
+
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.set_Phone_Number)
+                .setMessage(R.string.this_will_be_the_number_you)
+                .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.change, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        startActivityForResult(i, PHONE_NUMBER_REQUEST_CODE);
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+            case (PHONE_NUMBER_REQUEST_CODE):
+                if (resultCode == Activity.RESULT_OK) {
+                    // TODO Update your TextView
+                    withdrawPhonenumber.setText(data.getStringExtra(PHONEAUTH_DETAILS));
+                }
+                break;
+        }
     }
 }
