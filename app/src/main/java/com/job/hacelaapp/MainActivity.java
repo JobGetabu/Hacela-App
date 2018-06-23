@@ -1,5 +1,7 @@
 package com.job.hacelaapp;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -8,6 +10,7 @@ import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +27,7 @@ import com.job.hacelaapp.hacelaCore.AccountFragment;
 import com.job.hacelaapp.hacelaCore.HomeFragment;
 import com.job.hacelaapp.hacelaCore.ProfileFragment;
 import com.job.hacelaapp.manageUsers.LoginActivity;
+import com.job.hacelaapp.viewmodel.NavigationViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean notificationVisible = false;
     private BottomBarAdapter pagerAdapter;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private NavigationViewModel navigationViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         //firebase
         mAuth = FirebaseAuth.getInstance();
         authListner();
+
+        navigationViewModel = ViewModelProviders.of(this).get(NavigationViewModel.class);
 
         //bottom nav items
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(fetchString(R.string.bottomnav_title_1),
@@ -106,6 +113,20 @@ public class MainActivity extends AppCompatActivity {
         mNoSwipePager.setCurrentItem(0);
 
         //createFakeNotification();
+
+        navHome();
+    }
+
+    private void navHome() {
+        navigationViewModel.getHomeDestination().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(@Nullable Integer integer) {
+                if (integer != null) {
+                    mBottomNavigation.setCurrentItem(integer);
+                    mNoSwipePager.setCurrentItem(integer);
+                }
+            }
+        });
     }
 
     private Drawable fetchDrawable(@DrawableRes int mdrawable) {
@@ -141,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     AHBottomNavigation.OnTabSelectedListener onTabSelectedListener = new AHBottomNavigation.OnTabSelectedListener() {
         @Override
         public boolean onTabSelected(int position, boolean wasSelected) {
@@ -159,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             //fragment change logic
-            switch (position){
+            switch (position) {
                 case 0:
 
                     break;
@@ -213,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
     }*/
 
     //auth state listener for live changes
-    private void authListner(){
+    private void authListner() {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {

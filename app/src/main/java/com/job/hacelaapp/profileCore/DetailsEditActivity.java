@@ -59,6 +59,7 @@ import com.job.hacelaapp.ui.PhoneAuthActivity;
 import com.job.hacelaapp.util.ImageProcessor;
 import com.job.hacelaapp.util.PermissionProvider;
 import com.job.hacelaapp.viewmodel.DetailsEditActivityViewModel;
+import com.job.hacelaapp.viewmodel.NavigationViewModel;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
@@ -135,6 +136,8 @@ public class DetailsEditActivity extends AppCompatActivity {
     private PermissionProvider permissionProvider;
 
     private DetailsEditActivityViewModel model;
+    private NavigationViewModel navigationViewModel;
+
     private ImageProcessor imageProcessor;
 
     private String mResultPhoneNumber="";
@@ -195,6 +198,8 @@ public class DetailsEditActivity extends AppCompatActivity {
         //build no net dialogue
         setUpNoNetDialogue();
 
+        navigationViewModel = ViewModelProviders.of(this).get(NavigationViewModel.class);
+
         //read db data
         DetailsEditActivityViewModel.Factory factory = new DetailsEditActivityViewModel.Factory(
                 getApplication(), mAuth, mFirestore);
@@ -216,6 +221,16 @@ public class DetailsEditActivity extends AppCompatActivity {
                 .setBgGradientStart(getResources().getColor(R.color.app_gradient_start))
                 .setBgGradientEnd(getResources().getColor(R.color.app_gradient_end))
                 .build();
+    }
+
+    public void navHome(int where) {
+        //intent back home and clear backstack
+        Intent mainIntent = new Intent(this, MainActivity.class);
+        //since we cnt call finish
+        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainIntent);
+
+        navigationViewModel.setHomeDestination(where);
     }
 
     @OnClick({R.id.details_tv_income, R.id.details_tv_income_line})
@@ -657,7 +672,9 @@ public class DetailsEditActivity extends AppCompatActivity {
                                             sDialog.dismissWithAnimation();
 
                                             //better we switch activity to home
-                                            sendToMain();
+
+                                            navHome(2);
+                                            finish();
                                         }
                                     });
 
@@ -694,7 +711,7 @@ public class DetailsEditActivity extends AppCompatActivity {
                     if (dbtask.isSuccessful()) {
                         pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                         pDialog.dismissWithAnimation();
-                        finish();
+                        navHome(2);
                     } else {
                         pDialog.dismiss();
                         Log.d(TAG, "onComplete: error" + dbtask.getException().toString());
@@ -799,13 +816,6 @@ public class DetailsEditActivity extends AppCompatActivity {
         }
     }
 
-    private void sendToMain(){
-        //clears backstack
-        Intent mainIntent = new Intent(this, MainActivity.class);
-        mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(mainIntent);
-        finish();
-    }
 }
 
 //TODO
