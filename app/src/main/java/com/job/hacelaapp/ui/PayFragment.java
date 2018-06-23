@@ -117,7 +117,7 @@ public class PayFragment extends BottomSheetDialogFragment {
 
         //read db data
         AccountViewModel.Factory factory = new AccountViewModel.Factory(
-                getActivity().getApplication(), mAuth, mFirestore);
+                this.getActivity().getApplication(), mAuth, mFirestore);
 
         model = ViewModelProviders.of(this, factory)
                 .get(AccountViewModel.class);

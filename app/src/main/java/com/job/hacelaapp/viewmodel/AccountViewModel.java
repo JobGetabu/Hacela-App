@@ -43,7 +43,12 @@ public class AccountViewModel extends AndroidViewModel {
     private DocumentReference groupAccountRef;
     private DocumentReference userAuthRef;
 
+    //live datas
+    private FirebaseDocumentLiveData mDataUsersAccountLiveData;
+    FirebaseDocumentLiveData mDataUsersAuthLiveData;
 
+
+    //mediators
     private MediatorLiveData<UsersAccount> usersAccountMediatorLiveData = new MediatorLiveData<>();
     private MediatorLiveData<UserAuthInfo> usersAuthMediatorLiveData = new MediatorLiveData<>();
 
@@ -57,17 +62,19 @@ public class AccountViewModel extends AndroidViewModel {
         userAccountRef = mFirestore.collection(USERSACCOUNTCOL).document(currentUserId);
         userAuthRef = mFirestore.collection(USERSAUTHCOL).document(currentUserId);
 
+        //init livedatas
+        mDataUsersAccountLiveData = new FirebaseDocumentLiveData(userAccountRef);
+        mDataUsersAuthLiveData = new FirebaseDocumentLiveData(userAuthRef);
+
+
         // Set up the MediatorLiveData to convert DataSnapshot objects into POJO objects
         workOnUsersAccountLiveData();
         workOnUsersAuthLiveData();
 
     }
 
-
     private void workOnUsersAccountLiveData() {
-        FirebaseDocumentLiveData mData = new FirebaseDocumentLiveData(userAccountRef);
-
-        usersAccountMediatorLiveData.addSource(mData, new Observer<DocumentSnapshot>() {
+        usersAccountMediatorLiveData.addSource(mDataUsersAccountLiveData, new Observer<DocumentSnapshot>() {
             @Override
             public void onChanged(@Nullable final DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot != null){
@@ -87,9 +94,8 @@ public class AccountViewModel extends AndroidViewModel {
     }
 
     private void workOnUsersAuthLiveData(){
-        FirebaseDocumentLiveData mData = new FirebaseDocumentLiveData(userAuthRef);
 
-        usersAuthMediatorLiveData.addSource(mData, new Observer<DocumentSnapshot>() {
+        usersAuthMediatorLiveData.addSource(mDataUsersAuthLiveData, new Observer<DocumentSnapshot>() {
             @Override
             public void onChanged(@Nullable final DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot != null){
@@ -108,7 +114,6 @@ public class AccountViewModel extends AndroidViewModel {
             }
         });
     }
-
 
     public String formatMyMoney(Double money){
         DecimalFormat formatter = new DecimalFormat("#,###.00");
