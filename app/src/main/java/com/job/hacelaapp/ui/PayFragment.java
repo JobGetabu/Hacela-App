@@ -124,7 +124,6 @@ public class PayFragment extends BottomSheetDialogFragment {
 
         //setup ui observers
         setUpUi();
-
     }
 
     private void setUpUi() {
@@ -189,9 +188,10 @@ public class PayFragment extends BottomSheetDialogFragment {
                     final double am = Double.parseDouble(amount);
                     final DocumentReference userAccountRef = mFirestore.collection(USERSACCOUNTCOL).document(mCurrentUser.getUid());
 
+                    updatePhonenumber();
+
                     payTransaction(amount, am, userAccountRef);
 
-                    updatePhonenumber();
                 }
             }
         }
@@ -201,7 +201,17 @@ public class PayFragment extends BottomSheetDialogFragment {
         if (!mResultPhoneNumber.isEmpty()){
             //push the number update
             DocumentReference userAuthRef = mFirestore.collection(USERSAUTHCOL).document(mCurrentUser.getUid());
-            userAuthRef.update("phonenumber",mResultPhoneNumber);
+            userAuthRef.update("phonenumber",mResultPhoneNumber)
+                    .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                Log.d(TAG, "phone number updated success!");
+                            }else {
+                                Log.w(TAG, "phone number updated failure.", task.getException());
+                            }
+                        }
+                    });
 
         }
     }

@@ -235,9 +235,10 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
                                     pDialog.setContentText("You have insufficient funds");
                                 } else {
 
+                                    updatePhonenumber();
+
                                     withdrawTransaction(amount, am, userAccountRef);
 
-                                    updatePhonenumber();
                                 }
 
                             } else {
@@ -256,7 +257,17 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
         if (!mResultPhoneNumber.isEmpty()){
             //push the number update
             DocumentReference userAuthRef = mFirestore.collection(USERSAUTHCOL).document(mCurrentUser.getUid());
-            userAuthRef.update("phonenumber",mResultPhoneNumber);
+            userAuthRef.update("phonenumber",mResultPhoneNumber)
+                    .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                Log.d(TAG, "phone number updated success!");
+                            }else {
+                                Log.w(TAG, "phone number updated failure.", task.getException());
+                            }
+                        }
+                    });
 
         }
     }
