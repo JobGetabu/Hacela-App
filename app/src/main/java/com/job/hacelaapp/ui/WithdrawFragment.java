@@ -51,6 +51,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.job.hacelaapp.util.Constants.PHONEAUTH_DETAILS;
 import static com.job.hacelaapp.util.Constants.USERSACCOUNTCOL;
+import static com.job.hacelaapp.util.Constants.USERSAUTHCOL;
 
 /**
  * Created by Job on Tuesday : 6/19/2018.
@@ -76,7 +77,9 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
 
     public static final String TAG = "WithDrawFrag";
     private static final int PHONE_NUMBER_REQUEST_CODE = 1544;
+
     private String userOnlineName = "";
+    private String mResultPhoneNumber="";
 
     //firebase
     private FirebaseAuth mAuth;
@@ -233,6 +236,8 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
                                 } else {
 
                                     withdrawTransaction(amount, am, userAccountRef);
+
+                                    updatePhonenumber();
                                 }
 
                             } else {
@@ -242,12 +247,20 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
                             }
                         }
                     });
-
                 }
             }
         }
-
     }
+
+    private void updatePhonenumber() {
+        if (!mResultPhoneNumber.isEmpty()){
+            //push the number update
+            DocumentReference userAuthRef = mFirestore.collection(USERSAUTHCOL).document(mCurrentUser.getUid());
+            userAuthRef.update("phonenumber",mResultPhoneNumber);
+
+        }
+    }
+
 
     private void withdrawTransaction(final String amountText, final double am, final DocumentReference userAccountRef) {
         mFirestore.runTransaction(new Transaction.Function<Void>() {
@@ -461,6 +474,8 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
         switch (requestCode) {
             case (PHONE_NUMBER_REQUEST_CODE):
                 if (resultCode == Activity.RESULT_OK) {
+
+                    mResultPhoneNumber = data.getStringExtra(PHONEAUTH_DETAILS);
                     // TODO Update your TextView
                     withdrawPhonenumber.setText(data.getStringExtra(PHONEAUTH_DETAILS));
                 }

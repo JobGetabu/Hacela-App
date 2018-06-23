@@ -50,6 +50,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.job.hacelaapp.util.Constants.PHONEAUTH_DETAILS;
 import static com.job.hacelaapp.util.Constants.USERSACCOUNTCOL;
+import static com.job.hacelaapp.util.Constants.USERSAUTHCOL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,6 +77,7 @@ public class PayFragment extends BottomSheetDialogFragment {
     private static final int PHONE_NUMBER_REQUEST_CODE = 1114;
 
     private String userOnlineName = "";
+    private String mResultPhoneNumber="";
 
     //firebase
     private FirebaseAuth mAuth;
@@ -188,8 +190,19 @@ public class PayFragment extends BottomSheetDialogFragment {
                     final DocumentReference userAccountRef = mFirestore.collection(USERSACCOUNTCOL).document(mCurrentUser.getUid());
 
                     payTransaction(amount, am, userAccountRef);
+
+                    updatePhonenumber();
                 }
             }
+        }
+    }
+
+    private void updatePhonenumber() {
+        if (!mResultPhoneNumber.isEmpty()){
+            //push the number update
+            DocumentReference userAuthRef = mFirestore.collection(USERSAUTHCOL).document(mCurrentUser.getUid());
+            userAuthRef.update("phonenumber",mResultPhoneNumber);
+
         }
     }
 
@@ -441,6 +454,8 @@ public class PayFragment extends BottomSheetDialogFragment {
         switch (requestCode) {
             case (PHONE_NUMBER_REQUEST_CODE):
                 if (resultCode == Activity.RESULT_OK) {
+
+                    mResultPhoneNumber = data.getStringExtra(PHONEAUTH_DETAILS);
                     // TODO Update your TextView
                     payPhonenumber.setText(data.getStringExtra(PHONEAUTH_DETAILS));
                 }
