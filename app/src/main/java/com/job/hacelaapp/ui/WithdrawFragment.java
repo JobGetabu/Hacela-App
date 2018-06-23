@@ -196,55 +196,57 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
             if (validateOnPay()) {
                 if (withdrawPhonenumber.getText().toString().isEmpty()) {
                     sendToPhoneActivity();
-                }
+                } else {
 
-                showWaitDialogue();
-                simulatingMpesaTransaction();
-
-
-                if (pDialog == null) {
-                    pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE);
-                    pDialog.setCancelable(false);
-                    pDialog.setContentText("Oops Something went wrong");
-                    pDialog.show();
-                    dismiss();
-                }
+                    showWaitDialogue();
+                    simulatingMpesaTransaction();
 
 
-                final String amount = withdrawAmountinput.getEditText().getText().toString();
-                final double am = Double.parseDouble(amount);
-                final DocumentReference userAccountRef = mFirestore.collection(USERSACCOUNTCOL).document(mCurrentUser.getUid());
-
-                //do a check on balance at real time
-                Source source = Source.SERVER;
-
-                userAccountRef.get(source).addOnCompleteListener(getActivity(), new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-
-                            double mybal = task.getResult().getDouble("balance");
-
-                            if (am > mybal) {
-
-                                pDialog.changeAlertType(SweetAlertDialog.WARNING_TYPE);
-                                pDialog.setTitleText("Failed");
-                                pDialog.setContentText("You have insufficient funds");
-                            } else {
-
-                                withdrawTransaction(amount, am, userAccountRef);
-                            }
-
-                        } else {
-                            pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                            pDialog.setContentText("Oops Something went wrong");
-                            dismiss();
-                        }
+                    if (pDialog == null) {
+                        pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE);
+                        pDialog.setCancelable(false);
+                        pDialog.setContentText("Oops Something went wrong");
+                        pDialog.show();
+                        dismiss();
                     }
-                });
 
+
+                    final String amount = withdrawAmountinput.getEditText().getText().toString();
+                    final double am = Double.parseDouble(amount);
+                    final DocumentReference userAccountRef = mFirestore.collection(USERSACCOUNTCOL).document(mCurrentUser.getUid());
+
+                    //do a check on balance at real time
+                    Source source = Source.SERVER;
+
+                    userAccountRef.get(source).addOnCompleteListener(getActivity(), new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+
+                                double mybal = task.getResult().getDouble("balance");
+
+                                if (am > mybal) {
+
+                                    pDialog.changeAlertType(SweetAlertDialog.WARNING_TYPE);
+                                    pDialog.setTitleText("Failed");
+                                    pDialog.setContentText("You have insufficient funds");
+                                } else {
+
+                                    withdrawTransaction(amount, am, userAccountRef);
+                                }
+
+                            } else {
+                                pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                                pDialog.setContentText("Oops Something went wrong");
+                                dismiss();
+                            }
+                        }
+                    });
+
+                }
             }
         }
+
     }
 
     private void withdrawTransaction(final String amountText, final double am, final DocumentReference userAccountRef) {

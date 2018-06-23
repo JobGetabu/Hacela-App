@@ -168,32 +168,33 @@ public class PayFragment extends BottomSheetDialogFragment {
             if (validateOnPay()) {
                 if (payPhonenumber.getText().toString().isEmpty()) {
                     sendToPhoneActivity();
+                } else {
+
+                    showWaitDialogue();
+                    simulatingMpesaTransaction();
+
+
+                    if (pDialog == null) {
+                        pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE);
+                        pDialog.setCancelable(false);
+                        pDialog.setContentText("Oops Something went wrong");
+                        pDialog.show();
+                        dismiss();
+                    }
+
+
+                    final String amount = payAmountinput.getEditText().getText().toString();
+                    final double am = Double.parseDouble(amount);
+                    final DocumentReference userAccountRef = mFirestore.collection(USERSACCOUNTCOL).document(mCurrentUser.getUid());
+
+                    payTransaction(amount, am, userAccountRef);
                 }
-
-                showWaitDialogue();
-                simulatingMpesaTransaction();
-
-
-                if (pDialog == null) {
-                    pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.ERROR_TYPE);
-                    pDialog.setCancelable(false);
-                    pDialog.setContentText("Oops Something went wrong");
-                    pDialog.show();
-                    dismiss();
-                }
-
-
-                final String amount = payAmountinput.getEditText().getText().toString();
-                final double am = Double.parseDouble(amount);
-                final DocumentReference userAccountRef = mFirestore.collection(USERSACCOUNTCOL).document(mCurrentUser.getUid());
-
-                payTransaction(amount, am, userAccountRef);
             }
-
         }
     }
 
-    private void payTransaction(final String amountText, final double am, final DocumentReference userAccountRef) {
+    private void payTransaction(final String amountText, final double am,
+                                final DocumentReference userAccountRef) {
         mFirestore.runTransaction(new Transaction.Function<Void>() {
             @Override
             public Void apply(Transaction transaction) throws FirebaseFirestoreException {
@@ -222,16 +223,16 @@ public class PayFragment extends BottomSheetDialogFragment {
 
             }
         }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Transaction failure.", e);
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Transaction failure.", e);
 
-                        pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                        pDialog.setContentText("Oops Something went wrong");
-                        dismiss();
+                pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                pDialog.setContentText("Oops Something went wrong");
+                dismiss();
 
-                    }
-                });
+            }
+        });
     }
 
     @Override
