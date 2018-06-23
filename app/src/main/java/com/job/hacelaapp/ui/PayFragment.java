@@ -187,48 +187,51 @@ public class PayFragment extends BottomSheetDialogFragment {
                 final double am = Double.parseDouble(amount);
                 final DocumentReference userAccountRef = mFirestore.collection(USERSACCOUNTCOL).document(mCurrentUser.getUid());
 
-                mFirestore.runTransaction(new Transaction.Function<Void>() {
-                    @Override
-                    public Void apply(Transaction transaction) throws FirebaseFirestoreException {
-                        DocumentSnapshot snapshot = transaction.get(userAccountRef);
-                        double newBalance = snapshot.getDouble("balance") + am;
-                        transaction.update(userAccountRef, "balance", newBalance);
-
-                        // Success
-                        return null;
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Transaction success!");
-
-                        pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                        pDialog.setCancelable(false);
-                        pDialog.setContentText("Succefully added " + amount + " to your account");
-                        pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sDialog) {
-                                sDialog.dismissWithAnimation();
-                                dismiss();
-                            }
-                        });
-
-                    }
-                })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Transaction failure.", e);
-
-                                pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                                pDialog.setContentText("Oops Something went wrong");
-                                dismiss();
-
-                            }
-                        });
+                payTransaction(amount, am, userAccountRef);
             }
 
         }
+    }
+
+    private void payTransaction(final String amountText, final double am, final DocumentReference userAccountRef) {
+        mFirestore.runTransaction(new Transaction.Function<Void>() {
+            @Override
+            public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+                DocumentSnapshot snapshot = transaction.get(userAccountRef);
+                double newBalance = snapshot.getDouble("balance") + am;
+                transaction.update(userAccountRef, "balance", newBalance);
+
+                // Success
+                return null;
+            }
+        }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "Transaction success!");
+
+                pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                pDialog.setCancelable(false);
+                pDialog.setContentText("Succefully added " + amountText + " to your account");
+                pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                        dismiss();
+                    }
+                });
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Transaction failure.", e);
+
+                        pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                        pDialog.setContentText("Oops Something went wrong");
+                        dismiss();
+
+                    }
+                });
     }
 
     @Override
