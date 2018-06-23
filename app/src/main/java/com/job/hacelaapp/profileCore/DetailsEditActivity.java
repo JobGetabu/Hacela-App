@@ -674,7 +674,6 @@ public class DetailsEditActivity extends AppCompatActivity {
                                             //better we switch activity to home
 
                                             navHome(2);
-                                            finish();
                                         }
                                     });
 
@@ -710,8 +709,13 @@ public class DetailsEditActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Void> dbtask) {
                     if (dbtask.isSuccessful()) {
                         pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                        pDialog.dismissWithAnimation();
-                        navHome(2);
+                        pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                navHome(2);
+                            }
+                        });
                     } else {
                         pDialog.dismiss();
                         Log.d(TAG, "onComplete: error" + dbtask.getException().toString());
@@ -720,7 +724,6 @@ public class DetailsEditActivity extends AppCompatActivity {
                 }
             });
         }
-
     }
 
     private void errorPrompt() {

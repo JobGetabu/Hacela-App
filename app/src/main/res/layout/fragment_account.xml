@@ -48,6 +48,7 @@
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_micro"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
 
@@ -107,8 +108,8 @@
 
                 <ImageButton
                     android:id="@+id/account_imgleft"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="24dp"
+                    android:layout_height="match_parent"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="6dp"
@@ -120,8 +121,8 @@
 
                 <ImageButton
                     android:id="@+id/account_imgright"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="24dp"
+                    android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginEnd="6dp"
@@ -157,8 +158,8 @@
         android:id="@+id/account_floating_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/fab_margin_bottom"
-        android:layout_marginEnd="@dimen/fab_margin_right"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         app:fabMenuGravity="bottom|end"
         app:layout_anchor="@+id/linearLayout2"
         app:layout_anchorGravity="right|bottom"
@@ -185,11 +186,10 @@
             android:id="@+id/account_fab_deposit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:fabColor="@color/payGreen"
             app:fabIcon="@drawable/ic_money_deposit"
             app:fabSizes="mini"
-            app:fabText="Deposit"
-            app:fabColor="@color/payGreen"
-            />
+            app:fabText="Deposit" />
 
         <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
             android:id="@+id/account_fab_withdraw"
@@ -204,11 +204,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="visible"
+            app:fabColor="#fa8617"
             app:fabIcon="@drawable/ic_stats"
             app:fabSizes="mini"
-            app:fabText="Stats"
-            app:fabColor="#fa8617"
-            />
+            app:fabText="Stats" />
     </com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout>
 
     <!-- Bottom Sheet -->

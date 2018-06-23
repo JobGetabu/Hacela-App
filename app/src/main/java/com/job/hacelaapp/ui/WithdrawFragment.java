@@ -36,10 +36,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Source;
 import com.google.firebase.firestore.Transaction;
+import com.job.hacelaapp.MainActivity;
 import com.job.hacelaapp.R;
 import com.job.hacelaapp.dataSource.UserAuthInfo;
 import com.job.hacelaapp.dataSource.UserBasicInfo;
 import com.job.hacelaapp.viewmodel.AccountViewModel;
+import com.job.hacelaapp.viewmodel.NavigationViewModel;
 
 import java.text.DecimalFormat;
 
@@ -73,7 +75,9 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
 
 
     private View mRootView;
+
     private AccountViewModel model;
+    private NavigationViewModel navigationViewModel;
 
     public static final String TAG = "WithDrawFrag";
     private static final int PHONE_NUMBER_REQUEST_CODE = 1544;
@@ -119,6 +123,8 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
         textWatcher();
         withdrawBtn.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorAccent)));
 
+        navigationViewModel = ViewModelProviders.of(getActivity()).get(NavigationViewModel.class);
+
         //read db data
         AccountViewModel.Factory factory = new AccountViewModel.Factory(
                 getActivity().getApplication(), mAuth, mFirestore);
@@ -160,6 +166,16 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
                 .setBgGradientStart(getResources().getColor(R.color.app_gradient_start))
                 .setBgGradientEnd(getResources().getColor(R.color.app_gradient_end))
                 .build();
+    }
+
+    public void navHome(int where) {
+        //intent back home and clear backstack
+        Intent mainIntent = new Intent(getContext(), MainActivity.class);
+        //since we cnt call finish
+        mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainIntent);
+
+        navigationViewModel.setHomeDestination(where);
     }
 
     @Override
@@ -297,6 +313,7 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
                         dismiss();
+                        //navHome(1);
                     }
                 });
 

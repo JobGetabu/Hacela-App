@@ -254,11 +254,10 @@ public class PayFragment extends BottomSheetDialogFragment {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
-                        navHome(1);
                         dismiss();
+                        //navHome(1);
                     }
                 });
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
