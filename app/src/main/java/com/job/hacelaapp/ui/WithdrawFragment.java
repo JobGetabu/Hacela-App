@@ -307,7 +307,7 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
 
                 pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                 pDialog.setCancelable(false);
-                pDialog.setContentText("Succefully added " + amountText + " to your account");
+                pDialog.setContentText("Succefully withdrew " + amountText + " to your account");
                 pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {

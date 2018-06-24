@@ -47,4 +47,10 @@
     <color name="details_info_color">@color/item_name_color</color>
     <color name="details_list_color">#f5f6f9</color>
     <color name="pay_bg">#E0E0E0</color>
+
+    <color name="bgBackSideColor">#f4f0ff</color>
+    <color name="contentDividerLine">#e0e0e0</color>
+    <color name="contentBadgeTitle">#a9a9a9</color>
+    <color name="titleBadgeTitle">#adafb1</color>
+    <color name="titleBadgeText">#adafb1</color>
 </resources>
