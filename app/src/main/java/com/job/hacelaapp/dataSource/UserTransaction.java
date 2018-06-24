@@ -11,14 +11,16 @@ public class UserTransaction {
     private String status; // pending | failed | completed
     private String timestamp;
     private double amount;
+    private String paymentsystem;
 
-    public UserTransaction(String userid, String transactionid, String type, String status, String timestamp, double amount) {
+    public UserTransaction(String userid, String transactionid, String type, String status, String timestamp, double amount, String paymentsystem) {
         this.userid = userid;
         this.transactionid = transactionid;
         this.type = type;
         this.status = status;
         this.timestamp = timestamp;
         this.amount = amount;
+        this.paymentsystem = paymentsystem;
     }
 
     public String getUserid() {
@@ -67,6 +69,14 @@ public class UserTransaction {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public String getPaymentsystem() {
+        return paymentsystem;
+    }
+
+    public void setPaymentsystem(String paymentsystem) {
+        this.paymentsystem = paymentsystem;
     }
 
     @Override

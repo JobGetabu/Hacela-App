@@ -33,5 +33,6 @@ public class Constants {
     public static final String USERSPROFILECOL = "UsersProfile";
     public static final String USERSAUTHCOL = "UsersAuth";
     public static final String USERSACCOUNTCOL = "UsersAccount";
+    public static final String USERSTRANSACTIONCOL = "UsersTransaction";
 
 }

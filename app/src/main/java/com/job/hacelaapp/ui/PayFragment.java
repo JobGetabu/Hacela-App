@@ -32,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
@@ -43,6 +44,8 @@ import com.job.hacelaapp.viewmodel.AccountViewModel;
 import com.job.hacelaapp.viewmodel.NavigationViewModel;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import am.appwise.components.ni.NoInternetDialog;
 import butterknife.BindView;
@@ -53,6 +56,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import static com.job.hacelaapp.util.Constants.PHONEAUTH_DETAILS;
 import static com.job.hacelaapp.util.Constants.USERSACCOUNTCOL;
 import static com.job.hacelaapp.util.Constants.USERSAUTHCOL;
+import static com.job.hacelaapp.util.Constants.USERSTRANSACTIONCOL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -247,17 +251,46 @@ public class PayFragment extends BottomSheetDialogFragment {
             public void onSuccess(Void aVoid) {
                 Log.d(TAG, "Transaction success!");
 
-                pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                pDialog.setCancelable(false);
-                pDialog.setContentText("Succefully added " + amountText + " to your account");
-                pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sDialog) {
-                        sDialog.dismissWithAnimation();
-                        dismiss();
-                        //navHome(1);
-                    }
-                });
+
+                String userTransKey =mFirestore.collection(USERSTRANSACTIONCOL).document().getId();
+                DocumentReference userTransRef  =mFirestore.collection(USERSTRANSACTIONCOL).document(userTransKey);
+
+                //we add a transaction
+                Map<String,Object> userTransMap = new HashMap<>();
+                userTransMap.put("userid",mCurrentUser.getUid());
+                userTransMap.put("transactionid",userTransKey);
+                userTransMap.put("type","Deposit");
+                userTransMap.put("status","Pending");
+                userTransMap.put("timestamp", FieldValue.serverTimestamp());
+                userTransMap.put("amount",am);
+
+                userTransRef.set(userTransMap)
+                        .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()){
+
+                                    pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                                    pDialog.setCancelable(false);
+                                    pDialog.setContentText("Succefully added " + amountText + " to your account");
+                                    pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sDialog) {
+                                            sDialog.dismissWithAnimation();
+                                            dismiss();
+                                            //navHome(1);
+                                        }
+                                    });
+
+                                }else {
+
+                                    pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                                    pDialog.setContentText("Oops Something went wrong");
+                                    dismiss();
+
+                                }
+                            }
+                        });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
