@@ -8,20 +8,25 @@ import com.google.firebase.Timestamp;
 public class UsersTransaction {
     private String username;
     private String userid;
+    private String transactionid;
     private String type;
     private Timestamp timestamp;
+    private double amount;
+    private String paymentsystem;
     private String details;
-    private String transactionid;
 
-    //TODO: Add safaricom callback data
+    public UsersTransaction() {
+    }
 
-    public UsersTransaction(String username, String userid, String type, Timestamp timestamp, String details, String transactionid) {
+    public UsersTransaction(String username, String userid, String transactionid, String type, Timestamp timestamp, double amount, String paymentsystem, String details) {
         this.username = username;
         this.userid = userid;
+        this.transactionid = transactionid;
         this.type = type;
         this.timestamp = timestamp;
+        this.amount = amount;
+        this.paymentsystem = paymentsystem;
         this.details = details;
-        this.transactionid = transactionid;
     }
 
     public String getUsername() {
@@ -40,6 +45,14 @@ public class UsersTransaction {
         this.userid = userid;
     }
 
+    public String getTransactionid() {
+        return transactionid;
+    }
+
+    public void setTransactionid(String transactionid) {
+        this.transactionid = transactionid;
+    }
+
     public String getType() {
         return type;
     }
@@ -56,6 +69,22 @@ public class UsersTransaction {
         this.timestamp = timestamp;
     }
 
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public String getPaymentsystem() {
+        return paymentsystem;
+    }
+
+    public void setPaymentsystem(String paymentsystem) {
+        this.paymentsystem = paymentsystem;
+    }
+
     public String getDetails() {
         return details;
     }
@@ -64,23 +93,17 @@ public class UsersTransaction {
         this.details = details;
     }
 
-    public String getTransactionid() {
-        return transactionid;
-    }
-
-    public void setTransactionid(String transactionid) {
-        this.transactionid = transactionid;
-    }
-
     @Override
     public String toString() {
         return "UsersTransaction{" +
                 "username='" + username + '\'' +
                 ", userid='" + userid + '\'' +
+                ", transactionid='" + transactionid + '\'' +
                 ", type='" + type + '\'' +
                 ", timestamp=" + timestamp +
+                ", amount=" + amount +
+                ", paymentsystem='" + paymentsystem + '\'' +
                 ", details='" + details + '\'' +
-                ", transactionid='" + transactionid + '\'' +
                 '}';
     }
 }

@@ -320,6 +320,7 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
                 userTransMap.put("status", "Pending");
                 userTransMap.put("timestamp", FieldValue.serverTimestamp());
                 userTransMap.put("amount", am);
+                userTransMap.put("paymentsystem","Mpesa");
 
                 userTransRef.set(userTransMap)
                         .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
