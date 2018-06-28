@@ -371,4 +371,13 @@ public class EmailPasswordFragment extends Fragment implements TextWatcher {
         return valid;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        super.onDestroy();
+        if (noInternetDialog != null)
+            noInternetDialog.onDestroy();
+
+    }
+
 }

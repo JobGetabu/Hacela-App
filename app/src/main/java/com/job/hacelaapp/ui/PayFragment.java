@@ -257,12 +257,14 @@ public class PayFragment extends BottomSheetDialogFragment {
 
                 //we add a transaction
                 Map<String,Object> userTransMap = new HashMap<>();
-                userTransMap.put("userid",mCurrentUser.getUid());
-                userTransMap.put("transactionid",userTransKey);
-                userTransMap.put("type","Deposit");
-                userTransMap.put("status","Pending");
+                userTransMap.put("username",mCurrentUser.getDisplayName());
+                userTransMap.put("userid", mCurrentUser.getUid());
+                userTransMap.put("transactionid", userTransKey);
+                userTransMap.put("type", "withdraw");
+                userTransMap.put("status", "Pending");
                 userTransMap.put("timestamp", FieldValue.serverTimestamp());
-                userTransMap.put("amount",am);
+                userTransMap.put("amount", am);
+                userTransMap.put("details","");
                 userTransMap.put("paymentsystem","Mpesa");
 
                 userTransRef.set(userTransMap)
@@ -461,20 +463,22 @@ public class PayFragment extends BottomSheetDialogFragment {
             payAmountinput.setError(null);
         }
 
-        if (Double.parseDouble(am) < 10) {
-            payAmountinput.setError("Amount must be greater than 10");
+       if(!am.isEmpty()){
+           if (Double.parseDouble(am) < 10) {
+               payAmountinput.setError("Amount must be greater than 10");
 
-            payTextamount.setVisibility(View.GONE);
-            editImagbtn.setVisibility(View.GONE);
-            payAmountinput.setVisibility(View.VISIBLE);
+               payTextamount.setVisibility(View.GONE);
+               editImagbtn.setVisibility(View.GONE);
+               payAmountinput.setVisibility(View.VISIBLE);
 
-            valid = false;
-        } else {
-            payTextamount.setVisibility(View.VISIBLE);
-            editImagbtn.setVisibility(View.VISIBLE);
-            payAmountinput.setVisibility(View.GONE);
-            payAmountinput.setError(null);
-        }
+               valid = false;
+           } else {
+               payTextamount.setVisibility(View.VISIBLE);
+               editImagbtn.setVisibility(View.VISIBLE);
+               payAmountinput.setVisibility(View.GONE);
+               payAmountinput.setError(null);
+           }
+       }
 
         return valid;
     }

@@ -314,12 +314,14 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
 
                 //we add a transaction
                 Map<String, Object> userTransMap = new HashMap<>();
+                userTransMap.put("username",mCurrentUser.getDisplayName());
                 userTransMap.put("userid", mCurrentUser.getUid());
                 userTransMap.put("transactionid", userTransKey);
                 userTransMap.put("type", "withdraw");
                 userTransMap.put("status", "Pending");
                 userTransMap.put("timestamp", FieldValue.serverTimestamp());
                 userTransMap.put("amount", am);
+                userTransMap.put("details","");
                 userTransMap.put("paymentsystem","Mpesa");
 
                 userTransRef.set(userTransMap)
@@ -431,20 +433,22 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
             withdrawAmountinput.setError(null);
         }
 
-        if (Double.parseDouble(am) < 50) {
-            withdrawAmountinput.setError("Amount must be greater than 50");
+      if (!am.isEmpty()){
+          if (Double.parseDouble(am) < 50) {
+              withdrawAmountinput.setError("Amount must be greater than 50");
 
-            withdrawTextamount.setVisibility(View.GONE);
-            withdrawEditImg.setVisibility(View.GONE);
-            withdrawAmountinput.setVisibility(View.VISIBLE);
+              withdrawTextamount.setVisibility(View.GONE);
+              withdrawEditImg.setVisibility(View.GONE);
+              withdrawAmountinput.setVisibility(View.VISIBLE);
 
-            valid = false;
-        } else {
-            withdrawTextamount.setVisibility(View.VISIBLE);
-            withdrawEditImg.setVisibility(View.VISIBLE);
-            withdrawAmountinput.setVisibility(View.GONE);
-            withdrawAmountinput.setError(null);
-        }
+              valid = false;
+          } else {
+              withdrawTextamount.setVisibility(View.VISIBLE);
+              withdrawEditImg.setVisibility(View.VISIBLE);
+              withdrawAmountinput.setVisibility(View.GONE);
+              withdrawAmountinput.setError(null);
+          }
+      }
 
         return valid;
     }
