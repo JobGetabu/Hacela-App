@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -37,6 +36,7 @@ import com.job.hacelaapp.dataSource.UsersTransaction;
 import com.job.hacelaapp.ui.PayFragment;
 import com.job.hacelaapp.ui.WithdrawFragment;
 import com.job.hacelaapp.viewmodel.AccountViewModel;
+import com.ramotion.foldingcell.FoldingCell;
 import com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton;
 import com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout;
 
@@ -65,8 +65,7 @@ public class AccountFragment extends Fragment {
     ImageButton accountImgright;
     @BindView(R.id.account_translist)
     RecyclerView accountTranslist;
-    @BindView(R.id.account_swiperefresh)
-    SwipeRefreshLayout accountSwiperefresh;
+
     @BindView(R.id.linearLayout2)
     LinearLayout linearLayout2;
     @BindView(R.id.account_fab_deposit)
@@ -109,6 +108,7 @@ public class AccountFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mRootView = inflater.inflate(R.layout.fragment_account, container, false);
+
 
         unbinder = ButterKnife.bind(this, mRootView);
         return mRootView;
@@ -234,15 +234,31 @@ public class AccountFragment extends Fragment {
             public UserTransViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 // Create a new instance of the ViewHolder, in this case we are using a custom
                 // layout called R.layout.message for each item
-                View view = LayoutInflater.from(parent.getContext())
+
+                /*
+                final View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.ucell, parent, false);
 
-                return new UserTransViewHolder(view);
+                */
+
+                LayoutInflater vi = LayoutInflater.from(getContext());
+                final FoldingCell cell = (FoldingCell) vi.inflate(R.layout.ucell, parent, false);
+
+                // attach click listener to folding cell
+                cell.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        cell.toggle(false);
+                    }
+                });
+
+                return new UserTransViewHolder(cell);
             }
 
             @Override
             protected void onBindViewHolder(@NonNull UserTransViewHolder holder, int position, @NonNull UsersTransaction model) {
                 //for todo
+
             }
 
             @Override

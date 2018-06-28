@@ -2,11 +2,11 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parentpanelcor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#eaeaea"
     android:cursorVisible="false"
-    android:id="@+id/parentpanelcor"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".hacelaCore.AccountFragment">
 
@@ -14,8 +14,7 @@
         android:id="@+id/appbarlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        >
+        android:background="@android:color/transparent">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -40,17 +39,16 @@
         android:orientation="vertical"
         app:layout_anchor="@+id/appbarlay"
         app:layout_anchorGravity="bottom|center"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
         <android.support.design.card.MaterialCardView
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_micro"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="@dimen/spacing_micro"
 
             app:cardBackgroundColor="@color/colorPrimary"
             app:cardCornerRadius="2dp"
@@ -103,8 +101,7 @@
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    tools:text="KSH 32,000"
-                    />
+                    tools:text="KSH 32,000" />
 
                 <ImageButton
                     android:id="@+id/account_imgleft"
@@ -115,8 +112,8 @@
                     android:layout_marginStart="6dp"
                     android:layout_marginTop="8dp"
                     android:background="@android:color/transparent"
-                    android:scaleType="fitCenter"
                     android:contentDescription="@string/image_default_content_description"
+                    android:scaleType="fitCenter"
                     app:srcCompat="@drawable/ic_arrow_left" />
 
                 <ImageButton
@@ -128,29 +125,18 @@
                     android:layout_marginEnd="6dp"
                     android:layout_marginTop="8dp"
                     android:background="@android:color/transparent"
-                    android:scaleType="fitCenter"
                     android:contentDescription="@string/image_default_content_description"
+                    android:scaleType="fitCenter"
                     app:srcCompat="@drawable/ic_arrow_right" />
             </RelativeLayout>
         </android.support.design.card.MaterialCardView>
 
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/account_swiperefresh"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/account_translist"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
-            >
+            android:layout_height="match_parent"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/account_translist"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
-
-            </android.support.v7.widget.RecyclerView>
-
-        </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 
@@ -167,12 +153,6 @@
         >
         <!--Add any layout here-->
 
-        <!--
-       Add here only
-       com.robertlevonyan.examples.customfloatingactionbutton.view.FloatingActionButton
-       or android.support.design.widget.FloatingActionButton,
-       other views will be neglected by the layout
-       -->
 
         <!--Top view will be selected as a toggle for menu-->
         <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
@@ -211,13 +191,14 @@
     </com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout>
 
     <!-- Bottom Sheet -->
-    <include layout="@layout/addfunds_checkout"
+    <include
         android:id="@+id/account_pay_sheet"
-        android:visibility="gone"
-        />
-    <include layout="@layout/withdraw_checkout"
+        layout="@layout/addfunds_checkout"
+        android:visibility="gone" />
+
+    <include
         android:id="@+id/account_withdraw_sheet"
-        android:visibility="gone"
-        />
+        layout="@layout/withdraw_checkout"
+        android:visibility="gone" />
 
 </android.support.design.widget.CoordinatorLayout>

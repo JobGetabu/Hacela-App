@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:background="#ffffff"
     android:baselineAligned="false"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:visibility="visible">
 
     <!-- LEFT TITLE PART -->
     <RelativeLayout
@@ -103,7 +104,8 @@
             android:layout_marginStart="8dp"
             android:src="@drawable/ic_money_deposit"
             app:civ_border_color="#594691"
-            app:civ_border_width="2dp" />
+            app:civ_border_width="2dp"
+            tools:ignore="VectorDrawableCompat" />
 
         <TextView
             android:id="@+id/textView9"
