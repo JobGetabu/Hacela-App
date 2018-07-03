@@ -100,7 +100,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="0dp"
             android:text="Completed"
-            android:textColor="#594691" />
+            android:textColor="@color/payGreen" />
 
         <TextView
             android:id="@+id/title_long_date"
@@ -117,6 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/title_long_date"
+            android:layout_marginTop="8dp"
             android:singleLine="false"
             android:text="Details" />
 

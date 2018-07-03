@@ -260,7 +260,7 @@ public class PayFragment extends BottomSheetDialogFragment {
                 userTransMap.put("username",mCurrentUser.getDisplayName());
                 userTransMap.put("userid", mCurrentUser.getUid());
                 userTransMap.put("transactionid", userTransKey);
-                userTransMap.put("type", "withdraw");
+                userTransMap.put("type", "deposit");
                 userTransMap.put("status", "Pending");
                 userTransMap.put("timestamp", FieldValue.serverTimestamp());
                 userTransMap.put("amount", am);

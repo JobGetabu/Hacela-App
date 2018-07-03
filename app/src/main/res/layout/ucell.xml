@@ -19,9 +19,9 @@
     folding-cell:additionalFlipsCount="2"-->
 
     <!-- CONTENT (UNFOLDED) LAYOUT (MUST BE AT LEAST 2x times BIGGER than content layout bellow)-->
-    <include layout="@layout/ucell_title_layout" />
+    <include layout="@layout/ucell_title_expand" />
 
     <!-- TITLE (FOLDED) LAYOUT (MUST BE AT LEAST 2x times SMALLER than content layout above) -->
-    <include layout="@layout/ucell_title_lay" />
+    <include layout="@layout/ucell_title" />
 
 </com.ramotion.foldingcell.FoldingCell>
