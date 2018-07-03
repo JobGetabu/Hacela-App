@@ -145,6 +145,21 @@ public class MainActivity extends AppCompatActivity {
         return ContextCompat.getColor(this, color);
     }
 
+    /**
+     * Show or hide the bottom navigation with animation
+     */
+    public void showOrHideBottomNavigation(boolean show) {
+        if (show) {
+            mBottomNavigation.restoreBottomNavigation(true);
+        } else {
+            mBottomNavigation.hideBottomNavigation(true);
+        }
+    }
+
+    public void manageFabButton(android.support.design.widget.FloatingActionButton floatingActionButton){
+        mBottomNavigation.manageFloatingActionButtonBehavior(floatingActionButton);
+    }
+
     @Override
     public void onStart() {
         super.onStart();

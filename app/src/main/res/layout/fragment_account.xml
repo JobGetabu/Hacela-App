@@ -151,7 +151,7 @@
         android:layout_marginEnd="8dp"
         app:fabMenuGravity="bottom|end"
         app:layout_anchor="@+id/linearLayout2"
-        app:layout_anchorGravity="right|bottom"
+        app:layout_anchorGravity="bottom|right"
 
         >
         <!--Add any layout here-->
