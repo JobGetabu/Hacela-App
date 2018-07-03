@@ -10,6 +10,7 @@ public class UsersTransaction {
     private String userid;
     private String transactionid;
     private String type;
+    private String status;
     private Timestamp timestamp;
     private double amount;
     private String paymentsystem;
@@ -18,11 +19,13 @@ public class UsersTransaction {
     public UsersTransaction() {
     }
 
-    public UsersTransaction(String username, String userid, String transactionid, String type, Timestamp timestamp, double amount, String paymentsystem, String details) {
+    public UsersTransaction(String username, String userid, String transactionid,
+                            String type, String status, Timestamp timestamp, double amount, String paymentsystem, String details) {
         this.username = username;
         this.userid = userid;
         this.transactionid = transactionid;
         this.type = type;
+        this.status = status;
         this.timestamp = timestamp;
         this.amount = amount;
         this.paymentsystem = paymentsystem;
@@ -93,6 +96,7 @@ public class UsersTransaction {
         this.details = details;
     }
 
+
     @Override
     public String toString() {
         return "UsersTransaction{" +
@@ -100,6 +104,7 @@ public class UsersTransaction {
                 ", userid='" + userid + '\'' +
                 ", transactionid='" + transactionid + '\'' +
                 ", type='" + type + '\'' +
+                ", status='" + status + '\'' +
                 ", timestamp=" + timestamp +
                 ", amount=" + amount +
                 ", paymentsystem='" + paymentsystem + '\'' +
