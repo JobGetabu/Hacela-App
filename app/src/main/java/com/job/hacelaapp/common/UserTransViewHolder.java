@@ -108,6 +108,7 @@ public class UserTransViewHolder extends RecyclerView.ViewHolder {
         if (model.getStatus().equals(context.getString(R.string.status_pending))) {
             mTitleStatus.setTextColor(context.getResources().getColor(R.color.bottomtab_item_disabled));
             titleExStatus.setTextColor(context.getResources().getColor(R.color.bottomtab_item_disabled));
+
             mTitleStatus.setText(context.getString(R.string.status_pending));
             titleExStatus.setText(context.getString(R.string.status_pending));
 
@@ -115,6 +116,7 @@ public class UserTransViewHolder extends RecyclerView.ViewHolder {
         } else if (model.getStatus().equals(context.getString(R.string.status_completed))) {
             mTitleStatus.setTextColor(context.getResources().getColor(R.color.payGreen));
             titleExStatus.setTextColor(context.getResources().getColor(R.color.payGreen));
+
             mTitleStatus.setText(context.getString(R.string.status_completed));
             titleExStatus.setText(context.getString(R.string.status_completed));
 
@@ -122,6 +124,7 @@ public class UserTransViewHolder extends RecyclerView.ViewHolder {
         } else if (model.getStatus().equals(context.getString(R.string.status_failed))){
             mTitleStatus.setTextColor(context.getResources().getColor(R.color.googleDarkRed));
             titleExStatus.setTextColor(context.getResources().getColor(R.color.googleDarkRed));
+
             mTitleStatus.setText(context.getString(R.string.status_failed));
             titleExStatus.setText(context.getString(R.string.status_failed));
         }
