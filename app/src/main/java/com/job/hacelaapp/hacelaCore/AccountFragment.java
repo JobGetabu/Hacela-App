@@ -222,7 +222,7 @@ public class AccountFragment extends Fragment {
         final CollectionReference transRef = mFirestore.collection(USERSTRANSACTIONCOL);
         final Query query = transRef
                 .whereEqualTo("userid",mCurrentUser.getUid())
-                .orderBy("timestamp", Query.Direction.ASCENDING);
+                .orderBy("timestamp", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<UsersTransaction> options = new FirestoreRecyclerOptions.Builder<UsersTransaction>()
                 .setQuery(query, UsersTransaction.class)
@@ -257,7 +257,9 @@ public class AccountFragment extends Fragment {
 
             @Override
             protected void onBindViewHolder(@NonNull UserTransViewHolder holder, int position, @NonNull UsersTransaction model) {
-                //for todo
+
+                holder.init(getContext(), model.getTransactionid());
+                holder.setUpUi(model);
 
             }
 

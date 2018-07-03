@@ -8,6 +8,7 @@
     android:orientation="vertical"
     android:paddingBottom="0dp"
     app:behavior_hideable="true"
+    android:cursorVisible="false"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
     <LinearLayout

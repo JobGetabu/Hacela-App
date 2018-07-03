@@ -77,4 +77,17 @@
         app:layout_constraintStart_toEndOf="@+id/title_date"
         app:layout_constraintTop_toBottomOf="@+id/title_amount" />
 
+    <!-- divider line -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:src="@color/contentDividerLine"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_image" />
+
 </android.support.constraint.ConstraintLayout>

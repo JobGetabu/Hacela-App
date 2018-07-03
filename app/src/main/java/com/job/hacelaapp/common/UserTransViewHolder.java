@@ -1,7 +1,10 @@
 package com.job.hacelaapp.common;
 
 import android.content.Context;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -16,9 +19,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -48,6 +51,7 @@ public class UserTransViewHolder extends RecyclerView.ViewHolder {
     public UserTransViewHolder(@NonNull View itemView) {
         super(itemView);
 
+        ButterKnife.bind(this, itemView);
         //View mRootView = inflater.inflate(R.layout.ucell_title, container, false);
     }
 
@@ -61,10 +65,11 @@ public class UserTransViewHolder extends RecyclerView.ViewHolder {
         //get trans type
         if (model.getType().equals(WITHDRAW)) {
             mTitleTransType.setText("Mpesa withdrawal");
+            setmTitleImage(R.drawable.ic_money_withdraw,R.color.colorAccent);
 
         } else if (model.getType().equals(DEPOSIT)) {
             mTitleTransType.setText("Mpesa deposit");
-
+            setmTitleImage(R.drawable.ic_money_deposit,R.color.payGreen);
         }
 
         //set up date - time
@@ -72,6 +77,15 @@ public class UserTransViewHolder extends RecyclerView.ViewHolder {
 
         //set amount
         showAmount(model);
+
+        if (model.getStatus().equals("Pending")) {
+            mTitleStatus.setTextColor(context.getResources().getColor(R.color.colorAccent));
+            mTitleStatus.setText("Pending");
+
+        } else if (model.getStatus().equals("Completed")) {
+            mTitleStatus.setTextColor(context.getResources().getColor(R.color.payGreen));
+            mTitleStatus.setText("Completed");
+        }
     }
 
     private String dateFormater(UsersTransaction model) {
@@ -81,7 +95,7 @@ public class UserTransViewHolder extends RecyclerView.ViewHolder {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-M-dd hh:mm:ss", Locale.ENGLISH);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-M-dd hh:mm:ss");
 
         return "On " + dateFormat.format(date);
     }
@@ -96,12 +110,17 @@ public class UserTransViewHolder extends RecyclerView.ViewHolder {
         //get trans type
         if (model.getType().equals(WITHDRAW)) {
             mTitleAmount.setTextColor(context.getResources().getColor(R.color.colorAccent));
-            mTitleAmount.setText("-Ksh "+String.format("Ksh %,.2f", amount));
+            mTitleAmount.setText("-"+String.format("Ksh %,.2f", amount));
 
         } else if (model.getType().equals(DEPOSIT)) {
             mTitleAmount.setTextColor(context.getResources().getColor(R.color.payGreen));
-            mTitleAmount.setText("-Ksh "+String.format("Ksh %,.2f", amount));
+            mTitleAmount.setText("+"+String.format("Ksh %,.2f", amount));
 
         }
+    }
+
+    private void setmTitleImage(@DrawableRes int resourceId, @ColorRes int color){
+
+        mTitleImage.setImageDrawable(ContextCompat.getDrawable(context,resourceId));
     }
 }

@@ -86,8 +86,6 @@ public class MainActivity extends AppCompatActivity {
         //translucent bottom navigation
         //mBottomNavigation.setTranslucentNavigationEnabled(true);
 
-        //Quick Return Animation
-        mBottomNavigation.setBehaviorTranslationEnabled(true);
 
 
         //Color ripple effect will enable it at the finish of design
@@ -106,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
         pagerAdapter.addFragments(new AccountFragment());
         //pagerAdapter.addFragments(new ChatFragment());
         pagerAdapter.addFragments(new ProfileFragment());
+
+        //Quick Return Animation
+        mBottomNavigation.setBehaviorTranslationEnabled(true);
 
         mNoSwipePager.setAdapter(pagerAdapter);
 

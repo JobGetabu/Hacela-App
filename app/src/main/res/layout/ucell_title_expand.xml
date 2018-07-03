@@ -8,7 +8,7 @@
     android:baselineAligned="false"
     android:orientation="horizontal"
     android:padding="8dp"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <!-- LEFT TITLE PART -->
     <RelativeLayout
@@ -24,7 +24,7 @@
         android:paddingTop="8dp">
 
         <TextView
-            android:id="@+id/title_price"
+            android:id="@+id/title_ex_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -38,20 +38,20 @@
             android:textSize="26sp" />
 
         <TextView
-            android:id="@+id/title_time_label"
+            android:id="@+id/title_ex_time_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/title_price"
+            android:layout_alignEnd="@+id/title_ex_amount"
             android:layout_alignParentBottom="true"
             android:text="03:11 PM"
             android:textColor="@android:color/white"
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/title_date_label"
+            android:id="@+id/title_ex_day_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/title_time_label"
+            android:layout_above="@+id/title_ex_time_label"
             android:layout_alignParentStart="true"
             android:text="TODAY"
             android:textAllCaps="true"
@@ -59,11 +59,11 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/title_kes"
+            android:id="@+id/title_ex_kes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_below="@id/title_price"
+            android:layout_below="@id/title_ex_amount"
             android:layout_centerVertical="true"
             android:paddingEnd="4dp"
             android:text="+ KES"
@@ -85,7 +85,7 @@
 
 
         <TextView
-            android:id="@+id/title_trans_type"
+            android:id="@+id/title_ex_trans_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mpesa Deposit"
@@ -93,7 +93,7 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/title_status"
+            android:id="@+id/title_ex_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -103,20 +103,20 @@
             android:textColor="@color/payGreen" />
 
         <TextView
-            android:id="@+id/title_long_date"
+            android:id="@+id/title_ex_long_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/title_trans_type"
+            android:layout_below="@+id/title_ex_trans_type"
             android:text="TextView"
             android:textSize="10sp" />
 
         <TextView
-            android:id="@+id/title_details"
+            android:id="@+id/title_ex_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/title_long_date"
+            android:layout_below="@+id/title_ex_long_date"
             android:layout_marginTop="8dp"
             android:singleLine="false"
             android:text="Details" />
