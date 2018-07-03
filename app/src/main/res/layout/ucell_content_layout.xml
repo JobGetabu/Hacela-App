@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <!-- content header line -->
     <RelativeLayout
@@ -113,7 +113,8 @@
         android:paddingBottom="6dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingTop="9dp">
+        android:paddingTop="9dp"
+        android:visibility="visible">
 
         <!-- avatar and name part -->
         <RelativeLayout
@@ -193,7 +194,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -294,7 +296,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <RelativeLayout
                 android:layout_width="0dp"
