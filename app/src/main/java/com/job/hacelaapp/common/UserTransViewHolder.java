@@ -170,7 +170,7 @@ public class UserTransViewHolder extends RecyclerView.ViewHolder {
             mTitleAmount.setTextColor(context.getResources().getColor(R.color.colorAccent));
             mTitleAmount.setText("-" + String.format("Ksh %,.2f", amount));
 
-            titleExKes.setText("+ KES");
+            titleExKes.setText("- KES");
 
         } else if (model.getType().equals(DEPOSIT)) {
             mTitleAmount.setTextColor(context.getResources().getColor(R.color.payGreen));
@@ -183,7 +183,6 @@ public class UserTransViewHolder extends RecyclerView.ViewHolder {
     private void setmTitleImage(@DrawableRes int resourceId, @ColorRes int color) {
 
         mTitleImage.setImageResource(resourceId);
-        //mTitleImage.setImageResource(ContextCompat.getDrawable(context,resourceId));
     }
 
     private void detailText(UsersTransaction model) {
