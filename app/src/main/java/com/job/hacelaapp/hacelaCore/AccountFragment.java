@@ -290,4 +290,10 @@ public class AccountFragment extends Fragment {
             adapter.stopListening();
     }
 
+    private void useMe(){
+        int i   = 0;
+        i = 1;
+        Log.d(TAG, "useMe: "+i);
+    }
+
 }
