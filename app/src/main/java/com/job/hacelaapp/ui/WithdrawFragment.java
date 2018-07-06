@@ -547,4 +547,8 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
                 break;
         }
     }
+
+    private void refreshData(Boolean v) {
+        navigationViewModel.setRefreshData(v);
+    }
 }

@@ -81,6 +81,7 @@ public class AccountFragment extends Fragment {
     @BindView(R.id.account_withdraw_sheet)
     LinearLayout withdrawSheetViewgroup;
 
+
     Unbinder unbinder;
 
     private static final String TAG = "AccFrag";
@@ -157,6 +158,7 @@ public class AccountFragment extends Fragment {
 
     @OnClick(R.id.account_imgleft)
     public void onAccountImgleftClicked() {
+        changeFabActions(true);
     }
 
     @OnClick(R.id.account_imgright)
@@ -185,11 +187,13 @@ public class AccountFragment extends Fragment {
             @Override
             public void onMenuExpanded() {
                 // Do stuff when expanded...
+                accountFloatingLayout.setBackgroundColor(getContext().getResources().getColor(R.color.fablayout));
             }
 
             @Override
             public void onMenuCollapsed() {
                 // Do stuff when collapsed...
+                accountFloatingLayout.setBackgroundColor(getContext().getResources().getColor(android.R.color.transparent));
             }
         });
     }
@@ -217,6 +221,7 @@ public class AccountFragment extends Fragment {
                 LinearLayoutManager(getContext().getApplicationContext(), LinearLayoutManager.VERTICAL, false);
 
         accountTranslist.setLayoutManager(linearLayoutManager);
+        accountTranslist.setHasFixedSize(true);
 
         // Create a reference to the members collection
         final CollectionReference transRef = mFirestore.collection(USERSTRANSACTIONCOL);
@@ -269,6 +274,8 @@ public class AccountFragment extends Fragment {
                 Log.e(TAG, "onError: ", e);
             }
 
+
+
         };
         adapter.startListening();
         adapter.notifyDataSetChanged();
@@ -290,10 +297,7 @@ public class AccountFragment extends Fragment {
             adapter.stopListening();
     }
 
-    private void useMe(){
-        int i   = 0;
-        i = 1;
-        Log.d(TAG, "useMe: "+i);
+    private void changeFabActions(boolean b) {
     }
 
 }

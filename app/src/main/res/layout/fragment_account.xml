@@ -30,6 +30,8 @@
                 android:layout_gravity="center"
                 android:text="@string/account" />
         </android.support.v7.widget.Toolbar>
+
+
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
@@ -49,7 +51,6 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
-
             app:cardBackgroundColor="@color/colorPrimary"
             app:cardCornerRadius="2dp"
             app:layout_anchor="@+id/toolbar"
@@ -131,7 +132,6 @@
             </RelativeLayout>
         </android.support.design.card.MaterialCardView>
 
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/account_translist"
             android:layout_width="match_parent"
@@ -155,7 +155,7 @@
 
         >
         <!--Add any layout here-->
-
+        <!-- android:background="#b4eaeaea"-->
 
         <!--Top view will be selected as a toggle for menu-->
         <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton

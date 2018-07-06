@@ -4,15 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_micro"
-    android:layout_marginEnd="@dimen/spacing_micro"
-    >
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/group_item_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/group_placeholder"
         app:civ_border_color="@android:color/white"
@@ -22,14 +20,16 @@
 
     <TextView
         android:id="@+id/group_item_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:text="Group Name"
-        android:textColor="@color/colorWhite"
+        android:gravity="start"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/group_item_image"
         app:layout_constraintStart_toStartOf="@+id/group_item_image"
-        app:layout_constraintTop_toBottomOf="@+id/group_item_image" />
+        app:layout_constraintTop_toBottomOf="@+id/group_item_image"
+        tools:text="Group Name"
+        tools:textColor="@android:color/black" />
 </android.support.constraint.ConstraintLayout>

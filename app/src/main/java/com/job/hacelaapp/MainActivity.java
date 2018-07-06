@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         //createFakeNotification();
 
         navHome();
+        refreshAdapter();
     }
 
     private void navHome() {
@@ -125,6 +126,17 @@ public class MainActivity extends AppCompatActivity {
                 if (integer != null) {
                     mBottomNavigation.setCurrentItem(integer);
                     mNoSwipePager.setCurrentItem(integer);
+                }
+            }
+        });
+    }
+
+    private void refreshAdapter(){
+        navigationViewModel.getRefreshData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                if (aBoolean != null){
+                    pagerAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -186,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
             if (!wasSelected) {
                 mNoSwipePager.setCurrentItem(position);
                 Log.d(TAG, "onTabSelected: AT :" + position);
+                pagerAdapter.notifyDataSetChanged();
             }
 
             // remove notification badge..

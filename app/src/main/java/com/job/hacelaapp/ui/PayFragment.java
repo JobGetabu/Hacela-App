@@ -84,7 +84,7 @@ public class PayFragment extends BottomSheetDialogFragment {
     private static final int PHONE_NUMBER_REQUEST_CODE = 1114;
 
     private String userOnlineName = "";
-    private String mResultPhoneNumber="";
+    private String mResultPhoneNumber = "";
 
     //firebase
     private FirebaseAuth mAuth;
@@ -174,6 +174,10 @@ public class PayFragment extends BottomSheetDialogFragment {
         navigationViewModel.setHomeDestination(where);
     }
 
+    private void refreshData(Boolean v) {
+        navigationViewModel.setRefreshData(v);
+    }
+
     @OnClick(R.id.pay_amountinput)
     public void onPayAmountinputClicked() {
     }
@@ -209,23 +213,23 @@ public class PayFragment extends BottomSheetDialogFragment {
 
                     payTransaction(amount, am, userAccountRef);
 
-
+                    refreshData(true);
                 }
             }
         }
     }
 
     private void updatePhonenumber() {
-        if (!mResultPhoneNumber.isEmpty()){
+        if (!mResultPhoneNumber.isEmpty()) {
             //push the number update
             DocumentReference userAuthRef = mFirestore.collection(USERSAUTHCOL).document(mCurrentUser.getUid());
-            userAuthRef.update("phonenumber",mResultPhoneNumber)
+            userAuthRef.update("phonenumber", mResultPhoneNumber)
                     .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 Log.d(TAG, "phone number updated success!");
-                            }else {
+                            } else {
                                 Log.w(TAG, "phone number updated failure.", task.getException());
                             }
                         }
@@ -252,26 +256,26 @@ public class PayFragment extends BottomSheetDialogFragment {
                 Log.d(TAG, "Transaction success!");
 
 
-                String userTransKey =mFirestore.collection(USERSTRANSACTIONCOL).document().getId();
-                DocumentReference userTransRef  =mFirestore.collection(USERSTRANSACTIONCOL).document(userTransKey);
+                String userTransKey = mFirestore.collection(USERSTRANSACTIONCOL).document().getId();
+                DocumentReference userTransRef = mFirestore.collection(USERSTRANSACTIONCOL).document(userTransKey);
 
                 //we add a transaction
-                Map<String,Object> userTransMap = new HashMap<>();
-                userTransMap.put("username",mCurrentUser.getDisplayName());
+                Map<String, Object> userTransMap = new HashMap<>();
+                userTransMap.put("username", mCurrentUser.getDisplayName());
                 userTransMap.put("userid", mCurrentUser.getUid());
                 userTransMap.put("transactionid", userTransKey);
                 userTransMap.put("type", "deposit");
                 userTransMap.put("status", "Pending");
                 userTransMap.put("timestamp", FieldValue.serverTimestamp());
                 userTransMap.put("amount", am);
-                userTransMap.put("details","");
-                userTransMap.put("paymentsystem","Mpesa");
+                userTransMap.put("details", "");
+                userTransMap.put("paymentsystem", "Mpesa");
 
                 userTransRef.set(userTransMap)
                         .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()){
+                                if (task.isSuccessful()) {
 
                                     pDialog.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                                     pDialog.setCancelable(false);
@@ -285,7 +289,7 @@ public class PayFragment extends BottomSheetDialogFragment {
                                         }
                                     });
 
-                                }else {
+                                } else {
 
                                     pDialog.changeAlertType(SweetAlertDialog.ERROR_TYPE);
                                     pDialog.setContentText("Oops Something went wrong");
@@ -463,22 +467,22 @@ public class PayFragment extends BottomSheetDialogFragment {
             payAmountinput.setError(null);
         }
 
-       if(!am.isEmpty()){
-           if (Double.parseDouble(am) < 10) {
-               payAmountinput.setError("Amount must be greater than 10");
+        if (!am.isEmpty()) {
+            if (Double.parseDouble(am) < 10) {
+                payAmountinput.setError("Amount must be greater than 10");
 
-               payTextamount.setVisibility(View.GONE);
-               editImagbtn.setVisibility(View.GONE);
-               payAmountinput.setVisibility(View.VISIBLE);
+                payTextamount.setVisibility(View.GONE);
+                editImagbtn.setVisibility(View.GONE);
+                payAmountinput.setVisibility(View.VISIBLE);
 
-               valid = false;
-           } else {
-               payTextamount.setVisibility(View.VISIBLE);
-               editImagbtn.setVisibility(View.VISIBLE);
-               payAmountinput.setVisibility(View.GONE);
-               payAmountinput.setError(null);
-           }
-       }
+                valid = false;
+            } else {
+                payTextamount.setVisibility(View.VISIBLE);
+                editImagbtn.setVisibility(View.VISIBLE);
+                payAmountinput.setVisibility(View.GONE);
+                payAmountinput.setError(null);
+            }
+        }
 
         return valid;
     }

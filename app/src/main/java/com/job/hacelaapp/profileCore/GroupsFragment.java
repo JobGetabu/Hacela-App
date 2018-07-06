@@ -37,7 +37,7 @@ public class GroupsFragment extends Fragment {
         mRootView = inflater.inflate(R.layout.frag_profile_groups, container, false);
 
         Toolbar toolbar = getActivity().findViewById(R.id.profile_page_toolbar);
-        createMenus(toolbar,0);
+        createMenus(toolbar, 0);
         setHasOptionsMenu(true);
 
 
@@ -65,12 +65,12 @@ public class GroupsFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void createMenus(Toolbar actionBarToolBar, @MenuRes int menu){
+    private void createMenus(Toolbar actionBarToolBar, @MenuRes int menu) {
         ((MainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(actionBarToolBar);
         actionBarToolBar.setTitle("");
         if (menu == 0)
             actionBarToolBar.getMenu().clear();
         else
-        actionBarToolBar.inflateMenu(menu);
+            actionBarToolBar.inflateMenu(menu);
     }
 }
