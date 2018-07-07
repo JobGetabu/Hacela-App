@@ -214,4 +214,9 @@
         layout="@layout/withdraw_checkout"
         android:visibility="gone" />
 
+    <include
+        android:id="@+id/account_contribute_sheet"
+        layout="@layout/fragment_group_addfunds"
+        android:visibility="gone" />
+
 </android.support.design.widget.CoordinatorLayout>

@@ -42,6 +42,7 @@ import com.job.hacelaapp.common.UserTransViewHolder;
 import com.job.hacelaapp.dataSource.UsersAccount;
 import com.job.hacelaapp.dataSource.UsersProfile;
 import com.job.hacelaapp.dataSource.UsersTransaction;
+import com.job.hacelaapp.ui.GroupAddfundsFragment;
 import com.job.hacelaapp.ui.PayFragment;
 import com.job.hacelaapp.ui.WithdrawFragment;
 import com.job.hacelaapp.viewmodel.AccountViewModel;
@@ -97,6 +98,8 @@ public class AccountFragment extends Fragment {
     LinearLayout bottomSheetViewgroup;
     @BindView(R.id.account_withdraw_sheet)
     LinearLayout withdrawSheetViewgroup;
+    @BindView(R.id.account_contribute_sheet)
+    LinearLayout contributeSheetViewgroup;
     @BindView(R.id.account_progress)
     ProgressBar accountProgress;
 
@@ -113,8 +116,10 @@ public class AccountFragment extends Fragment {
 
     private PayFragment payFragment;
     private WithdrawFragment withdrawFragment;
+    private GroupAddfundsFragment contributeFragment;
     private BottomSheetBehavior paySheetBehavior;
     private BottomSheetBehavior withdrawSheetBehavior;
+    private BottomSheetBehavior contributeSheetBehavior;
     private AccountViewModel model;
     private FirestoreRecyclerAdapter adapter;
 
@@ -146,6 +151,7 @@ public class AccountFragment extends Fragment {
 
         payFragment = new PayFragment();
         withdrawFragment = new WithdrawFragment();
+        contributeFragment = new GroupAddfundsFragment();
 
 
         //firebase
@@ -167,6 +173,8 @@ public class AccountFragment extends Fragment {
         paySheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         withdrawSheetBehavior = BottomSheetBehavior.from(withdrawSheetViewgroup);
         withdrawSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        contributeSheetBehavior = BottomSheetBehavior.from(contributeSheetViewgroup);
+        contributeSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         setUpTransactionList();
 
@@ -235,14 +243,21 @@ public class AccountFragment extends Fragment {
 
     @OnClick(R.id.account_fab_deposit)
     public void onAccountFabDepositClicked() {
-        payFragment.show(getActivity().getSupportFragmentManager(), PayFragment.TAG);
-        paySheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        if (accountFabDeposit.getFabText().equals("Contribute")){
+            contributeFragment.show(getActivity().getSupportFragmentManager(), GroupAddfundsFragment.TAG);
+            contributeSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }else {
+
+            payFragment.show(getActivity().getSupportFragmentManager(), PayFragment.TAG);
+            paySheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
     }
 
     @OnClick(R.id.account_fab_withdraw)
     public void onAccountFabWithdrawClicked() {
-        withdrawFragment.show(getActivity().getSupportFragmentManager(), PayFragment.TAG);
-        withdrawSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            withdrawFragment.show(getActivity().getSupportFragmentManager(), PayFragment.TAG);
+            withdrawSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
     }
 
     @OnClick(R.id.account_fab_stats)
@@ -278,7 +293,7 @@ public class AccountFragment extends Fragment {
                     String balance = model.formatMyMoney(usersAccount.getBalance());
                     accountAccountBalance.setText(balance);
                 } else {
-                    accountAccountBalance.setText("Ksh 0.00");
+                    accountAccountBalance.setText("Ksh -:-");
                 }
             }
         });

@@ -1,8 +1,9 @@
 package com.job.hacelaapp.ui;
 
 
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +13,10 @@ import com.job.hacelaapp.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupAddfundsFragment extends Fragment {
+public class GroupAddfundsFragment extends BottomSheetDialogFragment {
 
+
+    public static final String TAG = "ContrFrag";
 
     public GroupAddfundsFragment() {
         // Required empty public constructor
