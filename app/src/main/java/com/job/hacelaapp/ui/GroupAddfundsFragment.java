@@ -14,8 +14,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Source;
 import com.job.hacelaapp.R;
@@ -23,6 +27,8 @@ import com.job.hacelaapp.viewmodel.AccountViewModel;
 import com.job.hacelaapp.viewmodel.NavigationViewModel;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import am.appwise.components.ni.NoInternetDialog;
 import butterknife.BindView;
@@ -30,6 +36,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static com.job.hacelaapp.util.Constants.HACELAUTILCOL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,7 +114,33 @@ public class GroupAddfundsFragment extends BottomSheetDialogFragment {
         //real time data
         Source source = Source.SERVER;
 
+        final String key = mFirestore.collection(HACELAUTILCOL).document().getId();
+
+        Map<String,Object> timeMap = new HashMap<>();
+        timeMap.put("currenttime", FieldValue.serverTimestamp());
         //fetch current time : server
+        mFirestore.collection(HACELAUTILCOL).document(key)
+                .set(timeMap)
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                        mFirestore.collection(HACELAUTILCOL).document(key)
+                                .get()
+                                .addOnSuccessListener(getActivity(), new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                                        Timestamp currentTimestamp = documentSnapshot.getTimestamp("currenttime");
+
+                                        String currentGroupId = model.getCurrentGroupIdMediatorLiveData().getValue();
+                                        if(currentGroupId != null){
+
+                                        }
+                                    }
+                                });
+                    }
+                });
     }
 
     private void setUpNoNetDialogue() {

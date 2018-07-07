@@ -51,6 +51,8 @@ public class AccountViewModel extends AndroidViewModel {
     //mediators
     private MediatorLiveData<UsersAccount> usersAccountMediatorLiveData = new MediatorLiveData<>();
     private MediatorLiveData<UserAuthInfo> usersAuthMediatorLiveData = new MediatorLiveData<>();
+    private MediatorLiveData<String> currentGroupIdMediatorLiveData = new MediatorLiveData<>();
+
 
     public AccountViewModel(@NonNull Application application,FirebaseAuth mAuth, FirebaseFirestore mFirestore) {
         super(application);
@@ -136,6 +138,14 @@ public class AccountViewModel extends AndroidViewModel {
 
     public void setUsersAuthMediatorLiveData(UserAuthInfo usersAuthMediatorLiveData) {
         this.usersAuthMediatorLiveData.setValue(usersAuthMediatorLiveData);
+    }
+
+    public MediatorLiveData<String> getCurrentGroupIdMediatorLiveData() {
+        return currentGroupIdMediatorLiveData;
+    }
+
+    public void setCurrentGroupIdMediatorLiveData(String currentGroupIdMediatorLiveData) {
+        this.currentGroupIdMediatorLiveData.setValue(currentGroupIdMediatorLiveData);
     }
 
     /**

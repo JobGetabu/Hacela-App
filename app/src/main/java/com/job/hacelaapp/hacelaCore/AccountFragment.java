@@ -124,7 +124,8 @@ public class AccountFragment extends Fragment {
     private FirestoreRecyclerAdapter adapter;
 
     final List<String> listGroups = new ArrayList<>();
-    ListIterator<String> iterator;
+    private ListIterator<String> iterator;
+    private String currentGroupId;
 
 
     public AccountFragment() {
@@ -168,6 +169,7 @@ public class AccountFragment extends Fragment {
 
         //setup ui observers
         setUpCashUi();
+        currentGroupIdObserver();
 
         paySheetBehavior = BottomSheetBehavior.from(bottomSheetViewgroup);
         paySheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -198,6 +200,7 @@ public class AccountFragment extends Fragment {
                 accountImgleft.setVisibility(View.VISIBLE);
 
                 String id = iterator.previous();
+                model.setCurrentGroupIdMediatorLiveData(id);
 
                 if (id.equals(getString(R.string.personal_account))) {
                     changeFabActions(true);
@@ -211,6 +214,43 @@ public class AccountFragment extends Fragment {
         }
     }
 
+
+
+    @OnClick(R.id.account_imgright)
+    public void onAccountImgrightClicked() {
+
+        if (!listGroups.isEmpty() && iterator != null) {
+
+            if (iterator.hasNext()) {
+                accountImgright.setVisibility(View.VISIBLE);
+                String id = iterator.next();
+                model.setCurrentGroupIdMediatorLiveData(id);
+
+                if (id.equals(getString(R.string.personal_account))) {
+                    changeFabActions(true);
+                } else {
+                    changeFabActions(false);
+                }
+            } else {
+                accountImgright.setVisibility(View.INVISIBLE);
+            }
+            navImages();
+        }
+    }
+
+    private void currentGroupIdObserver(){
+        MediatorLiveData<String> data = model.getCurrentGroupIdMediatorLiveData();
+
+        data.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                if(s != null){
+                    currentGroupId  = s;
+                }
+            }
+        });
+    }
+
     private void navImages() {
         if (iterator.hasNext()) {
             accountImgright.setVisibility(View.VISIBLE);
@@ -222,27 +262,6 @@ public class AccountFragment extends Fragment {
             accountImgleft.setVisibility(View.VISIBLE);
         } else {
             accountImgleft.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    @OnClick(R.id.account_imgright)
-    public void onAccountImgrightClicked() {
-
-        if (!listGroups.isEmpty() && iterator != null) {
-
-            if (iterator.hasNext()) {
-                accountImgright.setVisibility(View.VISIBLE);
-                String id = iterator.next();
-
-                if (id.equals(getString(R.string.personal_account))) {
-                    changeFabActions(true);
-                } else {
-                    changeFabActions(false);
-                }
-            } else {
-                accountImgright.setVisibility(View.INVISIBLE);
-            }
-            navImages();
         }
     }
 
