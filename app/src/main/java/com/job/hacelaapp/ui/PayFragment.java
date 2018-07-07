@@ -327,7 +327,7 @@ public class PayFragment extends BottomSheetDialogFragment {
         super.onDestroy();
     }
 
-    @OnClick(R.id.pay_editImg)
+    @OnClick({R.id.pay_editImg,R.id.pay_textamount})
     public void onPayEditIcon() {
         payAmountinput.setVisibility(View.VISIBLE);
         String am = payTextamount.getText().toString();
