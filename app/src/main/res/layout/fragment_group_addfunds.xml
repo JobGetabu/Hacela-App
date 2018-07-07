@@ -75,7 +75,8 @@
             android:layout_alignTop="@+id/textView6contr"
             android:layout_marginEnd="8dp"
             android:layout_toEndOf="@+id/textView6contr"
-            android:text="group name" />
+            android:textSize="16sp"
+            tools:text="group name" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -148,7 +149,7 @@
 
     <android.support.design.chip.Chip
         android:id="@+id/sdesgroup"
-        style="@style/Widget.MaterialComponents.Chip.Choice"
+        style="@style/Widget.MaterialComponents.Chip.Filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

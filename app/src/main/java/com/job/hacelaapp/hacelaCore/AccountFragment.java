@@ -125,7 +125,6 @@ public class AccountFragment extends Fragment {
 
     final List<String> listGroups = new ArrayList<>();
     private ListIterator<String> iterator;
-    private String currentGroupId;
 
 
     public AccountFragment() {
@@ -164,12 +163,11 @@ public class AccountFragment extends Fragment {
         AccountViewModel.Factory factory = new AccountViewModel.Factory(
                 getActivity().getApplication(), mAuth, mFirestore);
 
-        model = ViewModelProviders.of(this, factory)
+        model = ViewModelProviders.of(getActivity(), factory)
                 .get(AccountViewModel.class);
 
         //setup ui observers
         setUpCashUi();
-        currentGroupIdObserver();
 
         paySheetBehavior = BottomSheetBehavior.from(bottomSheetViewgroup);
         paySheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -203,9 +201,9 @@ public class AccountFragment extends Fragment {
                 model.setCurrentGroupIdMediatorLiveData(id);
 
                 if (id.equals(getString(R.string.personal_account))) {
-                    changeFabActions(true);
-                } else {
                     changeFabActions(false);
+                } else {
+                    changeFabActions(true);
                 }
             } else {
                 accountImgleft.setVisibility(View.INVISIBLE);
@@ -227,9 +225,9 @@ public class AccountFragment extends Fragment {
                 model.setCurrentGroupIdMediatorLiveData(id);
 
                 if (id.equals(getString(R.string.personal_account))) {
-                    changeFabActions(true);
-                } else {
                     changeFabActions(false);
+                } else {
+                    changeFabActions(true);
                 }
             } else {
                 accountImgright.setVisibility(View.INVISIBLE);
@@ -238,18 +236,6 @@ public class AccountFragment extends Fragment {
         }
     }
 
-    private void currentGroupIdObserver(){
-        MediatorLiveData<String> data = model.getCurrentGroupIdMediatorLiveData();
-
-        data.observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                if(s != null){
-                    currentGroupId  = s;
-                }
-            }
-        });
-    }
 
     private void navImages() {
         if (iterator.hasNext()) {

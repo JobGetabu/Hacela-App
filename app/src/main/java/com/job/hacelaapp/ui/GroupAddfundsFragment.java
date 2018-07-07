@@ -2,8 +2,11 @@ package com.job.hacelaapp.ui;
 
 
 import android.app.Fragment;
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.TextInputLayout;
@@ -27,6 +30,8 @@ import com.job.hacelaapp.viewmodel.AccountViewModel;
 import com.job.hacelaapp.viewmodel.NavigationViewModel;
 
 import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,6 +42,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.job.hacelaapp.util.Constants.GROUPCOL;
 import static com.job.hacelaapp.util.Constants.HACELAUTILCOL;
 
 /**
@@ -68,6 +74,7 @@ public class GroupAddfundsFragment extends BottomSheetDialogFragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mFirestore;
     private FirebaseUser mCurrentUser;
+    private String currentGroupId;
 
     //starter progress
     private SweetAlertDialog pDialog;
@@ -103,20 +110,34 @@ public class GroupAddfundsFragment extends BottomSheetDialogFragment {
         AccountViewModel.Factory factory = new AccountViewModel.Factory(
                 this.getActivity().getApplication(), mAuth, mFirestore);
 
-        model = ViewModelProviders.of(this, factory)
+        model = ViewModelProviders.of(getActivity(), factory)
                 .get(AccountViewModel.class);
 
         //setup ui observers
         setUpUi();
+        currentGroupIdObserver();
+    }
+
+    private void currentGroupIdObserver(){
+        MediatorLiveData<String> data = model.getCurrentGroupIdMediatorLiveData();
+
+        data.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(@Nullable String s) {
+                if(s != null){
+                    currentGroupId  = s;
+                }
+            }
+        });
     }
 
     private void setUpUi() {
         //real time data : current time|day only
         final Source source = Source.SERVER;
 
-        final String key = mFirestore.collection(HACELAUTILCOL).document().getId();
+        final String key = "time";
 
-        Map<String,Object> timeMap = new HashMap<>();
+        Map<String, Object> timeMap = new HashMap<>();
         timeMap.put("currenttime", FieldValue.serverTimestamp());
         //fetch current time : server
         mFirestore.collection(HACELAUTILCOL).document(key)
@@ -132,13 +153,33 @@ public class GroupAddfundsFragment extends BottomSheetDialogFragment {
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                                         Timestamp currentTimestamp = documentSnapshot.getTimestamp("currenttime");
+                                        Date date = null;
 
-                                        String currentGroupId = model.getCurrentGroupIdMediatorLiveData().getValue();
-                                        if(currentGroupId != null){
+                                        if (currentTimestamp != null) {
+                                            date = currentTimestamp.toDate();
+                                            Calendar c = Calendar.getInstance();
+                                            c.setTime(date);
+                                        }
 
+                                        Log.d(TAG, "onSuccess: "+currentGroupId);
+                                        if (currentGroupId != null) {
+
+                                            setUpGroupNameUi(currentGroupId);
                                         }
                                     }
                                 });
+                    }
+                });
+    }
+
+    private void setUpGroupNameUi(String currentGroupId) {
+        mFirestore.collection(GROUPCOL).document(currentGroupId)
+                .get()
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String groupname = documentSnapshot.getString("groupname");
+                        contrGroupname.setText(groupname);
                     }
                 });
     }
