@@ -73,7 +73,6 @@ public class UserTransViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
 
         ButterKnife.bind(this, itemView);
-        //View mRootView = inflater.inflate(R.layout.ucell_title_expand, container, false);
     }
 
     public void init(Context context, String transId) {

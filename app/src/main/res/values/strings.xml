@@ -201,4 +201,6 @@
     <string name="status_failed">Failed</string>
     <string name="pay_via">Pay Via</string>
     <string name="contribute">Contribute</string>
+    <string name="deposit">Deposit</string>
+    <string name="stats">Stats</string>
 </resources>

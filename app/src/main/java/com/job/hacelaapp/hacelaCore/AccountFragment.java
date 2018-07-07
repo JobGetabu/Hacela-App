@@ -179,7 +179,7 @@ public class AccountFragment extends Fragment {
         setUpTransactionList();
 
         //set up navigator
-        listGroups.add("Personal Account");
+        listGroups.add(getString(R.string.personal_account));
         userGroups();
     }
 
@@ -197,19 +197,21 @@ public class AccountFragment extends Fragment {
             if (iterator.hasPrevious()) {
                 accountImgleft.setVisibility(View.VISIBLE);
 
-                Toast.makeText(getContext(), "" + iterator.previous(), Toast.LENGTH_SHORT).show();
+                String id = iterator.previous();
+
+                if (id.equals(getString(R.string.personal_account))) {
+                    changeFabActions(true);
+                } else {
+                    changeFabActions(false);
+                }
             } else {
                 accountImgleft.setVisibility(View.INVISIBLE);
             }
             navImages();
         }
-
-
-
-        changeFabActions(true);
     }
 
-    private void navImages(){
+    private void navImages() {
         if (iterator.hasNext()) {
             accountImgright.setVisibility(View.VISIBLE);
         } else {
@@ -230,23 +232,26 @@ public class AccountFragment extends Fragment {
 
             if (iterator.hasNext()) {
                 accountImgright.setVisibility(View.VISIBLE);
+                String id = iterator.next();
 
-                Toast.makeText(getContext(), "" + iterator.next(), Toast.LENGTH_SHORT).show();
+                if (id.equals(getString(R.string.personal_account))) {
+                    changeFabActions(true);
+                } else {
+                    changeFabActions(false);
+                }
             } else {
                 accountImgright.setVisibility(View.INVISIBLE);
             }
             navImages();
         }
-
-        changeFabActions(false);
     }
 
     @OnClick(R.id.account_fab_deposit)
     public void onAccountFabDepositClicked() {
-        if (accountFabDeposit.getFabText().equals("Contribute")){
+        if (accountFabDeposit.getFabText().equals(getString(R.string.contribute))) {
             contributeFragment.show(getActivity().getSupportFragmentManager(), GroupAddfundsFragment.TAG);
             contributeSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        }else {
+        } else {
 
             payFragment.show(getActivity().getSupportFragmentManager(), PayFragment.TAG);
             paySheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -255,8 +260,8 @@ public class AccountFragment extends Fragment {
 
     @OnClick(R.id.account_fab_withdraw)
     public void onAccountFabWithdrawClicked() {
-            withdrawFragment.show(getActivity().getSupportFragmentManager(), PayFragment.TAG);
-            withdrawSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        withdrawFragment.show(getActivity().getSupportFragmentManager(), PayFragment.TAG);
+        withdrawSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
     }
 
@@ -387,7 +392,7 @@ public class AccountFragment extends Fragment {
             fabMenu.setFabIconColor(ContextCompat.getColor(getContext(), android.R.color.white));
             fabMenu.setFabColor(ContextCompat.getColor(getContext(), R.color.fabColor));
 
-            accountFabDeposit.setFabText("Contribute");
+            accountFabDeposit.setFabText(getString(R.string.contribute));
             accountFabWithdraw.setFabText("Request Pay");
             accountFabStats.setFabText("Group Stats");
         } else {
@@ -396,14 +401,13 @@ public class AccountFragment extends Fragment {
             fabMenu.setFabIconColor(ContextCompat.getColor(getContext(), android.R.color.white));
             fabMenu.setFabColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
 
-            accountFabWithdraw.setFabText("Withdraw");
-            accountFabDeposit.setFabText("Deposit");
-            accountFabStats.setFabText("Stats");
-
+            accountFabWithdraw.setFabText(getString(R.string.withdraw));
+            accountFabDeposit.setFabText(getString(R.string.deposit));
+            accountFabStats.setFabText(getString(R.string.stats));
         }
     }
 
-    //TODO get all groups user is in
+    //get all groups user is in
     private void userGroups() {
 
         accountProgress.setVisibility(View.VISIBLE);
