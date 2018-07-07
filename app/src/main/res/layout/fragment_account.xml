@@ -31,6 +31,15 @@
                 android:text="@string/account" />
         </android.support.v7.widget.Toolbar>
 
+        <ProgressBar
+            android:id="@+id/account_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:indeterminate="true"
+            android:minHeight="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
 
     </android.support.design.widget.AppBarLayout>
 
@@ -89,7 +98,7 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/account_account_balance"
+                    android:id="@+id/account_balance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
@@ -159,6 +168,7 @@
 
         <!--Top view will be selected as a toggle for menu-->
         <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
+            android:id="@+id/account_fab_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="bottom"

@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,20 +19,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.Source;
 import com.job.hacelaapp.R;
+import com.job.hacelaapp.appExecutor.DefaultExecutorSupplier;
 import com.job.hacelaapp.common.UserTransViewHolder;
 import com.job.hacelaapp.dataSource.UsersAccount;
+import com.job.hacelaapp.dataSource.UsersProfile;
 import com.job.hacelaapp.dataSource.UsersTransaction;
 import com.job.hacelaapp.ui.PayFragment;
 import com.job.hacelaapp.ui.WithdrawFragment;
@@ -40,11 +49,18 @@ import com.ramotion.foldingcell.FoldingCell;
 import com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton;
 import com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.job.hacelaapp.util.Constants.USERSPROFILECOL;
 import static com.job.hacelaapp.util.Constants.USERSTRANSACTIONCOL;
 
 /**
@@ -57,7 +73,7 @@ public class AccountFragment extends Fragment {
     Toolbar toolbar;
     @BindView(R.id.account_accounttype)
     TextView accountAccounttype;
-    @BindView(R.id.account_account_balance)
+    @BindView(R.id.account_balance)
     TextView accountAccountBalance;
     @BindView(R.id.account_imgleft)
     ImageButton accountImgleft;
@@ -65,7 +81,6 @@ public class AccountFragment extends Fragment {
     ImageButton accountImgright;
     @BindView(R.id.account_translist)
     RecyclerView accountTranslist;
-
     @BindView(R.id.linearLayout2)
     LinearLayout linearLayout2;
     @BindView(R.id.account_fab_deposit)
@@ -74,12 +89,16 @@ public class AccountFragment extends Fragment {
     FloatingActionButton accountFabWithdraw;
     @BindView(R.id.account_fab_stats)
     FloatingActionButton accountFabStats;
+    @BindView(R.id.account_fab_menu)
+    FloatingActionButton fabMenu;
     @BindView(R.id.account_floating_layout)
     FloatingLayout accountFloatingLayout;
     @BindView(R.id.account_pay_sheet)
     LinearLayout bottomSheetViewgroup;
     @BindView(R.id.account_withdraw_sheet)
     LinearLayout withdrawSheetViewgroup;
+    @BindView(R.id.account_progress)
+    ProgressBar accountProgress;
 
 
     Unbinder unbinder;
@@ -98,6 +117,10 @@ public class AccountFragment extends Fragment {
     private BottomSheetBehavior withdrawSheetBehavior;
     private AccountViewModel model;
     private FirestoreRecyclerAdapter adapter;
+
+    final List<String> listGroups = new ArrayList<>();
+    ListIterator<String> iterator;
+
 
     public AccountFragment() {
         // Required empty public constructor
@@ -125,7 +148,6 @@ public class AccountFragment extends Fragment {
         withdrawFragment = new WithdrawFragment();
 
 
-
         //firebase
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
@@ -148,6 +170,9 @@ public class AccountFragment extends Fragment {
 
         setUpTransactionList();
 
+        //set up navigator
+        listGroups.add("Personal Account");
+        userGroups();
     }
 
     @Override
@@ -158,11 +183,54 @@ public class AccountFragment extends Fragment {
 
     @OnClick(R.id.account_imgleft)
     public void onAccountImgleftClicked() {
+
+        if (!listGroups.isEmpty() && iterator != null) {
+
+            if (iterator.hasPrevious()) {
+                accountImgleft.setVisibility(View.VISIBLE);
+
+                Toast.makeText(getContext(), "" + iterator.previous(), Toast.LENGTH_SHORT).show();
+            } else {
+                accountImgleft.setVisibility(View.INVISIBLE);
+            }
+            navImages();
+        }
+
+
+
         changeFabActions(true);
+    }
+
+    private void navImages(){
+        if (iterator.hasNext()) {
+            accountImgright.setVisibility(View.VISIBLE);
+        } else {
+            accountImgright.setVisibility(View.INVISIBLE);
+        }
+
+        if (iterator.hasPrevious()) {
+            accountImgleft.setVisibility(View.VISIBLE);
+        } else {
+            accountImgleft.setVisibility(View.INVISIBLE);
+        }
     }
 
     @OnClick(R.id.account_imgright)
     public void onAccountImgrightClicked() {
+
+        if (!listGroups.isEmpty() && iterator != null) {
+
+            if (iterator.hasNext()) {
+                accountImgright.setVisibility(View.VISIBLE);
+
+                Toast.makeText(getContext(), "" + iterator.next(), Toast.LENGTH_SHORT).show();
+            } else {
+                accountImgright.setVisibility(View.INVISIBLE);
+            }
+            navImages();
+        }
+
+        changeFabActions(false);
     }
 
     @OnClick(R.id.account_fab_deposit)
@@ -174,7 +242,8 @@ public class AccountFragment extends Fragment {
     @OnClick(R.id.account_fab_withdraw)
     public void onAccountFabWithdrawClicked() {
         withdrawFragment.show(getActivity().getSupportFragmentManager(), PayFragment.TAG);
-        withdrawSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);    }
+        withdrawSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
 
     @OnClick(R.id.account_fab_stats)
     public void onAccountFabStatsClicked() {
@@ -215,7 +284,7 @@ public class AccountFragment extends Fragment {
         });
     }
 
-    private void setUpTransactionList(){
+    private void setUpTransactionList() {
 
         LinearLayoutManager linearLayoutManager = new
                 LinearLayoutManager(getContext().getApplicationContext(), LinearLayoutManager.VERTICAL, false);
@@ -226,14 +295,14 @@ public class AccountFragment extends Fragment {
         // Create a reference to the members collection
         final CollectionReference transRef = mFirestore.collection(USERSTRANSACTIONCOL);
         final Query query = transRef
-                .whereEqualTo("userid",mCurrentUser.getUid())
+                .whereEqualTo("userid", mCurrentUser.getUid())
                 .orderBy("timestamp", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<UsersTransaction> options = new FirestoreRecyclerOptions.Builder<UsersTransaction>()
                 .setQuery(query, UsersTransaction.class)
                 .build();
 
-        adapter = new FirestoreRecyclerAdapter<UsersTransaction,UserTransViewHolder>(options) {
+        adapter = new FirestoreRecyclerAdapter<UsersTransaction, UserTransViewHolder>(options) {
             @NonNull
             @Override
             public UserTransViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -275,7 +344,6 @@ public class AccountFragment extends Fragment {
             }
 
 
-
         };
         adapter.startListening();
         adapter.notifyDataSetChanged();
@@ -297,7 +365,83 @@ public class AccountFragment extends Fragment {
             adapter.stopListening();
     }
 
-    private void changeFabActions(boolean b) {
+    private void changeFabActions(boolean isGroup) {
+
+        if (isGroup) {
+            fabMenu.setFabIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_groups));
+            fabMenu.setFabIconColor(ContextCompat.getColor(getContext(), android.R.color.white));
+            fabMenu.setFabColor(ContextCompat.getColor(getContext(), R.color.fabColor));
+
+            accountFabDeposit.setFabText("Contribute");
+            accountFabWithdraw.setFabText("Request Pay");
+            accountFabStats.setFabText("Group Stats");
+        } else {
+
+            fabMenu.setFabIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_money_action));
+            fabMenu.setFabIconColor(ContextCompat.getColor(getContext(), android.R.color.white));
+            fabMenu.setFabColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+
+            accountFabWithdraw.setFabText("Withdraw");
+            accountFabDeposit.setFabText("Deposit");
+            accountFabStats.setFabText("Stats");
+
+        }
     }
 
+    //TODO get all groups user is in
+    private void userGroups() {
+
+        accountProgress.setVisibility(View.VISIBLE);
+
+        // Source can be CACHE, SERVER, or DEFAULT.
+        Source source = Source.SERVER;
+        DocumentReference profRef = mFirestore.collection(USERSPROFILECOL).document(mCurrentUser.getUid());
+
+        profRef.get(source)
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(final DocumentSnapshot documentSnapshot) {
+
+                        accountProgress.setVisibility(View.GONE);
+
+                        DefaultExecutorSupplier.getInstance().forMainThreadTasks()
+                                .execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // do some Main Thread work here.
+                                        UsersProfile usersProfile = documentSnapshot.toObject(UsersProfile.class);
+
+                                        if (usersProfile != null && usersProfile.getGroups() != null) {
+                                            //go ahead for groups
+
+                                            Map<String, Boolean> groups = usersProfile.getGroups();
+
+                                            Set s1 = groups.entrySet();//to get whole entrys
+                                            for (Object aS1 : s1) {
+                                                Map.Entry m = (Map.Entry) aS1;//to get next entry (and casting required because values are object type)
+                                                //Entry is inner interface of Map interface
+
+                                                if (m.getValue().equals(true)) {
+                                                    String gId = (String) m.getKey();
+
+                                                    listGroups.add(gId);
+
+                                                }
+                                            }
+                                            iterator = listGroups.listIterator();
+                                            navImages();
+                                        }
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(getActivity(), new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        accountProgress.setVisibility(View.GONE);
+                    }
+                });
+
+    }
 }

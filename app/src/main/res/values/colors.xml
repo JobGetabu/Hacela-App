@@ -53,5 +53,7 @@
     <color name="contentBadgeTitle">#a9a9a9</color>
     <color name="titleBadgeTitle">#adafb1</color>
     <color name="titleBadgeText">#adafb1</color>
+
     <color name="fablayout">#dceaeaea</color>
+    <color name="fabColor">#fa8617</color>
 </resources>
