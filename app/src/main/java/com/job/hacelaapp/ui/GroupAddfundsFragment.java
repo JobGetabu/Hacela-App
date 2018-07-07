@@ -111,8 +111,8 @@ public class GroupAddfundsFragment extends BottomSheetDialogFragment {
     }
 
     private void setUpUi() {
-        //real time data
-        Source source = Source.SERVER;
+        //real time data : current time|day only
+        final Source source = Source.SERVER;
 
         final String key = mFirestore.collection(HACELAUTILCOL).document().getId();
 
@@ -126,7 +126,7 @@ public class GroupAddfundsFragment extends BottomSheetDialogFragment {
                     public void onSuccess(Void aVoid) {
 
                         mFirestore.collection(HACELAUTILCOL).document(key)
-                                .get()
+                                .get(source)
                                 .addOnSuccessListener(getActivity(), new OnSuccessListener<DocumentSnapshot>() {
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {

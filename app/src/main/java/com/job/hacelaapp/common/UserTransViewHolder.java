@@ -133,26 +133,29 @@ public class UserTransViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void dateFormater(UsersTransaction model) {
-        Timestamp timestamp = model.getTimestamp();
-        Date date = timestamp.toDate();
+        if (model.getTimestamp() != null){
 
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
+            Timestamp timestamp = model.getTimestamp();
+            Date date = timestamp.toDate();
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-M-dd hh:mm:ss");
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
 
-        String ss = "On " + dateFormat.format(date);
-        mTitleDate.setText(ss);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-M-dd hh:mm:ss");
 
-        DateFormat dateFormat2 = new SimpleDateFormat("hh.mm aa");
-        titleExTimeLabel.setText(dateFormat2.format(date));
+            String ss = "On " + dateFormat.format(date);
+            mTitleDate.setText(ss);
 
-        int intday = c.get(Calendar.DAY_OF_WEEK);
+            DateFormat dateFormat2 = new SimpleDateFormat("hh.mm aa");
+            titleExTimeLabel.setText(dateFormat2.format(date));
 
-        titleExDayLabel.setText(theDay(intday));
+            int intday = c.get(Calendar.DAY_OF_WEEK);
 
-        DateFormat dateFormat3 = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
-        titleExLongDate.setText(dateFormat3.format(date));
+            titleExDayLabel.setText(theDay(intday));
+
+            DateFormat dateFormat3 = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+            titleExLongDate.setText(dateFormat3.format(date));
+        }
     }
 
     private void showAmount(UsersTransaction model) {
