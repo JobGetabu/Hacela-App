@@ -173,7 +173,7 @@ public class AccountFragment extends Fragment {
                 .get(AccountViewModel.class);
 
         //setup ui observers
-        //setUpCashUi();
+        setUpCashUi();
         setUpUI(getString(R.string.personal_account));
 
 
@@ -220,7 +220,6 @@ public class AccountFragment extends Fragment {
             navImages();
         }
     }
-
 
 
     @OnClick(R.id.account_imgright)
@@ -302,18 +301,20 @@ public class AccountFragment extends Fragment {
         });
     }
 
+    //to reflect payments to personal accounts
     private void setUpCashUi() {
         MediatorLiveData<UsersAccount> data = model.getUsersAccountMediatorLiveData();
 
         data.observe(this, new Observer<UsersAccount>() {
             @Override
             public void onChanged(@Nullable UsersAccount usersAccount) {
-                if (usersAccount != null) {
-
-                    String balance = model.formatMyMoney(usersAccount.getBalance());
-                    accountAccountBalance.setText(balance);
-                } else {
-                    accountAccountBalance.setText("Ksh -:-");
+                if (currentGroupId.equals(getString(R.string.personal_account))) {
+                    if (usersAccount != null) {
+                        String balance = model.formatMyMoney(usersAccount.getBalance());
+                        accountAccountBalance.setText(balance);
+                    } else {
+                        accountAccountBalance.setText("Ksh -:-");
+                    }
                 }
             }
         });
@@ -479,7 +480,7 @@ public class AccountFragment extends Fragment {
 
     }
 
-    private void setUpUI(String id){
+    private void setUpUI(String id) {
 
         Source source = Source.SERVER;
         accountAccountBalance.setText("Ksh -:-");
@@ -492,11 +493,11 @@ public class AccountFragment extends Fragment {
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()){
-                                String balance =  model.formatMyMoney(task.getResult().getDouble("balance"));
+                            if (task.isSuccessful()) {
+                                String balance = model.formatMyMoney(task.getResult().getDouble("balance"));
                                 accountAccountBalance.setText(balance);
 
-                            }else {
+                            } else {
                                 accountAccountBalance.setText("Ksh -:-");
                             }
                         }
@@ -507,11 +508,11 @@ public class AccountFragment extends Fragment {
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 String type = task.getResult().getString("displayname");
-                                accountAccounttype.setText(type.toUpperCase()+" ACCOUNT");
+                                accountAccounttype.setText(type.toUpperCase() + " ACCOUNT");
 
-                            }else {
+                            } else {
                                 accountAccounttype.setText("-:-");
 
                             }
@@ -521,12 +522,12 @@ public class AccountFragment extends Fragment {
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()){
+                            if (task.isSuccessful()) {
 
-                                String balance =  model.formatMyMoney(task.getResult().getDouble("balance"));
+                                String balance = model.formatMyMoney(task.getResult().getDouble("balance"));
                                 accountAccountBalance.setText(balance);
 
-                            }else {
+                            } else {
                                 accountAccountBalance.setText("Ksh -:-");
 
                             }
