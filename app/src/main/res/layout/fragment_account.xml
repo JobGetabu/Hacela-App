@@ -54,6 +54,7 @@
 
 
         <android.support.design.card.MaterialCardView
+            android:id="@+id/account_cash_card"
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -124,7 +125,7 @@
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/image_default_content_description"
                     android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/ic_arrow_left" />
+                    app:srcCompat="@drawable/ic_nav_left" />
 
                 <ImageButton
                     android:id="@+id/account_imgright"
@@ -137,7 +138,7 @@
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/image_default_content_description"
                     android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/ic_arrow_right" />
+                    app:srcCompat="@drawable/ic_nav_right" />
             </RelativeLayout>
         </android.support.design.card.MaterialCardView>
 

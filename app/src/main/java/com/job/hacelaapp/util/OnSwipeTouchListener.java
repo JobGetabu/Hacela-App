@@ -17,9 +17,11 @@ public class OnSwipeTouchListener implements OnTouchListener {
     }
 
     public void onSwipeLeft() {
+        //do left swipes
     }
 
     public void onSwipeRight() {
+        //do right swipes
     }
 
     public boolean onTouch(View v, MotionEvent event) {

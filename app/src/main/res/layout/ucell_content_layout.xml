@@ -177,7 +177,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:tint="@color/colorTextGrey"
-                app:srcCompat="@drawable/ic_nav_arrow" />
+                app:srcCompat="@drawable/ic_nav_right" />
 
         </RelativeLayout>
 
@@ -277,7 +277,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    app:srcCompat="@drawable/ic_nav_arrow" />
+                    app:srcCompat="@drawable/ic_nav_right" />
 
             </RelativeLayout>
 

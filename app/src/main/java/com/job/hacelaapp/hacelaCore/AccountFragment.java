@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.card.MaterialCardView;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -47,6 +48,7 @@ import com.job.hacelaapp.dataSource.UsersTransaction;
 import com.job.hacelaapp.ui.GroupAddfundsFragment;
 import com.job.hacelaapp.ui.PayFragment;
 import com.job.hacelaapp.ui.WithdrawFragment;
+import com.job.hacelaapp.util.OnSwipeTouchListener;
 import com.job.hacelaapp.viewmodel.AccountViewModel;
 import com.ramotion.foldingcell.FoldingCell;
 import com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton;
@@ -107,6 +109,8 @@ public class AccountFragment extends Fragment {
     LinearLayout contributeSheetViewgroup;
     @BindView(R.id.account_progress)
     ProgressBar accountProgress;
+    @BindView(R.id.account_cash_card)
+    MaterialCardView cardCash;
 
 
     Unbinder unbinder;
@@ -175,6 +179,7 @@ public class AccountFragment extends Fragment {
         //setup ui observers
         setUpCashUi();
         setUpUI(getString(R.string.personal_account));
+        cardCashSwiperListener();
 
 
         paySheetBehavior = BottomSheetBehavior.from(bottomSheetViewgroup);
@@ -189,6 +194,57 @@ public class AccountFragment extends Fragment {
         //set up navigator
         listGroups.add(getString(R.string.personal_account));
         userGroups();
+    }
+
+    private void cardCashSwiperListener() {
+        cardCash.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+            @Override
+            public void onSwipeLeft() {
+
+                if (!listGroups.isEmpty() && iterator != null) {
+
+                    if (iterator.hasPrevious()) {
+                        accountImgleft.setVisibility(View.VISIBLE);
+
+                        String id = iterator.previous();
+                        model.setCurrentGroupIdMediatorLiveData(id);
+                        setUpUI(id);
+
+                        if (id.equals(getString(R.string.personal_account))) {
+                            changeFabActions(false);
+                        } else {
+                            changeFabActions(true);
+                        }
+                    } else {
+                        accountImgleft.setVisibility(View.INVISIBLE);
+                    }
+                    navImages();
+                }
+            }
+
+            @Override
+            public void onSwipeRight() {
+
+                if (!listGroups.isEmpty() && iterator != null) {
+
+                    if (iterator.hasNext()) {
+                        accountImgright.setVisibility(View.VISIBLE);
+                        String id = iterator.next();
+                        model.setCurrentGroupIdMediatorLiveData(id);
+                        setUpUI(id);
+
+                        if (id.equals(getString(R.string.personal_account))) {
+                            changeFabActions(false);
+                        } else {
+                            changeFabActions(true);
+                        }
+                    } else {
+                        accountImgright.setVisibility(View.INVISIBLE);
+                    }
+                    navImages();
+                }
+            }
+        });
     }
 
     @Override
@@ -308,10 +364,12 @@ public class AccountFragment extends Fragment {
         data.observe(this, new Observer<UsersAccount>() {
             @Override
             public void onChanged(@Nullable UsersAccount usersAccount) {
-                if (currentGroupId.equals(getString(R.string.personal_account))) {
-                    if (usersAccount != null) {
-                        String balance = model.formatMyMoney(usersAccount.getBalance());
-                        accountAccountBalance.setText(balance);
+                if (currentGroupId != null) {
+                    if (currentGroupId.equals(getString(R.string.personal_account))) {
+                        if (usersAccount != null){
+                            String balance = model.formatMyMoney(usersAccount.getBalance());
+                            accountAccountBalance.setText(balance);
+                        }
                     } else {
                         accountAccountBalance.setText("Ksh -:-");
                     }
