@@ -25,8 +25,10 @@ import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -61,6 +63,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
+import static com.job.hacelaapp.util.Constants.GROUPACCOUNTCOL;
+import static com.job.hacelaapp.util.Constants.GROUPCOL;
+import static com.job.hacelaapp.util.Constants.USERSACCOUNTCOL;
 import static com.job.hacelaapp.util.Constants.USERSPROFILECOL;
 import static com.job.hacelaapp.util.Constants.USERSTRANSACTIONCOL;
 
@@ -125,6 +130,7 @@ public class AccountFragment extends Fragment {
 
     final List<String> listGroups = new ArrayList<>();
     private ListIterator<String> iterator;
+    private String currentGroupId;
 
 
     public AccountFragment() {
@@ -167,7 +173,9 @@ public class AccountFragment extends Fragment {
                 .get(AccountViewModel.class);
 
         //setup ui observers
-        setUpCashUi();
+        //setUpCashUi();
+        setUpUI(getString(R.string.personal_account));
+
 
         paySheetBehavior = BottomSheetBehavior.from(bottomSheetViewgroup);
         paySheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -199,6 +207,7 @@ public class AccountFragment extends Fragment {
 
                 String id = iterator.previous();
                 model.setCurrentGroupIdMediatorLiveData(id);
+                setUpUI(id);
 
                 if (id.equals(getString(R.string.personal_account))) {
                     changeFabActions(false);
@@ -223,6 +232,7 @@ public class AccountFragment extends Fragment {
                 accountImgright.setVisibility(View.VISIBLE);
                 String id = iterator.next();
                 model.setCurrentGroupIdMediatorLiveData(id);
+                setUpUI(id);
 
                 if (id.equals(getString(R.string.personal_account))) {
                     changeFabActions(false);
@@ -468,4 +478,62 @@ public class AccountFragment extends Fragment {
                 });
 
     }
+
+    private void setUpUI(String id){
+
+        Source source = Source.SERVER;
+        accountAccountBalance.setText("Ksh -:-");
+        accountAccounttype.setText("-:-");
+
+        if (id.equals(getString(R.string.personal_account))) {
+
+            accountAccounttype.setText(getString(R.string.personal_account));
+            mFirestore.collection(USERSACCOUNTCOL).document(mCurrentUser.getUid()).get(source)
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()){
+                                String balance =  model.formatMyMoney(task.getResult().getDouble("balance"));
+                                accountAccountBalance.setText(balance);
+
+                            }else {
+                                accountAccountBalance.setText("Ksh -:-");
+                            }
+                        }
+                    });
+
+        } else {
+            mFirestore.collection(GROUPCOL).document(id).get(source)
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()){
+                                String type = task.getResult().getString("displayname");
+                                accountAccounttype.setText(type.toUpperCase()+" ACCOUNT");
+
+                            }else {
+                                accountAccounttype.setText("-:-");
+
+                            }
+                        }
+                    });
+            mFirestore.collection(GROUPACCOUNTCOL).document(id).get(source)
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()){
+
+                                String balance =  model.formatMyMoney(task.getResult().getDouble("balance"));
+                                accountAccountBalance.setText(balance);
+
+                            }else {
+                                accountAccountBalance.setText("Ksh -:-");
+
+                            }
+                        }
+                    });
+
+        }
+    }
+
 }

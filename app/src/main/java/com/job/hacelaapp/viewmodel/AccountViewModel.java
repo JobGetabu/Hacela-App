@@ -8,7 +8,6 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -118,10 +117,7 @@ public class AccountViewModel extends AndroidViewModel {
     }
 
     public String formatMyMoney(Double money){
-        DecimalFormat formatter = new DecimalFormat("#,###.00");
-        Log.d(TAG, "formatMyMoney: "+formatter.format(money));
         return String.format("Ksh %,.2f", money);
-        //return "Ksh "+formatter.format(money);
     }
 
     public MediatorLiveData<UsersAccount> getUsersAccountMediatorLiveData() {
