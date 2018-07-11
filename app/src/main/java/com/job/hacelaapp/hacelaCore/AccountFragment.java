@@ -1,6 +1,7 @@
 package com.job.hacelaapp.hacelaCore;
 
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.MediatorLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -11,6 +12,7 @@ import android.support.design.card.MaterialCardView;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -50,6 +52,7 @@ import com.job.hacelaapp.ui.PayFragment;
 import com.job.hacelaapp.ui.WithdrawFragment;
 import com.job.hacelaapp.util.OnSwipeTouchListener;
 import com.job.hacelaapp.viewmodel.AccountViewModel;
+import com.job.hacelaapp.viewmodel.NavigationViewModel;
 import com.ramotion.foldingcell.FoldingCell;
 import com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton;
 import com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout;
@@ -111,6 +114,8 @@ public class AccountFragment extends Fragment {
     ProgressBar accountProgress;
     @BindView(R.id.account_cash_card)
     MaterialCardView cardCash;
+    @BindView(R.id.account_refresh)
+    SwipeRefreshLayout accountRefresh;
 
 
     Unbinder unbinder;
@@ -129,7 +134,9 @@ public class AccountFragment extends Fragment {
     private BottomSheetBehavior paySheetBehavior;
     private BottomSheetBehavior withdrawSheetBehavior;
     private BottomSheetBehavior contributeSheetBehavior;
+
     private AccountViewModel model;
+    private NavigationViewModel navModel;
     private FirestoreRecyclerAdapter adapter;
 
     final List<String> listGroups = new ArrayList<>();
@@ -176,9 +183,14 @@ public class AccountFragment extends Fragment {
         model = ViewModelProviders.of(getActivity(), factory)
                 .get(AccountViewModel.class);
 
+        navModel = ViewModelProviders.of(getActivity()).get(NavigationViewModel.class);
+
         //setup ui observers
         setUpCashUi();
         setUpUI(getString(R.string.personal_account));
+        navModelObserver();
+
+        currentGroupId = getString(R.string.personal_account);
         cardCashSwiperListener();
 
 
@@ -194,68 +206,55 @@ public class AccountFragment extends Fragment {
         //set up navigator
         listGroups.add(getString(R.string.personal_account));
         userGroups();
+
+        //swipe refresh
+        int a = getResources().getColor(R.color.payGreen);
+        int b = getResources().getColor(R.color.colorAppBarDark);
+        int c = getResources().getColor(R.color.colorAccent);
+        accountRefresh.setColorSchemeColors(a,b,c);
+        accountRefresh.setOnRefreshListener(onRefreshListener);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void cardCashSwiperListener() {
         cardCash.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
             @Override
             public void onSwipeLeft() {
 
-                if (!listGroups.isEmpty() && iterator != null) {
-
-                    if (iterator.hasPrevious()) {
-                        accountImgleft.setVisibility(View.VISIBLE);
-
-                        String id = iterator.previous();
-                        model.setCurrentGroupIdMediatorLiveData(id);
-                        setUpUI(id);
-
-                        if (id.equals(getString(R.string.personal_account))) {
-                            changeFabActions(false);
-                        } else {
-                            changeFabActions(true);
-                        }
-                    } else {
-                        accountImgleft.setVisibility(View.INVISIBLE);
-                    }
-                    navImages();
-                }
+                navLeft();
             }
 
             @Override
             public void onSwipeRight() {
 
-                if (!listGroups.isEmpty() && iterator != null) {
-
-                    if (iterator.hasNext()) {
-                        accountImgright.setVisibility(View.VISIBLE);
-                        String id = iterator.next();
-                        model.setCurrentGroupIdMediatorLiveData(id);
-                        setUpUI(id);
-
-                        if (id.equals(getString(R.string.personal_account))) {
-                            changeFabActions(false);
-                        } else {
-                            changeFabActions(true);
-                        }
-                    } else {
-                        accountImgright.setVisibility(View.INVISIBLE);
-                    }
-                    navImages();
-                }
+                navRight();
             }
         });
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
+    private void navRight() {
+        if (!listGroups.isEmpty() && iterator != null) {
+
+            if (iterator.hasNext()) {
+                accountImgright.setVisibility(View.VISIBLE);
+                String id = iterator.next();
+                model.setCurrentGroupIdMediatorLiveData(id);
+                currentGroupId = id;
+                setUpUI(id);
+
+                if (id.equals(getString(R.string.personal_account))) {
+                    changeFabActions(false);
+                } else {
+                    changeFabActions(true);
+                }
+            } else {
+                accountImgright.setVisibility(View.INVISIBLE);
+            }
+            navImages();
+        }
     }
 
-    @OnClick(R.id.account_imgleft)
-    public void onAccountImgleftClicked() {
-
+    private void navLeft() {
         if (!listGroups.isEmpty() && iterator != null) {
 
             if (iterator.hasPrevious()) {
@@ -263,6 +262,7 @@ public class AccountFragment extends Fragment {
 
                 String id = iterator.previous();
                 model.setCurrentGroupIdMediatorLiveData(id);
+                currentGroupId = id;
                 setUpUI(id);
 
                 if (id.equals(getString(R.string.personal_account))) {
@@ -277,28 +277,21 @@ public class AccountFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @OnClick(R.id.account_imgleft)
+    public void onAccountImgleftClicked() {
+        navLeft();
+    }
+
 
     @OnClick(R.id.account_imgright)
     public void onAccountImgrightClicked() {
-
-        if (!listGroups.isEmpty() && iterator != null) {
-
-            if (iterator.hasNext()) {
-                accountImgright.setVisibility(View.VISIBLE);
-                String id = iterator.next();
-                model.setCurrentGroupIdMediatorLiveData(id);
-                setUpUI(id);
-
-                if (id.equals(getString(R.string.personal_account))) {
-                    changeFabActions(false);
-                } else {
-                    changeFabActions(true);
-                }
-            } else {
-                accountImgright.setVisibility(View.INVISIBLE);
-            }
-            navImages();
-        }
+        navRight();
     }
 
 
@@ -366,7 +359,7 @@ public class AccountFragment extends Fragment {
             public void onChanged(@Nullable UsersAccount usersAccount) {
                 if (currentGroupId != null) {
                     if (currentGroupId.equals(getString(R.string.personal_account))) {
-                        if (usersAccount != null){
+                        if (usersAccount != null) {
                             String balance = model.formatMyMoney(usersAccount.getBalance());
                             accountAccountBalance.setText(balance);
                         }
@@ -591,8 +584,89 @@ public class AccountFragment extends Fragment {
                             }
                         }
                     });
+        }
+    }
+
+    private void setAccountRefresh(String id){
+        //swipe refresh becomes visible
+        if (currentGroupId == null || currentGroupId.isEmpty()){
+            accountRefresh.setRefreshing(false);
+            return;
+        }
+
+        Source source = Source.SERVER;
+        accountRefresh.setRefreshing(true);
+
+
+        if (id.equals(getString(R.string.personal_account))) {
+
+            accountAccounttype.setText(getString(R.string.personal_account));
+            mFirestore.collection(USERSACCOUNTCOL).document(mCurrentUser.getUid()).get(source)
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                String balance = model.formatMyMoney(task.getResult().getDouble("balance"));
+                                accountAccountBalance.setText(balance);
+                                accountRefresh.setRefreshing(false);
+
+                            } else {
+                                accountAccountBalance.setText("Ksh -:-");
+                                accountRefresh.setRefreshing(false);
+                            }
+                        }
+                    });
+
+        } else {
+            mFirestore.collection(GROUPCOL).document(id).get(source)
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                String type = task.getResult().getString("displayname");
+                                accountAccounttype.setText(type.toUpperCase() + " ACCOUNT");
+                                accountRefresh.setRefreshing(false);
+
+                            } else {
+                                accountAccounttype.setText("-:-");
+                                accountRefresh.setRefreshing(false);
+
+                            }
+                        }
+                    });
+            mFirestore.collection(GROUPACCOUNTCOL).document(id).get(source)
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+
+                                String balance = model.formatMyMoney(task.getResult().getDouble("balance"));
+                                accountAccountBalance.setText(balance);
+                                accountRefresh.setRefreshing(false);
+
+                            } else {
+                                accountAccountBalance.setText("Ksh -:-");
+                                accountRefresh.setRefreshing(false);
+                            }
+                        }
+                    });
 
         }
     }
 
+    SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            setAccountRefresh(currentGroupId);
+        }
+    };
+
+    private void navModelObserver(){
+        navModel.getRefreshData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(@Nullable Boolean aBoolean) {
+                setAccountRefresh(currentGroupId);
+            }
+        });
+    }
 }

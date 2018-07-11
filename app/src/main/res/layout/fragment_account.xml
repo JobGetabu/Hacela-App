@@ -156,7 +156,6 @@
                 android:layout_marginTop="8dp" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
-
     </LinearLayout>
 
     <com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout

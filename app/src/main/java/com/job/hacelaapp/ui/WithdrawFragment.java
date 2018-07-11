@@ -197,7 +197,7 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
         super.onDestroy();
     }
 
-    @OnClick(R.id.withdraw_editImg)
+    @OnClick({R.id.withdraw_editImg,R.id.withdraw_textamount})
     public void onWithdrawEditImgClicked() {
 
         withdrawAmountinput.setVisibility(View.VISIBLE);
@@ -259,6 +259,7 @@ public class WithdrawFragment extends BottomSheetDialogFragment {
 
                                     withdrawTransaction(amount, am, userAccountRef);
 
+                                    refreshData(true);
                                 }
 
                             } else {

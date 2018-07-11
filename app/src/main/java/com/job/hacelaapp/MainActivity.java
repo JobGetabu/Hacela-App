@@ -196,9 +196,10 @@ public class MainActivity extends AppCompatActivity {
 
             //change fragments
             if (!wasSelected) {
+                pagerAdapter.notifyDataSetChanged();
                 mNoSwipePager.setCurrentItem(position);
                 Log.d(TAG, "onTabSelected: AT :" + position);
-                pagerAdapter.notifyDataSetChanged();
+
             }
 
             // remove notification badge..
